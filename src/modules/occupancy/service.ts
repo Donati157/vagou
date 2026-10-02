@@ -2,6 +2,9 @@ import "server-only";
 import { and, desc, eq, inArray, isNull, lt, or, sql } from "drizzle-orm";
 import { db, type Tx } from "@/server/db/client";
 import { dataSources, facilities, floors, occupancyEvents, occupancySnapshots, parkingSpaces } from "@/server/db/schema";
+
+/** Spaces count publicly only when their floor has a published digital map. */
+const onPublishedFloor = sql`exists (select 1 from floor_plans fp where fp.floor_id = "parking_spaces"."floor_id" and fp.status = 'PUBLISHED')`;
 import { logger } from "@/server/lib/logger";
 import { countStatuses, emptyCounts, toPublicAvailability, totalOf, type PublicAvailability, type StatusCounts } from "./availability";
 import { getOccupancyProvider, type SpaceObservation } from "./provider";
@@ -52,7 +55,7 @@ async function maybeSnapshot(exec: Exec, facilityId: string, source: SourceKind,
   const rows = await exec
     .select({ status: parkingSpaces.opStatus, n: sql<number>`count(*)::int` })
     .from(parkingSpaces)
-    .where(and(eq(parkingSpaces.facilityId, facilityId), isNull(parkingSpaces.archivedAt)))
+    .where(and(eq(parkingSpaces.facilityId, facilityId), isNull(parkingSpaces.archivedAt), onPublishedFloor))
     .groupBy(parkingSpaces.opStatus);
   const c = emptyCounts();
   for (const r of rows) c[r.status.toLowerCase() as keyof StatusCounts] = r.n;
@@ -94,7 +97,7 @@ async function tickSource(src: { id: string; facilityId: string; kind: SourceKin
   const provider = getOccupancyProvider(src.kind);
   const spaces =
     src.granularity === "SPACE"
-      ? await db.select({ id: parkingSpaces.id, status: parkingSpaces.opStatus }).from(parkingSpaces).where(and(eq(parkingSpaces.facilityId, src.facilityId), isNull(parkingSpaces.archivedAt)))
+      ? await db.select({ id: parkingSpaces.id, status: parkingSpaces.opStatus }).from(parkingSpaces).where(and(eq(parkingSpaces.facilityId, src.facilityId), isNull(parkingSpaces.archivedAt), onPublishedFloor))
       : [];
   const result = await provider.poll({
     facilityId: src.facilityId,
@@ -136,7 +139,7 @@ export async function getLiveAvailability(facilityRows: Array<{ id: string; decl
     db
       .select({ facilityId: parkingSpaces.facilityId, floorId: parkingSpaces.floorId, status: parkingSpaces.opStatus, n: sql<number>`count(*)::int` })
       .from(parkingSpaces)
-      .where(and(inArray(parkingSpaces.facilityId, ids), isNull(parkingSpaces.archivedAt)))
+      .where(and(inArray(parkingSpaces.facilityId, ids), isNull(parkingSpaces.archivedAt), onPublishedFloor))
       .groupBy(parkingSpaces.facilityId, parkingSpaces.floorId, parkingSpaces.opStatus),
     db.select({ id: floors.id, facilityId: floors.facilityId, name: floors.name, level: floors.level }).from(floors).where(inArray(floors.facilityId, ids)),
     db
@@ -157,7 +160,8 @@ export async function getLiveAvailability(facilityRows: Array<{ id: string; decl
   for (const f of facilityRows) {
     const src = sources.find((s) => s.facilityId === f.id) ?? null;
     const mine = spaceRows.filter((r) => r.facilityId === f.id);
-    const hasDigitalMap = mine.length > 0;
+    // Per-space counts are used when a published map exists and the source reports per space.
+    const hasDigitalMap = mine.length > 0 && (!src || src.granularity === "SPACE");
     let counts: StatusCounts | null = null;
     let capacity = f.declaredCapacity;
     let updatedAt = src?.lastSyncAt ?? null;

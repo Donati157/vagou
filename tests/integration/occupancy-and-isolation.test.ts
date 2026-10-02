@@ -25,6 +25,7 @@ beforeAll(async () => {
     .values(Array.from({ length: 4 }, (_, i) => ({ facilityId: fa.id, floorId: floor.id, code: `A-${i}`, x: 0.1 * i, y: 0.1 })))
     .returning();
   await db.insert(s.dataSources).values({ facilityId: fa.id, kind: "MANUAL", granularity: "SPACE", name: "Manual", lastSyncAt: new Date() });
+  await db.insert(s.floorPlans).values({ floorId: floor.id, originalKey: "k", originalName: "p.png", originalMime: "image/png", originalSize: 1, status: "PUBLISHED", publishedAt: new Date() });
   Object.assign(ids, { orgA: orgA.id, orgB: orgB.id, userA: userA.id, admin: admin.id, facilityA: fa.id, facilityB: fb.id, floorA: floor.id, spaces: spaces.map((x) => x.id) });
 });
 
@@ -67,6 +68,13 @@ describe("occupancy pipeline", () => {
     expect(a.capacity).toBe(4);
     expect(a.simulated).toBe(false);
     expect(a.floors[0].counts.occupied).toBe(2);
+  });
+  it("ignores spaces of floors without a published map", async () => {
+    const { getLiveAvailability } = await import("@/modules/occupancy/service");
+    const [draftFloor] = await db.insert(s.floors).values({ facilityId: ids.facilityA, name: "G2" }).returning();
+    await db.insert(s.parkingSpaces).values({ facilityId: ids.facilityA, floorId: draftFloor.id, code: "B-1", x: 0.5, y: 0.5 });
+    const a = (await getLiveAvailability([{ id: ids.facilityA, declaredCapacity: 10 }])).get(ids.facilityA)!;
+    expect(a.capacity).toBe(4);
   });
   it("shows facilities without a data source as unknown", async () => {
     const { getLiveAvailability } = await import("@/modules/occupancy/service");
