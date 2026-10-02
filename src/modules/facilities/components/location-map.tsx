@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { Circle, MapContainer, Marker, TileLayer } from "react-leaflet";
 
-/** Small static map. Private listings show only an approximate area, never the exact point. */
+/** Small static map of a facility's location (`approximate` draws an area instead of the exact point). */
 export default function LocationMap({ lat, lng, approximate }: { lat: number; lng: number; approximate: boolean }) {
   const icon = L.divIcon({
     className: "",

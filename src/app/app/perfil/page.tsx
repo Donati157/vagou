@@ -16,7 +16,7 @@ export default async function ProfilePage() {
       <PageHeader title="Meu perfil" description={`${ROLE_LABEL[user.role]} · na Vagou desde ${formatFullDate(profile.createdAt)}`} />
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         <Card>
-          <CardHeader title="Dados pessoais" description="Coletamos apenas o necessário para suas reservas." />
+          <CardHeader title="Dados pessoais" description="Usamos estes dados apenas para operar sua conta." />
           <CardBody>
             <ProfileForm profile={profile} />
           </CardBody>
@@ -24,7 +24,7 @@ export default async function ProfilePage() {
         <Card>
           <CardHeader title="Privacidade" description="Você controla seus dados." />
           <CardBody className="space-y-3 text-sm text-asphalt-600">
-            <p>Seu nome completo, telefone e placa nunca aparecem publicamente. Proprietários veem apenas seu primeiro nome e a placa da reserva.</p>
+            <p>Seu nome, e-mail e celular nunca aparecem publicamente nem são compartilhados com os shoppings. Seus favoritos ficam visíveis só para você.</p>
             <PrivacyControls />
           </CardBody>
         </Card>

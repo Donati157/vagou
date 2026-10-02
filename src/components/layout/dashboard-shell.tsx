@@ -5,7 +5,7 @@ import { ROLE_HOME, ROLE_LABEL } from "@/modules/auth/roles";
 import { DashboardNav, MobileDashboardNav, type NavItem } from "./dashboard-nav";
 import { UserMenu } from "./user-menu";
 
-/** Sidebar layout for management areas (owner, company, admin). */
+/** Sidebar layout for management areas (company, admin). */
 export async function DashboardShell({ area, items, children, context }: { area: string; items: NavItem[]; children: React.ReactNode; context?: React.ReactNode }) {
   const user = (await getCurrentUser())!;
   return (

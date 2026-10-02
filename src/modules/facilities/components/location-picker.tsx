@@ -24,7 +24,7 @@ function Recenter({ center }: { center: [number, number] }) {
   return null;
 }
 
-/** Click-to-place map used in the listing wizard. The exact point stays private until booking. */
+/** Click-to-place map used in the shopping registration form to set the facility's location. */
 export default function LocationPicker({ value, center, onPick }: { value: { lat: number; lng: number } | null; center: [number, number]; onPick: (lat: number, lng: number) => void }) {
   return (
     <MapContainer center={center} zoom={14} className="h-full w-full" scrollWheelZoom>
