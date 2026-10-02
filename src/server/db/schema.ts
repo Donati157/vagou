@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  customType,
   check,
   doublePrecision,
   index,
@@ -425,6 +426,23 @@ export const occupancySnapshots = pgTable(
 );
 
 // ───────────────────────────── Platform ─────────────────────────────
+
+const bytea = customType<{ data: Buffer; driverData: Buffer | Uint8Array }>({
+  dataType: () => "bytea",
+  fromDriver: (v) => (Buffer.isBuffer(v) ? v : Buffer.from(v)),
+});
+
+/**
+ * Uploaded files when running on serverless hosting (no persistent disk). Keys are the same as
+ * the local-disk driver ("floorplans/<orgId>/<uuid>.png"); authorization happens in /api/files.
+ */
+export const storedFiles = pgTable("stored_files", {
+  key: text("key").primaryKey(),
+  contentType: text("content_type").notNull(),
+  size: integer("size").notNull(),
+  data: bytea("data").notNull(),
+  createdAt: createdAt(),
+});
 
 export const favorites = pgTable(
   "favorites",

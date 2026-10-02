@@ -1,9 +1,13 @@
 /**
  * Demo seed — fictional facilities in São Paulo. No real personal data.
- * Usage: npm run db:seed   (stop `npm run dev` first when using the embedded database)
+ *
+ *   npm run db:seed                 → resets the database and loads demo data (development)
+ *   tsx scripts/seed.ts --if-empty  → loads demo data only into an empty database (deploys);
+ *                                     never deletes anything
+ *
+ * Stop `npm run dev` first when using the embedded database.
  */
 import fs from "node:fs";
-import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { sql } from "drizzle-orm";
 import { loadEnv } from "./env";
@@ -15,11 +19,19 @@ import { hashPassword } from "../src/modules/auth/password";
 import { standardLayout, STANDARD_SECTORS, spaceCode } from "../src/modules/floorplans/layout";
 import { seededRng, simulateAggregate, targetOccupancy } from "../src/modules/occupancy/simulation";
 import { addMinutes } from "../src/lib/time";
+import { createStorage, storageDriverName } from "../src/modules/storage/drivers";
 
 loadEnv();
 
-if (process.env.NODE_ENV === "production" && process.env.ALLOW_DEMO_SEED !== "true") {
-  console.error("✖ Seed de demonstração bloqueado em produção (defina ALLOW_DEMO_SEED=true para forçar).");
+const IF_EMPTY = process.argv.includes("--if-empty");
+const PRODUCTION = process.env.NODE_ENV === "production" || !!process.env.VERCEL;
+
+if (PRODUCTION && process.env.ALLOW_DEMO_SEED !== "true") {
+  console.log("• Seed de demonstração não executado (defina ALLOW_DEMO_SEED=true para carregar dados de demonstração).");
+  process.exit(0);
+}
+if (PRODUCTION && (!process.env.DEMO_PASSWORD || process.env.DEMO_PASSWORD === "Vagou@2026" || process.env.DEMO_PASSWORD.length < 10)) {
+  console.error("✖ Em produção, defina DEMO_PASSWORD (mínimo de 10 caracteres, diferente da senha de desenvolvimento) antes de criar as contas de demonstração.");
   process.exit(1);
 }
 
@@ -413,14 +425,23 @@ const FACILITIES: FacilitySpec[] = [
 async function main() {
   const db = createDatabase();
   await runMigrations(db);
-  console.log("• Limpando dados anteriores…");
-  const res = await db.execute<{ tablename: string }>(sql`select tablename from pg_tables where schemaname = 'public'`);
-  const names = ((res as unknown as { rows: Array<{ tablename: string }> }).rows ?? (res as unknown as Array<{ tablename: string }>)).map((t) => `"${t.tablename}"`);
-  if (names.length) await db.execute(sql.raw(`TRUNCATE ${names.join(", ")} RESTART IDENTITY CASCADE`));
-
-  const uploadsDir = process.env.UPLOADS_DIR ?? path.join(process.cwd(), ".data", "uploads");
-  fs.rmSync(uploadsDir, { recursive: true, force: true });
-  fs.mkdirSync(uploadsDir, { recursive: true });
+  if (IF_EMPTY) {
+    const [{ n }] = await db.select({ n: sql<number>`count(*)::int` }).from(s.users);
+    if (n > 0) {
+      console.log("• Banco já possui dados — seed ignorado.");
+      process.exit(0);
+    }
+  } else {
+    console.log("• Limpando dados anteriores…");
+    const res = await db.execute<{ tablename: string }>(sql`select tablename from pg_tables where schemaname = 'public'`);
+    const names = ((res as unknown as { rows: Array<{ tablename: string }> }).rows ?? (res as unknown as Array<{ tablename: string }>)).map((t) => `"${t.tablename}"`);
+    if (names.length) await db.execute(sql.raw(`TRUNCATE ${names.join(", ")} RESTART IDENTITY CASCADE`));
+  }
+  const files = createStorage(db);
+  if (storageDriverName() === "local" && !IF_EMPTY) {
+    const { localUploadsDir } = await import("../src/modules/storage/drivers");
+    fs.rmSync(localUploadsDir(), { recursive: true, force: true });
+  }
 
   const now = new Date();
   const passwordHash = await hashPassword(DEMO_PASSWORD);
@@ -505,8 +526,7 @@ async function main() {
       const planId = randomUUID();
       const key = `floorplans/${orgId}/${planId}.png`;
       const png = renderSamplePlan(1600, 1000, fl.digit % 2);
-      fs.mkdirSync(path.join(uploadsDir, path.dirname(key)), { recursive: true });
-      fs.writeFileSync(path.join(uploadsDir, key), png);
+      await files.put(key, png, "image/png");
       const owner = users.find((u) => u.org === f.org)!;
       await db.insert(s.floorPlans).values({
         id: planId,
@@ -612,7 +632,7 @@ async function main() {
   ]);
 
   console.log(`\n✔ Seed concluído: ${FACILITIES.length} estacionamentos, ${meta.reduce((a, m) => a + m.spaceIds.length, 0)} vagas mapeadas.`);
-  console.log(`  Contas demo (senha: ${DEMO_PASSWORD})`);
+  console.log(PRODUCTION ? "  Contas demo criadas com a senha definida em DEMO_PASSWORD." : `  Contas demo (senha: ${DEMO_PASSWORD})`);
   for (const u of users.slice(0, 3)) console.log(`  ${u.role.padEnd(15)} ${u.email}`);
   process.exit(0);
 }

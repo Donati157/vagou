@@ -8,6 +8,7 @@ import { MapEditor } from "@/modules/floorplans/components/map-editor";
 import { PlanUploader } from "@/modules/floorplans/components/plan-uploader";
 import { PublishPlanButton, ReanalyzeButton } from "@/modules/floorplans/components/plan-actions";
 import { ForbiddenError, NotFoundError } from "@/server/lib/errors";
+import { MAX_UPLOAD_BYTES } from "@/modules/storage/storage";
 import { cn } from "@/lib/cn";
 import { formatDateTime, formatPercent } from "@/lib/format";
 import { FLOOR_PLAN_STATUS_LABEL } from "@/lib/labels";
@@ -80,7 +81,7 @@ export default async function SmartMapPage({ params, searchParams }: { params: P
               <FlaskConical className="mt-0.5 size-4 shrink-0" aria-hidden /> Modo demonstração: a análise automática é simulada e propõe um layout padrão sobre a sua planta. Revise e corrija as vagas no editor antes de publicar.
             </p>
           )}
-          <PlanUploader floorId={floorId} hasSpaces={spaces.length > 0} />
+          <PlanUploader floorId={floorId} hasSpaces={spaces.length > 0} maxBytes={MAX_UPLOAD_BYTES - 64 * 1024} />
         </div>
       )}
 

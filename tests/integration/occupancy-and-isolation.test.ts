@@ -107,3 +107,17 @@ describe("platform admin authorization", () => {
     await expect(authenticate("ninguem@test.dev", "errada123")).rejects.toMatchObject({ code: "INVALID_CREDENTIALS" });
   });
 });
+
+describe("database file storage (serverless hosting)", () => {
+  it("stores, reads, overwrites and deletes files in PostgreSQL", async () => {
+    const { DatabaseFileStorage } = await import("@/modules/storage/drivers");
+    const store = new DatabaseFileStorage(db);
+    const key = "floorplans/org/plan.png";
+    await store.put(key, Buffer.from([1, 2, 3]), "image/png");
+    expect([...(await store.get(key))!]).toEqual([1, 2, 3]);
+    await store.put(key, Buffer.from([9]), "image/png");
+    expect([...(await store.get(key))!]).toEqual([9]);
+    await store.delete(key);
+    expect(await store.get(key)).toBeNull();
+  });
+});

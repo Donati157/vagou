@@ -1,46 +1,11 @@
 import "server-only";
-import fs from "node:fs/promises";
-import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { AppError } from "@/server/lib/errors";
+import { db } from "@/server/db/client";
+import { createStorage, type FileStorage } from "./drivers";
 
-/**
- * File storage adapter. V1 ships LocalFileStorage (files outside /public, served through
- * an authorized route). A SupabaseStorage/S3 adapter can implement the same interface.
- */
-export interface FileStorage {
-  put(key: string, data: Buffer, contentType: string): Promise<void>;
-  get(key: string): Promise<Buffer | null>;
-  delete(key: string): Promise<void>;
-}
-
-class LocalFileStorage implements FileStorage {
-  constructor(private root: string) {}
-  private resolve(key: string) {
-    const full = path.resolve(this.root, key);
-    if (!full.startsWith(path.resolve(this.root) + path.sep)) throw new AppError("BAD_KEY", "Arquivo inválido.");
-    return full;
-  }
-  async put(key: string, data: Buffer) {
-    const full = this.resolve(key);
-    await fs.mkdir(path.dirname(full), { recursive: true });
-    await fs.writeFile(full, data);
-  }
-  async get(key: string) {
-    try {
-      return await fs.readFile(this.resolve(key));
-    } catch {
-      return null;
-    }
-  }
-  async delete(key: string) {
-    await fs.rm(this.resolve(key), { force: true });
-  }
-}
-
-export const storage: FileStorage = new LocalFileStorage(
-  process.env.UPLOADS_DIR ?? path.join(process.cwd(), ".data", "uploads"),
-);
+/** Active storage driver (disk in development, PostgreSQL on serverless hosting). See drivers.ts. */
+export const storage: FileStorage = createStorage(db);
 
 export type AllowedKind = "image" | "floorplan";
 
@@ -51,9 +16,16 @@ const SIGNATURES: Array<{ mime: string; ext: string; test: (b: Buffer) => boolea
   { mime: "application/pdf", ext: "pdf", test: (b) => b.subarray(0, 5).toString() === "%PDF-" },
 ];
 
+/**
+ * Serverless platforms cap request bodies (Vercel: 4.5 MB), so uploads are limited accordingly.
+ * The browser downsizes larger plans before sending (see plan-uploader.tsx).
+ */
+export const MAX_UPLOAD_BYTES = process.env.VERCEL ? 4 * 1024 * 1024 : 15 * 1024 * 1024;
+const mb = (b: number) => `${Math.round(b / 1024 / 1024)} MB`;
+
 const RULES: Record<AllowedKind, { mimes: string[]; maxBytes: number; label: string }> = {
-  image: { mimes: ["image/png", "image/jpeg", "image/webp"], maxBytes: 5 * 1024 * 1024, label: "PNG, JPG ou WEBP de até 5 MB" },
-  floorplan: { mimes: ["image/png", "image/jpeg", "application/pdf"], maxBytes: 15 * 1024 * 1024, label: "PNG, JPG ou PDF de até 15 MB" },
+  image: { mimes: ["image/png", "image/jpeg", "image/webp"], maxBytes: Math.min(5 * 1024 * 1024, MAX_UPLOAD_BYTES), label: `PNG, JPG ou WEBP de até ${mb(Math.min(5 * 1024 * 1024, MAX_UPLOAD_BYTES))}` },
+  floorplan: { mimes: ["image/png", "image/jpeg", "application/pdf"], maxBytes: MAX_UPLOAD_BYTES, label: `PNG, JPG ou PDF de até ${mb(MAX_UPLOAD_BYTES)}` },
 };
 
 /**

@@ -15,11 +15,28 @@ export function pgliteDataDir() {
   return process.env.PGLITE_DATA_DIR ?? path.join(process.cwd(), ".data", "pglite");
 }
 
+/** Connection string of a real PostgreSQL (Vercel/Neon/Supabase integrations expose one of these). */
+export function postgresUrl() {
+  return process.env.DATABASE_URL || process.env.POSTGRES_URL || null;
+}
+
 export function createDatabase(opts: { inMemory?: boolean } = {}): Database {
-  const url = process.env.DATABASE_URL;
+  const url = postgresUrl();
   if (url && !opts.inMemory) {
-    const client = postgres(url, { max: Number(process.env.DATABASE_POOL_SIZE ?? 10) });
+    const client = postgres(url, {
+      // Small pool: each serverless instance keeps few connections; poolers multiplex the rest.
+      max: Number(process.env.DATABASE_POOL_SIZE ?? 5),
+      // Transaction-mode poolers (Neon/Supabase/PgBouncer) don't support prepared statements.
+      prepare: false,
+      idle_timeout: 20,
+      connect_timeout: 15,
+      onnotice: () => {}, // ignore informational NOTICEs (e.g. "already exists, skipping")
+    });
     return drizzlePostgres(client, { schema });
+  }
+  if (!opts.inMemory && process.env.VERCEL) {
+    // Serverless filesystems are ephemeral/read-only: the embedded database would lose data.
+    throw new Error("DATABASE_URL is required in production (configure a PostgreSQL database).");
   }
   if (!opts.inMemory) {
     fs.mkdirSync(pgliteDataDir(), { recursive: true });

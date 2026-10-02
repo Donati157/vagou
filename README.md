@@ -125,11 +125,36 @@ Com `NEXT_PUBLIC_DEMO_MODE=true` (e fora de produção) a tela de login mostra a
 O seed se recusa a rodar com `NODE_ENV=production` (a menos que `ALLOW_DEMO_SEED=true`).
 **Nunca** use essas credenciais em produção.
 
-## Deploy
+## Deploy (Vercel + PostgreSQL)
 
-- Requer um PostgreSQL gerenciado (`DATABASE_URL`) — o banco embutido é apenas para desenvolvimento/demonstração.
-- Rode `npm run db:migrate` no deploy; configure `APP_SECRET`, `NEXT_PUBLIC_APP_URL` e `NEXT_PUBLIC_DEMO_MODE=false`.
-- Uploads usam disco local (`UPLOADS_DIR`); em ambientes serverless troque pelo adaptador de storage (S3/Supabase) — a interface `FileStorage` já existe.
+A Vagou roda em hospedagem serverless. Requisitos de produção:
+
+- **PostgreSQL 13+** acessível pela internet (recomendado: **Neon** pelo Vercel Marketplace, que injeta `DATABASE_URL` automaticamente; Supabase também funciona — `POSTGRES_URL` é aceito). Conexões via pooler funcionam (`prepare: false`).
+- **Node.js 20.9+** (declarado em `engines`).
+- Os arquivos enviados (plantas) ficam no próprio PostgreSQL (tabela `stored_files`) quando há banco configurado — não há dependência de disco. `STORAGE_DRIVER=local|database` força um driver.
+- Na Vercel cada requisição aceita até 4,5 MB; plantas maiores são otimizadas no navegador antes do envio.
+
+O build da Vercel executa automaticamente `npm run vercel-build`:
+
+```
+tsx scripts/migrate.ts && tsx scripts/seed.ts --if-empty && next build
+```
+
+1. aplica as migrations (falha com mensagem clara se `DATABASE_URL` não existir);
+2. carrega os dados de demonstração **somente se o banco estiver vazio** e `ALLOW_DEMO_SEED=true` — nunca apaga dados;
+3. compila o app.
+
+Variáveis de ambiente na Vercel:
+
+| Variável | Obrigatória | Valor |
+|---|---|---|
+| `DATABASE_URL` | sim | criada pela integração Neon (ou a connection string do seu PostgreSQL) |
+| `NEXT_PUBLIC_APP_URL` | recomendada | URL pública, ex.: `https://vagou.vercel.app` |
+| `ALLOW_DEMO_SEED` | para dados demo | `true` |
+| `DEMO_PASSWORD` | se `ALLOW_DEMO_SEED=true` | senha das contas demo (mín. 10 caracteres, diferente da senha de desenvolvimento) |
+| `NEXT_PUBLIC_DEMO_MODE` | não | `false` em produção |
+
+Em produção os atalhos de contas demo da tela de login ficam ocultos e o seed se recusa a usar a senha de desenvolvimento.
 
 ## Fluxos da V1
 
@@ -177,8 +202,8 @@ O seed se recusa a rodar com `NODE_ENV=production` (a menos que `ALLOW_DEMO_SEED
 
 ## Limitações conhecidas
 
-- O banco embutido (PGlite) atende um processo por vez; use PostgreSQL em produção.
-- Uploads em disco local; em ambiente serverless, configure um adaptador de storage em nuvem.
+- O banco embutido (PGlite) atende um processo por vez; em produção é obrigatório um PostgreSQL.
+- Arquivos no PostgreSQL atendem a escala da V1; para grande volume, implemente um driver de object storage (interface `FileStorage`).
 - Em desenvolvimento o `reactStrictMode` está desligado porque o `react-leaflet` v5 não suporta a dupla execução de efeitos do modo estrito.
 
 ## Testes

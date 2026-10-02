@@ -9,8 +9,26 @@ import { Alert } from "@/components/ui/states";
 import { cn } from "@/lib/cn";
 import { uploadFloorPlanAction } from "../actions";
 
-const MAX = 15 * 1024 * 1024;
 const ACCEPT = ["image/png", "image/jpeg", "application/pdf"];
+const PICK_LIMIT = 50 * 1024 * 1024; // larger originals are downsized in the browser before upload
+
+/** Re-encodes an image as JPEG (max 2400 px) so it fits the platform's request size limit. */
+async function downsize(file: File, maxBytes: number): Promise<File> {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, 2400 / Math.max(bitmap.width, bitmap.height));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bitmap.width * scale);
+  canvas.height = Math.round(bitmap.height * scale);
+  const ctx = canvas.getContext("2d")!;
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+  for (const q of [0.88, 0.75, 0.6]) {
+    const blob: Blob = await new Promise((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("encode"))), "image/jpeg", q));
+    if (blob.size <= maxBytes) return new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", { type: "image/jpeg" });
+  }
+  throw new Error("TOO_LARGE");
+}
 
 /** Renders the first page of a PDF to PNG in the browser (pdf.js, loaded on demand). */
 async function pdfToPng(file: File): Promise<File> {
@@ -29,7 +47,7 @@ async function pdfToPng(file: File): Promise<File> {
   return new File([blob], file.name.replace(/\.pdf$/i, "") + ".png", { type: "image/png" });
 }
 
-export function PlanUploader({ floorId, hasSpaces, compact }: { floorId: string; hasSpaces: boolean; compact?: boolean }) {
+export function PlanUploader({ floorId, hasSpaces, compact, maxBytes }: { floorId: string; hasSpaces: boolean; compact?: boolean; maxBytes: number }) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -43,7 +61,7 @@ export function PlanUploader({ floorId, hasSpaces, compact }: { floorId: string;
     setError(null);
     if (!f) return;
     if (!ACCEPT.includes(f.type)) return setError("Formato não suportado. Envie PNG, JPG ou PDF.");
-    if (f.size > MAX) return setError("Arquivo muito grande. O limite é 15 MB.");
+    if (f.size > PICK_LIMIT) return setError("Arquivo muito grande. Envie uma planta de até 50 MB.");
     setFile(f);
   }
 
@@ -51,16 +69,23 @@ export function PlanUploader({ floorId, hasSpaces, compact }: { floorId: string;
     if (!file) return;
     setError(null);
     const fd = new FormData();
-    fd.set("file", file);
     if (replace) fd.set("replace", "1");
-    if (file.type === "application/pdf") {
-      setStage("preparing");
-      try {
-        fd.set("preview", await pdfToPng(file));
-      } catch {
-        setStage("idle");
-        return setError("Não conseguimos ler este PDF. Envie a planta em PNG ou JPG.");
+    setStage("preparing");
+    try {
+      if (file.type === "application/pdf") {
+        let preview = await pdfToPng(file);
+        if (preview.size > maxBytes) preview = await downsize(preview, maxBytes);
+        // Keep the original PDF when both fit in one request; otherwise send only the rendered plan.
+        if (file.size + preview.size <= maxBytes) {
+          fd.set("file", file);
+          fd.set("preview", preview);
+        } else fd.set("file", preview);
+      } else {
+        fd.set("file", file.size > maxBytes ? await downsize(file, maxBytes) : file);
       }
+    } catch (err) {
+      setStage("idle");
+      return setError(err instanceof Error && err.message === "TOO_LARGE" ? "Não conseguimos reduzir esta planta o suficiente. Envie uma imagem menor." : "Não conseguimos ler este arquivo. Envie a planta em PNG ou JPG.");
     }
     setStage("processing");
     start(async () => {
@@ -108,7 +133,7 @@ export function PlanUploader({ floorId, hasSpaces, compact }: { floorId: string;
       >
         {file ? <FileImage className="size-8 text-green-600" aria-hidden /> : <Upload className="size-8 text-asphalt-400" aria-hidden />}
         <span className="font-semibold text-ink-900">{file ? file.name : "Arraste a planta aqui ou clique para escolher"}</span>
-        <span className="text-sm text-asphalt-500">{file ? `${(file.size / 1024 / 1024).toFixed(1)} MB` : "PNG, JPG ou PDF · até 15 MB"}</span>
+        <span className="text-sm text-asphalt-500">{file ? `${(file.size / 1024 / 1024).toFixed(1)} MB${file.size > maxBytes ? " · será otimizada antes do envio" : ""}` : "PNG, JPG ou PDF · arquivos grandes são otimizados automaticamente"}</span>
         <input ref={inputRef} type="file" accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf" className="sr-only" onChange={(e) => pick(e.target.files?.[0])} />
       </label>
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
