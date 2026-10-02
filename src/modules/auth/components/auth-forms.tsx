@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { startTransition, useActionState, useEffect, useRef, useState } from "react";
 import { AlertCircle, Building2, Car, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Field, Input } from "@/components/ui/field";
@@ -84,8 +84,29 @@ const ACCOUNT_TYPES = [
 export function RegisterForm({ next, initialType }: { next?: string; initialType?: string }) {
   const [state, action, pending] = useActionState(registerAction, null);
   const [type, setType] = useState<string>(ACCOUNT_TYPES.some((t) => t.value === initialType) ? initialType! : "DRIVER");
+  const formRef = useRef<HTMLFormElement>(null);
+  const invalid = (key: string) => (fe(state, key) ? { "aria-invalid": true, "aria-describedby": `${key}-error` } : {});
+
+  // After a validation error, take the user to the first field that needs fixing.
+  useEffect(() => {
+    if (state && !state.ok && state.fieldErrors) formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+  }, [state]);
+
   return (
-    <form action={action} className="space-y-4" noValidate>
+    <form
+      ref={formRef}
+      action={action}
+      // React resets a <form action> once the action settles, wiping what the user typed (and reverting
+      // the account-type radio to its initial value) even when the server only rejected one field.
+      // Dispatching manually keeps the inputs; `action` remains the no-JS fallback.
+      onSubmit={(e) => {
+        e.preventDefault();
+        const fd = new FormData(e.currentTarget);
+        startTransition(() => action(fd));
+      }}
+      className="space-y-4"
+      noValidate
+    >
       <FormError state={state} />
       <input type="hidden" name="next" value={next ?? ""} />
       <fieldset>
@@ -108,26 +129,30 @@ export function RegisterForm({ next, initialType }: { next?: string; initialType
         </div>
       </fieldset>
       <Field label="Nome completo" htmlFor="fullName" error={fe(state, "fullName")}>
-        <Input id="fullName" name="fullName" autoComplete="name" required />
+        <Input id="fullName" name="fullName" autoComplete="name" required {...invalid("fullName")} />
       </Field>
       {type === "COMPANY_ADMIN" && (
         <Field label="Nome do shopping ou grupo" htmlFor="organizationName" error={fe(state, "organizationName")}>
-          <Input id="organizationName" name="organizationName" autoComplete="organization" />
+          <Input id="organizationName" name="organizationName" autoComplete="organization" {...invalid("organizationName")} />
         </Field>
       )}
       <Field label="E-mail" htmlFor="email" error={fe(state, "email")}>
-        <Input id="email" name="email" type="email" autoComplete="email" required />
+        <Input id="email" name="email" type="email" autoComplete="email" required {...invalid("email")} />
       </Field>
       <Field label="Senha" htmlFor="password" hint="Mínimo de 8 caracteres, com letras e números." error={fe(state, "password")}>
-        <Input id="password" name="password" type="password" autoComplete="new-password" required />
+        <Input id="password" name="password" type="password" autoComplete="new-password" required {...invalid("password")} />
       </Field>
       <label className="flex items-start gap-2.5 text-sm text-asphalt-600">
-        <input type="checkbox" name="acceptTerms" className="mt-0.5 size-4 accent-ink-900" />
+        <input type="checkbox" name="acceptTerms" className="mt-0.5 size-4 accent-ink-900" {...invalid("acceptTerms")} />
         <span>
           Li e aceito os termos de uso e a política de privacidade. Usamos seus dados apenas para operar sua conta.
         </span>
       </label>
-      {fe(state, "acceptTerms") && <p className="text-sm text-danger">{fe(state, "acceptTerms")?.[0]}</p>}
+      {fe(state, "acceptTerms") && (
+        <p id="acceptTerms-error" className="text-sm text-danger">
+          {fe(state, "acceptTerms")?.[0]}
+        </p>
+      )}
       <Button type="submit" className="w-full" size="lg" loading={pending}>
         Criar conta
       </Button>
