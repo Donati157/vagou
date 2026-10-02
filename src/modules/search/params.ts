@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod";
 
 /** URL contract for the public search page (shareable, bookmarkable). */
 export const searchParamsSchema = z.object({

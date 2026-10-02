@@ -187,3 +187,14 @@ export async function getLiveAvailability(facilityRows: Array<{ id: string; decl
 }
 
 export { countStatuses };
+
+/** Manual aggregate count (facilities without a digital map). Authorization is checked by the caller. */
+export async function recordManualCount(facilityId: string, capacity: number, available: number, unavailable = 0) {
+  const now = new Date();
+  const total = Math.max(capacity, available + unavailable);
+  const occupied = total - available - unavailable;
+  await db.transaction(async (tx) => {
+    await tx.insert(occupancySnapshots).values({ facilityId, capturedAt: now, source: "MANUAL", total, available, occupied, reserved: 0, unavailable });
+    await tx.update(dataSources).set({ lastSyncAt: now, updatedAt: now }).where(and(eq(dataSources.facilityId, facilityId), eq(dataSources.status, "ACTIVE")));
+  });
+}

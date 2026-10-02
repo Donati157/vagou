@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Building2, ExternalLink, Layers } from "lucide-react";
+import { Building2, ExternalLink, Layers, Plus } from "lucide-react";
+import { LinkButton } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/breadcrumb";
 import { Badge } from "@/components/ui/badge";
 import { DemoBadge } from "@/components/ui/demo-badge";
@@ -27,7 +28,18 @@ export default async function CompanyHome({ searchParams }: { searchParams: Prom
   return (
     <>
       {sp.negado && <Alert tone="warning" className="mb-4">Você não tem acesso àquela área com este perfil.</Alert>}
-      <PageHeader title={orgs.length === 1 ? orgs[0].name : "Estacionamentos"} description="Visão em tempo real dos seus estacionamentos." actions={anySim ? <DemoBadge /> : undefined} />
+      <PageHeader
+        title={orgs.length === 1 ? orgs[0].name : "Estacionamentos"}
+        description="Visão em tempo real dos seus estacionamentos."
+        actions={
+          <>
+            {anySim && <DemoBadge />}
+            <LinkButton href="/company/estacionamentos/novo" size="sm">
+              <Plus className="size-4" aria-hidden /> Novo estacionamento
+            </LinkButton>
+          </>
+        }
+      />
       {facilities.length === 0 ? (
         <EmptyState icon={<Building2 className="size-6" aria-hidden />} title="Nenhum estacionamento cadastrado" description="Cadastre seu primeiro estacionamento para começar a digitalizar pisos e vagas." />
       ) : (
@@ -53,7 +65,7 @@ export default async function CompanyHome({ searchParams }: { searchParams: Prom
                 {facilities.map((f) => (
                   <TR key={f.id}>
                     <TD>
-                      <p className="font-semibold text-ink-900">{f.name}</p>
+                      <Link href={`/company/estacionamentos/${f.id}`} className="font-semibold text-ink-900 hover:underline">{f.name}</Link>
                       <p className="text-xs text-asphalt-500">
                         {FACILITY_KIND_LABEL[f.kind]} · {f.neighborhood} · {formatNumber(f.availability.capacity)} vagas
                       </p>

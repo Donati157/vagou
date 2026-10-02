@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { and, eq } from "drizzle-orm";
-import { z } from "zod";
+import { z } from "@/lib/zod";
 import { db } from "@/server/db/client";
 import { facilities, favorites } from "@/server/db/schema";
 import { runAction } from "@/server/lib/action";

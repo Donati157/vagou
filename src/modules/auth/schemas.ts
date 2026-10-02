@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod";
 
 export const emailSchema = z.string().trim().toLowerCase().email("Informe um e-mail válido.").max(160);
 export const passwordSchema = z
