@@ -10,7 +10,7 @@ export default async function DriverLayout({ children }: { children: React.React
   return (
     <>
       <SiteHeader />
-      <div className="border-b border-asphalt-100 bg-white">
+      <div className="border-b border-asphalt-100 bg-surface">
         <div className="mx-auto hidden max-w-5xl px-4 py-2 sm:px-6 md:block">
           <DriverTopNav />
         </div>

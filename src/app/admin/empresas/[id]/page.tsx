@@ -29,7 +29,7 @@ export default async function AdminOrgDetail({ params }: { params: Promise<{ id:
               {data.members.map((m) => (
                 <li key={m.id} className="flex items-center justify-between py-2">
                   <span>
-                    <span className="font-medium text-ink-900">{m.name}</span> <span className="text-asphalt-500">· {m.email}</span>
+                    <span className="font-medium text-fg">{m.name}</span> <span className="text-asphalt-500">· {m.email}</span>
                   </span>
                   {m.status === "SUSPENDED" ? <Badge tone="red">Suspenso</Badge> : <Badge tone="outline">{m.role === "OWNER" ? "Responsável" : m.role === "ADMIN" ? "Administrador" : "Operador"}</Badge>}
                 </li>
@@ -43,7 +43,7 @@ export default async function AdminOrgDetail({ params }: { params: Promise<{ id:
             <ul className="divide-y divide-asphalt-100 text-sm">
               {data.facilities.map((f) => (
                 <li key={f.id} className="flex items-center justify-between gap-2 py-2">
-                  <Link href={`/company/estacionamentos/${f.id}`} className="font-medium text-ink-900 hover:underline">
+                  <Link href={`/company/estacionamentos/${f.id}`} className="font-medium text-fg hover:underline">
                     {f.name}
                   </Link>
                   <span className="flex items-center gap-2 text-asphalt-500">

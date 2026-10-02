@@ -49,7 +49,7 @@ export default async function HomePage() {
             { Icon: Eye, title: "Veja onde tem vaga", text: "Cada shopping mostra quantas vagas tem, quantas estão livres agora e em qual piso." },
             { Icon: Navigation, title: "Vá direto", text: "Abra a planta do shopping, veja o setor com vaga e toque em “Ir até lá”." },
           ].map(({ Icon, title, text }, i) => (
-            <li key={title} className="rounded-lg border border-asphalt-100 bg-white p-6">
+            <li key={title} className="rounded-lg border border-asphalt-100 bg-surface p-6">
               <span className="font-display text-sm font-bold text-asphalt-300">0{i + 1}</span>
               <Icon className="mt-3 size-7 text-green-600" aria-hidden />
               <h3 className="mt-4 text-lg font-semibold">{title}</h3>
@@ -59,7 +59,7 @@ export default async function HomePage() {
         </ol>
       </section>
 
-      <section aria-labelledby="dentro" className="border-y border-asphalt-100 bg-white">
+      <section aria-labelledby="dentro" className="border-y border-asphalt-100 bg-surface">
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2">
           <div>
             <p className="text-sm font-semibold tracking-wide text-green-600 uppercase">Planta do shopping</p>
@@ -72,7 +72,7 @@ export default async function HomePage() {
                 { Icon: Clock, t: "Horários e entradas do estacionamento sempre à mão" },
               ].map(({ Icon, t }) => (
                 <li key={t} className="flex gap-3">
-                  <Icon className="mt-0.5 size-5 shrink-0 text-ink-800" aria-hidden /> {t}
+                  <Icon className="mt-0.5 size-5 shrink-0 text-fg" aria-hidden /> {t}
                 </li>
               ))}
             </ul>
@@ -156,7 +156,7 @@ export default async function HomePage() {
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 rounded-xl bg-green-400 px-6 py-12 sm:px-12 md:flex-row md:items-center">
           <div>
             <h2 className="text-3xl font-semibold text-ink-950">Abra a Vagou e descubra onde tem vaga.</h2>
-            <p className="mt-2 text-ink-800">Grátis para motoristas. Sem cadastro para pesquisar.</p>
+            <p className="mt-2 text-fg">Grátis para motoristas. Sem cadastro para pesquisar.</p>
           </div>
           <div className="flex flex-wrap gap-3">
             <LinkButton href="/buscar" size="lg">

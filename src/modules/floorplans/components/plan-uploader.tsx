@@ -99,7 +99,7 @@ export function PlanUploader({ floorId, hasSpaces, compact, maxBytes }: { floorI
 
   if (stage !== "idle") {
     return (
-      <div role="status" aria-live="polite" className="flex flex-col items-center justify-center gap-3 rounded-xl border border-asphalt-100 bg-white px-6 py-14 text-center">
+      <div role="status" aria-live="polite" className="flex flex-col items-center justify-center gap-3 rounded-xl border border-asphalt-100 bg-surface px-6 py-14 text-center">
         <Loader2 className="size-8 animate-spin text-green-600" aria-hidden />
         <p className="text-lg font-semibold">{stage === "preparing" ? "Preparando o PDF…" : "Processando a planta…"}</p>
         <p className="max-w-sm text-sm text-asphalt-500">Estamos identificando setores, vagas, entradas e áreas de circulação. Isso leva alguns segundos.</p>
@@ -108,7 +108,7 @@ export function PlanUploader({ floorId, hasSpaces, compact, maxBytes }: { floorI
   }
 
   return (
-    <div className={cn("rounded-xl border border-asphalt-100 bg-white", compact ? "p-4" : "p-6")}>
+    <div className={cn("rounded-xl border border-asphalt-100 bg-surface", compact ? "p-4" : "p-6")}>
       {error && (
         <Alert tone="danger" className="mb-4">
           {error}
@@ -128,11 +128,11 @@ export function PlanUploader({ floorId, hasSpaces, compact, maxBytes }: { floorI
         className={cn(
           "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed px-6 text-center transition-colors has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-green-200",
           compact ? "py-6" : "py-12",
-          dragOver ? "border-green-500 bg-green-50" : "border-asphalt-200 hover:border-ink-700",
+          dragOver ? "border-green-500 bg-green-50" : "border-asphalt-200 hover:border-fg",
         )}
       >
         {file ? <FileImage className="size-8 text-green-600" aria-hidden /> : <Upload className="size-8 text-asphalt-400" aria-hidden />}
-        <span className="font-semibold text-ink-900">{file ? file.name : "Arraste a planta aqui ou clique para escolher"}</span>
+        <span className="font-semibold text-fg">{file ? file.name : "Arraste a planta aqui ou clique para escolher"}</span>
         <span className="text-sm text-asphalt-500">{file ? `${(file.size / 1024 / 1024).toFixed(1)} MB${file.size > maxBytes ? " · será otimizada antes do envio" : ""}` : "PNG, JPG ou PDF · arquivos grandes são otimizados automaticamente"}</span>
         <input ref={inputRef} type="file" accept=".png,.jpg,.jpeg,.pdf,image/png,image/jpeg,application/pdf" className="sr-only" onChange={(e) => pick(e.target.files?.[0])} />
       </label>

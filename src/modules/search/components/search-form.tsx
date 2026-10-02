@@ -61,7 +61,7 @@ export function SearchForm({ initial, variant = "hero", className, onSubmitted, 
 
   const hero = variant === "hero";
   return (
-    <form onSubmit={submit} role="search" aria-label="Buscar shoppings" className={cn(hero && "rounded-xl bg-white p-2 shadow-lg", className)}>
+    <form onSubmit={submit} role="search" aria-label="Buscar shoppings" className={cn(hero && "rounded-xl bg-surface p-2 shadow-lg", className)}>
       <div className={cn("flex gap-2", hero ? "flex-col sm:flex-row" : "")}>
         <div className="relative flex-1">
           <label htmlFor="destino" className="sr-only">
@@ -103,7 +103,7 @@ export function SearchForm({ initial, variant = "hero", className, onSubmitted, 
             className={cn(inputClasses, "pl-11", hero ? "h-13 border-transparent text-base hover:border-transparent" : "h-11")}
           />
           {open && suggestions.length > 0 && (
-            <ul id="destino-list" role="listbox" aria-label="Sugestões de destino" className="absolute z-[700] mt-1 max-h-80 w-full overflow-auto rounded-md border border-asphalt-100 bg-white py-1 shadow-lg">
+            <ul id="destino-list" role="listbox" aria-label="Sugestões de destino" className="absolute z-[700] mt-1 max-h-80 w-full overflow-auto rounded-md border border-asphalt-100 bg-surface py-1 shadow-lg">
               <li role="option" aria-selected={false} onMouseDown={(e) => { e.preventDefault(); nearMe(); }} className="flex cursor-pointer items-center gap-2.5 px-3 py-2.5 text-sm font-semibold text-green-700 hover:bg-asphalt-50">
                 <Crosshair className="size-4" aria-hidden /> Usar minha localização
               </li>
@@ -120,7 +120,7 @@ export function SearchForm({ initial, variant = "hero", className, onSubmitted, 
                   className={cn("flex cursor-pointer items-center gap-2.5 px-3 py-2.5 text-sm", i === active ? "bg-green-50" : "hover:bg-asphalt-50")}
                 >
                   <MapPin className="size-4 text-asphalt-400" aria-hidden />
-                  <span className="font-medium text-ink-900">{p.name}</span>
+                  <span className="font-medium text-fg">{p.name}</span>
                   <span className="text-asphalt-500">· {p.region}</span>
                 </li>
               ))}

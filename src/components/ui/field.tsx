@@ -1,8 +1,8 @@
 import { cn } from "@/lib/cn";
 
 export const inputClasses =
-  "w-full h-11 rounded-md border border-asphalt-200 bg-white px-3 text-[15px] text-asphalt-900 placeholder:text-asphalt-400 " +
-  "transition-colors hover:border-asphalt-300 focus:border-ink-700 focus:outline-none focus:ring-3 focus:ring-green-200 " +
+  "w-full h-11 rounded-md border border-asphalt-200 bg-surface px-3 text-[15px] text-asphalt-900 placeholder:text-asphalt-400 " +
+  "transition-colors hover:border-asphalt-300 focus:border-fg focus:outline-none focus:ring-3 focus:ring-green-200 " +
   "disabled:bg-asphalt-50 disabled:text-asphalt-400 aria-invalid:border-danger aria-invalid:ring-red-100";
 
 export function Input({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement>) {

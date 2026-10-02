@@ -17,7 +17,7 @@ export function LogoMark({ className, title }: { className?: string; title?: str
 
 /** Wordmark: "Vag" + pin as "o" + "u", recreated from the brand logo. */
 export function Logo({ className, inverted = false }: { className?: string; inverted?: boolean }) {
-  const ink = inverted ? "#FFFFFF" : "#17382A";
+  const ink = inverted ? "#FFFFFF" : "var(--color-fg)";
   return (
     <span className={cn("inline-flex items-end font-display leading-none font-bold tracking-[-0.04em] select-none", className)} aria-label="Vagou" role="img">
       <span aria-hidden className="relative" style={{ color: ink }}>

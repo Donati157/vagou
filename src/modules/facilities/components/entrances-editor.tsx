@@ -21,7 +21,7 @@ export function EntrancesEditor({ facilityId, initial, fallback }: { facilityId:
   const router = useRouter();
   const update = (i: number, patch: Partial<Entrance>) => setItems((r) => r.map((x, j) => (j === i ? { ...x, ...patch } : x)));
   return (
-    <section className="rounded-xl border border-asphalt-100 bg-white p-5">
+    <section className="rounded-xl border border-asphalt-100 bg-surface p-5">
       <h2 className="text-lg font-semibold">Entradas</h2>
       <p className="mt-1 text-sm text-asphalt-500">A entrada recomendada é usada no botão “Ir até lá”. Coordenadas em graus decimais.</p>
       {error && <Alert tone="danger" className="mt-4">{error}</Alert>}

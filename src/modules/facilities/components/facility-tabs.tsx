@@ -27,7 +27,7 @@ export function FacilityTabs({ facilityId }: { facilityId: string }) {
             key={t.seg}
             href={t.seg ? `${base}/${t.seg}` : base}
             aria-current={active ? "page" : undefined}
-            className={cn("-mb-px inline-flex h-11 items-center border-b-2 px-3 text-sm font-semibold whitespace-nowrap", active ? "border-ink-900 text-ink-900" : "border-transparent text-asphalt-500 hover:text-ink-900")}
+            className={cn("-mb-px inline-flex h-11 items-center border-b-2 px-3 text-sm font-semibold whitespace-nowrap", active ? "border-fg text-fg" : "border-transparent text-asphalt-500 hover:text-fg")}
           >
             {t.label}
           </Link>

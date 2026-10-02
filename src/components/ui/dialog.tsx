@@ -43,7 +43,7 @@ export function Dialog({ open, onClose, title, description, children, footer, va
     >
       <div
         className={cn(
-          "flex w-full flex-col bg-white shadow-lg animate-slide-up",
+          "flex w-full flex-col bg-surface shadow-lg animate-slide-up",
           variant === "modal" ? "max-h-[90dvh] rounded-t-xl sm:max-w-lg sm:rounded-xl" : "max-h-[85dvh] rounded-t-xl sm:h-full sm:max-h-none sm:max-w-md sm:rounded-none",
           className,
         )}

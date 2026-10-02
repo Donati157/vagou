@@ -96,7 +96,7 @@ export default async function CompanyHome({ searchParams }: { searchParams: Prom
                 {facilities.map((f) => (
                   <TR key={f.id}>
                     <TD>
-                      <Link href={`/company/estacionamentos/${f.id}`} className="font-semibold text-ink-900 hover:underline">{f.name}</Link>
+                      <Link href={`/company/estacionamentos/${f.id}`} className="font-semibold text-fg hover:underline">{f.name}</Link>
                       <p className="text-xs text-asphalt-500">
                         {FACILITY_KIND_LABEL[f.kind]} · {f.neighborhood} · {formatNumber(f.availability.capacity)} vagas
                       </p>

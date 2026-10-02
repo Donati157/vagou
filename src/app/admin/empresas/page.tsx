@@ -37,7 +37,7 @@ export default async function AdminOrgs({ searchParams }: { searchParams: Promis
               {data.rows.map((o) => (
                 <TR key={o.id}>
                   <TD>
-                    <Link href={`/admin/empresas/${o.id}`} className="font-semibold text-ink-900 hover:underline">
+                    <Link href={`/admin/empresas/${o.id}`} className="font-semibold text-fg hover:underline">
                       {o.name}
                     </Link>
                   </TD>

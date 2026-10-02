@@ -45,7 +45,7 @@ export default async function AdminSources({ searchParams }: { searchParams: Pro
                 return (
                   <TR key={d.id}>
                     <TD>
-                      <Link href={`/company/estacionamentos/${d.facilityId}/dados`} className="font-semibold text-ink-900 hover:underline">
+                      <Link href={`/company/estacionamentos/${d.facilityId}/dados`} className="font-semibold text-fg hover:underline">
                         {d.facility}
                       </Link>
                       <p className="text-xs text-asphalt-500">{d.org}</p>

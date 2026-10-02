@@ -18,8 +18,8 @@ const axisProps = { stroke: "#b9c2be", tick: { fill: "#67736e", fontSize: 12 }, 
 function ChartTooltip({ active, payload, label, format }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string; format: ValueFormat }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-md border border-asphalt-100 bg-white px-3 py-2 text-sm shadow-md">
-      <p className="mb-1 font-semibold text-ink-900">{label}</p>
+    <div className="rounded-md border border-asphalt-100 bg-surface px-3 py-2 text-sm shadow-md">
+      <p className="mb-1 font-semibold text-fg">{label}</p>
       {payload.map((p) => (
         <p key={p.name} className="flex items-center gap-2 text-asphalt-700">
           <span className="size-2.5 rounded-full" style={{ background: p.color }} aria-hidden />
@@ -53,7 +53,7 @@ export function Chart({ data, xKey, series, format, kind = "bar", stacked, heigh
     <figure>
       <figcaption className="sr-only">{title}</figcaption>
       <div className="mb-2 flex justify-end">
-        <button type="button" onClick={() => setTable((t) => !t)} className="inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-xs font-semibold text-asphalt-500 hover:bg-asphalt-50 hover:text-ink-900" aria-pressed={table}>
+        <button type="button" onClick={() => setTable((t) => !t)} className="inline-flex items-center gap-1.5 rounded-sm px-2 py-1 text-xs font-semibold text-asphalt-500 hover:bg-asphalt-50 hover:text-fg" aria-pressed={table}>
           <Table2 className="size-3.5" aria-hidden /> {table ? "Ver gráfico" : "Ver tabela"}
         </button>
       </div>

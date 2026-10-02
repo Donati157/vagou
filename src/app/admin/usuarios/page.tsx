@@ -49,7 +49,7 @@ export default async function AdminUsers({ searchParams }: { searchParams: Promi
               {data.rows.map((u) => (
                 <TR key={u.id}>
                   <TD>
-                    <p className="font-semibold text-ink-900">{u.name ?? "—"}</p>
+                    <p className="font-semibold text-fg">{u.name ?? "—"}</p>
                     <p className="text-xs text-asphalt-500">{u.email}</p>
                   </TD>
                   <TD>{ROLE_LABEL[u.role]}</TD>

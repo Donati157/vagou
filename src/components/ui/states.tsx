@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 
 export function EmptyState({ icon, title, description, action, className }: { icon?: React.ReactNode; title: string; description?: string; action?: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("flex flex-col items-center justify-center rounded-lg border border-dashed border-asphalt-200 bg-white px-6 py-12 text-center", className)}>
+    <div className={cn("flex flex-col items-center justify-center rounded-lg border border-dashed border-asphalt-200 bg-surface px-6 py-12 text-center", className)}>
       <div className="mb-4 grid size-12 place-items-center rounded-full bg-green-50 text-green-600">{icon ?? <Inbox className="size-6" aria-hidden />}</div>
       <h3 className="text-lg font-semibold">{title}</h3>
       {description && <p className="mt-1 max-w-sm text-[15px] text-asphalt-500">{description}</p>}
@@ -14,7 +14,7 @@ export function EmptyState({ icon, title, description, action, className }: { ic
 
 export function ErrorState({ title = "Algo deu errado", description = "Não foi possível carregar esta página agora. Tente novamente em instantes.", action, className }: { title?: string; description?: string; action?: React.ReactNode; className?: string }) {
   return (
-    <div role="alert" className={cn("flex flex-col items-center justify-center rounded-lg border border-red-100 bg-white px-6 py-12 text-center", className)}>
+    <div role="alert" className={cn("flex flex-col items-center justify-center rounded-lg border border-red-100 bg-surface px-6 py-12 text-center", className)}>
       <div className="mb-4 grid size-12 place-items-center rounded-full bg-red-50 text-danger">
         <AlertTriangle className="size-6" aria-hidden />
       </div>
@@ -56,7 +56,7 @@ export function Alert({ tone = "info", title, children, className, icon }: { ton
   const tones = {
     info: "bg-blue-50 border-blue-100 text-blue-900",
     success: "bg-green-50 border-green-100 text-green-700",
-    warning: "bg-status-reserved-bg border-amber-200 text-[#7a5200]",
+    warning: "bg-status-reserved-bg border-amber-200 text-reserved-fg",
     danger: "bg-red-50 border-red-100 text-red-800",
   };
   return (

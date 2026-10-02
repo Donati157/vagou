@@ -44,7 +44,7 @@ export function DataSourcePanel({ facilityId, source, hasDigitalMap, capacity }:
   return (
     <div className="space-y-6">
       {error && <Alert tone="danger">{error}</Alert>}
-      <section className="rounded-xl border border-asphalt-100 bg-white p-5">
+      <section className="rounded-xl border border-asphalt-100 bg-surface p-5">
         <h2 className="text-lg font-semibold">Fonte atual</h2>
         {source ? (
           <p className="mt-2 flex flex-wrap items-center gap-2 text-[15px]">
@@ -63,7 +63,7 @@ export function DataSourcePanel({ facilityId, source, hasDigitalMap, capacity }:
       </section>
 
       {source?.kind === "MANUAL" && source.granularity === "AGGREGATE" && (
-        <section className="rounded-xl border border-asphalt-100 bg-white p-5">
+        <section className="rounded-xl border border-asphalt-100 bg-surface p-5">
           <h2 className="text-lg font-semibold">Informar vagas livres agora</h2>
           <p className="mt-1 text-sm text-asphalt-500">Capacidade: {capacity} vagas. A contagem fica visível por até 3 horas.</p>
           <div className="mt-3 flex flex-wrap items-end gap-3">
@@ -77,15 +77,15 @@ export function DataSourcePanel({ facilityId, source, hasDigitalMap, capacity }:
         </section>
       )}
 
-      <section className="rounded-xl border border-asphalt-100 bg-white p-5">
+      <section className="rounded-xl border border-asphalt-100 bg-surface p-5">
         <h2 className="text-lg font-semibold">Conectar fonte</h2>
         <p className="mt-1 text-sm text-asphalt-500">{hasDigitalMap ? "Este shopping tem mapa digital: a ocupação será acompanhada vaga a vaga." : "Sem mapa digital: a ocupação será por contagem de vagas livres."}</p>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
           {OPTIONS.map((o) => {
             const current = source?.kind === o.kind;
             return (
-              <li key={o.kind} className={cn("flex flex-col rounded-lg border p-4", current ? "border-ink-900 bg-green-50" : "border-asphalt-100", !o.available && "opacity-70")}>
-                <p className="flex items-center gap-2 font-semibold text-ink-900">
+              <li key={o.kind} className={cn("flex flex-col rounded-lg border p-4", current ? "border-fg bg-green-50" : "border-asphalt-100", !o.available && "opacity-70")}>
+                <p className="flex items-center gap-2 font-semibold text-fg">
                   <o.Icon className="size-5 text-asphalt-500" aria-hidden /> {o.label}
                 </p>
                 <p className="mt-1 flex-1 text-sm text-asphalt-600">{o.desc}</p>

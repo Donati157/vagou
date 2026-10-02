@@ -5,7 +5,7 @@ import type { AvailabilityState, PublicAvailability } from "../availability";
 
 export const AVAILABILITY_STYLE: Record<AvailabilityState, { bg: string; fg: string; pin: string; pinFg: string; Icon: typeof ParkingSquare }> = {
   AVAILABLE: { bg: "bg-status-available-bg", fg: "text-status-available", pin: "#2f8048", pinFg: "#ffffff", Icon: ParkingSquare },
-  FEW: { bg: "bg-status-reserved-bg", fg: "text-[#8a5d00]", pin: "#e8a317", pinFg: "#3b2a00", Icon: TriangleAlert },
+  FEW: { bg: "bg-status-reserved-bg", fg: "text-reserved-fg", pin: "#e8a317", pinFg: "#3b2a00", Icon: TriangleAlert },
   FULL: { bg: "bg-status-occupied-bg", fg: "text-status-occupied", pin: "#d63c3c", pinFg: "#ffffff", Icon: CircleSlash },
   UNKNOWN: { bg: "bg-asphalt-100", fg: "text-asphalt-600", pin: "#8c9893", pinFg: "#ffffff", Icon: HelpCircle },
 };
@@ -22,7 +22,7 @@ export function AvailabilityPill({ a, size = "md", showUpdated = false, classNam
         {a.state === "FEW" && <span className="sr-only">(poucas vagas)</span>}
       </span>
       {a.simulated && a.state !== "UNKNOWN" && (
-        <span title="Dados simulados para demonstração — não representam a ocupação real." className="inline-flex items-center gap-1 text-xs font-semibold text-[#7a5200]">
+        <span title="Dados simulados para demonstração — não representam a ocupação real." className="inline-flex items-center gap-1 text-xs font-semibold text-reserved-fg">
           <FlaskConical className="size-3.5" aria-hidden /> simulado
         </span>
       )}

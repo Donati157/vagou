@@ -14,7 +14,7 @@ export function LinkTabs({ tabs, active, label }: { tabs: Array<{ key: string; l
             aria-current={isActive ? "page" : undefined}
             className={cn(
               "relative -mb-px inline-flex h-11 items-center gap-2 border-b-2 px-3 text-sm font-semibold whitespace-nowrap transition-colors",
-              isActive ? "border-ink-900 text-ink-900" : "border-transparent text-asphalt-500 hover:text-ink-900",
+              isActive ? "border-fg text-fg" : "border-transparent text-asphalt-500 hover:text-fg",
             )}
           >
             {t.label}

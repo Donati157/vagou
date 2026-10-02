@@ -39,7 +39,7 @@ export function MallPlan({ slug, floors, simulated }: { slug: string; floors: Fl
               aria-selected={on}
               aria-controls="planta-piso"
               onClick={() => setActive(f.floorId)}
-              className={cn("inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold", on ? "border-ink-900 bg-ink-900 text-white" : "border-asphalt-200 bg-white text-asphalt-700 hover:border-ink-700")}
+              className={cn("inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold", on ? "border-fg bg-ink-900 text-white" : "border-asphalt-200 bg-surface text-asphalt-700 hover:border-fg")}
             >
               <Layers className="size-4" aria-hidden />
               {f.name}
@@ -54,8 +54,8 @@ export function MallPlan({ slug, floors, simulated }: { slug: string; floors: Fl
       <div id="planta-piso" role="tabpanel" aria-label={`Planta do piso ${floor.name}`} className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-asphalt-600">
           <p>
-            Piso <strong className="text-ink-900">{floor.name}</strong>: {floor.counts.available} livres de {total} vagas
-            {simulated && <span className="ml-2 text-xs font-semibold text-[#7a5200]">(status simulado)</span>}
+            Piso <strong className="text-fg">{floor.name}</strong>: {floor.counts.available} livres de {total} vagas
+            {simulated && <span className="ml-2 text-xs font-semibold text-reserved-fg">(status simulado)</span>}
           </p>
           <Link href={`/estacionamentos/${slug}/pisos/${floor.floorId}`} className="inline-flex items-center gap-1.5 font-semibold text-green-700 hover:underline">
             <Expand className="size-4" aria-hidden /> Ver planta em tela cheia
@@ -66,11 +66,11 @@ export function MallPlan({ slug, floors, simulated }: { slug: string; floors: Fl
         {floor.sectors.length > 0 && (
           <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4" aria-label="Vagas livres por setor">
             {floor.sectors.map((s) => (
-              <li key={s.id} className="flex items-center justify-between rounded-md border border-asphalt-100 bg-white px-3 py-2 text-sm">
+              <li key={s.id} className="flex items-center justify-between rounded-md border border-asphalt-100 bg-surface px-3 py-2 text-sm">
                 <span className="flex items-center gap-2">
                   <span className="size-3 rounded-sm" style={{ background: s.color }} aria-hidden /> Setor {s.name}
                 </span>
-                <span className="font-semibold text-ink-900">{s.free === 0 ? "Lotado" : `${s.free}/${s.total}`}</span>
+                <span className="font-semibold text-fg">{s.free === 0 ? "Lotado" : `${s.free}/${s.total}`}</span>
               </li>
             ))}
           </ul>

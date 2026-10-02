@@ -4,7 +4,7 @@ import { cn } from "@/lib/cn";
 
 export function Table({ className, ...props }: React.TableHTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-asphalt-100 bg-white">
+    <div className="overflow-x-auto rounded-lg border border-asphalt-100 bg-surface">
       <table className={cn("w-full text-left text-sm", className)} {...props} />
     </div>
   );
@@ -25,7 +25,7 @@ export function TD({ className, ...props }: React.TdHTMLAttributes<HTMLTableCell
 /** Server-friendly pagination built from links (keeps current query params). */
 export function Pagination({ page, pageCount, total, buildHref }: { page: number; pageCount: number; total: number; buildHref: (page: number) => string }) {
   if (pageCount <= 1) return <p className="mt-3 text-sm text-asphalt-500">{total} resultado(s)</p>;
-  const linkCls = "inline-flex h-9 items-center gap-1 rounded-sm border border-asphalt-200 bg-white px-3 text-sm font-medium hover:bg-asphalt-50";
+  const linkCls = "inline-flex h-9 items-center gap-1 rounded-sm border border-asphalt-200 bg-surface px-3 text-sm font-medium hover:bg-asphalt-50";
   return (
     <nav aria-label="Paginação" className="mt-3 flex items-center justify-between gap-3">
       <p className="text-sm text-asphalt-500">

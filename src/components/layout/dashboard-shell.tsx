@@ -10,7 +10,7 @@ export async function DashboardShell({ area, items, children, context }: { area:
   const user = (await getCurrentUser())!;
   return (
     <div className="min-h-dvh lg:grid lg:grid-cols-[256px_1fr]">
-      <aside className="hidden border-r border-asphalt-100 bg-white lg:flex lg:flex-col">
+      <aside className="hidden border-r border-asphalt-100 bg-surface lg:flex lg:flex-col">
         <div className="flex h-16 items-center px-5">
           <Link href="/" aria-label="Vagou — página inicial" className="text-[26px]">
             <Logo />

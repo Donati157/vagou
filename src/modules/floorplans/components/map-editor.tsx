@@ -224,7 +224,7 @@ export function MapEditor({ floorId, imageUrl, ratio, spaces, sectors, elements,
     <div className="grid gap-4 xl:grid-cols-[1fr_300px]">
       <div className="min-w-0">
         {/* Toolbar */}
-        <div role="toolbar" aria-label="Ferramentas do editor" className="mb-3 flex flex-wrap items-center gap-2 rounded-lg border border-asphalt-100 bg-white p-2">
+        <div role="toolbar" aria-label="Ferramentas do editor" className="mb-3 flex flex-wrap items-center gap-2 rounded-lg border border-asphalt-100 bg-surface p-2">
           <div className="flex rounded-md border border-asphalt-200 p-0.5">
             <button type="button" aria-pressed={tool === "select"} onClick={() => setTool("select")} className={cn("flex h-8 items-center gap-1.5 rounded-sm px-2.5 text-sm font-semibold", tool === "select" ? "bg-ink-900 text-white" : "text-asphalt-600")} disabled={!!readOnlyReason}>
               <MousePointer2 className="size-4" aria-hidden /> Selecionar
@@ -319,10 +319,10 @@ export function MapEditor({ floorId, imageUrl, ratio, spaces, sectors, elements,
       </div>
 
       {/* Inspector */}
-      <aside className="rounded-lg border border-asphalt-100 bg-white p-4" aria-label="Propriedades da vaga">
+      <aside className="rounded-lg border border-asphalt-100 bg-surface p-4" aria-label="Propriedades da vaga">
         {selectedItems.length === 0 ? (
           <div className="space-y-3 text-sm text-asphalt-600">
-            <p className="font-semibold text-ink-900">Nenhuma vaga selecionada</p>
+            <p className="font-semibold text-fg">Nenhuma vaga selecionada</p>
             <p>Selecione uma vaga no mapa para editar nome, setor, tipo, status, posição e rotação.</p>
             <Button size="sm" variant="secondary" onClick={() => setTool("add")} disabled={!!readOnlyReason}>
               <Plus className="size-4" aria-hidden /> Adicionar vaga
@@ -344,7 +344,7 @@ export function MapEditor({ floorId, imageUrl, ratio, spaces, sectors, elements,
           </div>
         ) : (
           <div className="space-y-3">
-            <p className="font-semibold text-ink-900">{single ? `Vaga ${single.code}` : `${selectedItems.length} vagas selecionadas`}</p>
+            <p className="font-semibold text-fg">{single ? `Vaga ${single.code}` : `${selectedItems.length} vagas selecionadas`}</p>
             {single && (
               <label className="block">
                 <span className="mb-1 block text-xs font-semibold text-asphalt-500">Nome</span>

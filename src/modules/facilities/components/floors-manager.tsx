@@ -59,7 +59,7 @@ export function FloorsManager({ facilityId, floors }: { facilityId: string; floo
       ) : (
         <ul className="space-y-3">
           {floors.map((f) => (
-            <li key={f.id} className="rounded-xl border border-asphalt-100 bg-white p-4">
+            <li key={f.id} className="rounded-xl border border-asphalt-100 bg-surface p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <h3 className="flex items-center gap-2 text-lg font-semibold">

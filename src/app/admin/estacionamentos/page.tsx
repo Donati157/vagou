@@ -46,7 +46,7 @@ export default async function AdminFacilities({ searchParams }: { searchParams: 
               {data.rows.map((f) => (
                 <TR key={f.id}>
                   <TD>
-                    <Link href={`/company/estacionamentos/${f.id}`} className="font-semibold text-ink-900 hover:underline">
+                    <Link href={`/company/estacionamentos/${f.id}`} className="font-semibold text-fg hover:underline">
                       {f.name}
                     </Link>
                     <p className="text-xs text-asphalt-500">

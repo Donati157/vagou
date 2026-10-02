@@ -15,7 +15,7 @@ const TOGGLES = [
 ] as const;
 
 const selectCls =
-  "h-9 rounded-full border border-asphalt-200 bg-white pr-8 pl-3 text-sm font-medium text-asphalt-700 hover:border-asphalt-300 appearance-none bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 fill=%22none%22 stroke=%22%2367736e%22 stroke-width=%222%22 viewBox=%220 0 24 24%22><path d=%22m6 9 6 6 6-6%22/></svg>')] bg-[length:14px] bg-[right_10px_center] bg-no-repeat";
+  "h-9 rounded-full border border-asphalt-200 bg-surface pr-8 pl-3 text-sm font-medium text-asphalt-700 hover:border-asphalt-300 appearance-none bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 fill=%22none%22 stroke=%22%2367736e%22 stroke-width=%222%22 viewBox=%220 0 24 24%22><path d=%22m6 9 6 6 6-6%22/></svg>')] bg-[length:14px] bg-[right_10px_center] bg-no-repeat";
 
 /** Filter controls write straight to the URL (shareable searches, server-side filtering). */
 export function SearchFilters() {
@@ -44,7 +44,7 @@ export function SearchFilters() {
             onClick={() => set(key, on ? null : "1")}
             className={cn(
               "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-sm font-medium transition-colors",
-              on ? "border-ink-900 bg-ink-900 text-white" : "border-asphalt-200 bg-white text-asphalt-700 hover:border-asphalt-300",
+              on ? "border-fg bg-ink-900 text-white" : "border-asphalt-200 bg-surface text-asphalt-700 hover:border-asphalt-300",
             )}
           >
             <Icon className="size-4" aria-hidden /> {label}

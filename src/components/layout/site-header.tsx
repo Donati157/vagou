@@ -24,7 +24,7 @@ export async function SiteHeader({ variant = "solid" }: { variant?: "solid" | "t
               className={
                 variant === "transparent"
                   ? "rounded-md px-3 py-2 text-[15px] font-medium text-white/85 hover:bg-white/10 hover:text-white"
-                  : "rounded-md px-3 py-2 text-[15px] font-medium text-asphalt-600 hover:bg-asphalt-50 hover:text-ink-900"
+                  : "rounded-md px-3 py-2 text-[15px] font-medium text-asphalt-600 hover:bg-asphalt-50 hover:text-fg"
               }
             >
               {l.label}

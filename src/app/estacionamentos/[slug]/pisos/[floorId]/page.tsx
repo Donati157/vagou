@@ -37,7 +37,7 @@ export default async function FloorPage({ params }: Props) {
     <>
       <SiteHeader />
       <main id="conteudo" className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
-        <Link href={`/estacionamentos/${f.slug}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-asphalt-600 hover:text-ink-900">
+        <Link href={`/estacionamentos/${f.slug}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-asphalt-600 hover:text-fg">
           <ArrowLeft className="size-4" aria-hidden /> {f.name}
         </Link>
         <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
@@ -49,7 +49,7 @@ export default async function FloorPage({ params }: Props) {
           </div>
           <nav aria-label="Outros pisos" className="flex flex-wrap gap-2">
             {f.floorsWithMap.filter((x) => x.hasMap).map((x) => (
-              <Link key={x.floorId} href={`/estacionamentos/${f.slug}/pisos/${x.floorId}`} aria-current={x.floorId === floor.id ? "page" : undefined} className={x.floorId === floor.id ? "rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white" : "rounded-full border border-asphalt-200 bg-white px-4 py-2 text-sm font-semibold hover:border-ink-700"}>
+              <Link key={x.floorId} href={`/estacionamentos/${f.slug}/pisos/${x.floorId}`} aria-current={x.floorId === floor.id ? "page" : undefined} className={x.floorId === floor.id ? "rounded-full bg-ink-900 px-4 py-2 text-sm font-semibold text-white" : "rounded-full border border-asphalt-200 bg-surface px-4 py-2 text-sm font-semibold hover:border-fg"}>
                 {x.name} · {x.counts.available === 0 ? "Lotado" : `${x.counts.available} livres`}
               </Link>
             ))}
@@ -59,30 +59,30 @@ export default async function FloorPage({ params }: Props) {
           <div className="space-y-3">
             <FloorMapView imageUrl={plan.imageUrl} ratio={ratio} spaces={spaces} elements={elements} route={route} />
             <SpaceLegend />
-            {a.simulated && <p className="text-xs text-[#7a5200]">Status das vagas simulado para demonstração.</p>}
+            {a.simulated && <p className="text-xs text-reserved-fg">Status das vagas simulado para demonstração.</p>}
           </div>
           <aside className="space-y-4">
             {best && best.free > 0 && (
               <section className="rounded-lg border border-green-200 bg-green-50 p-4">
-                <h2 className="font-semibold text-ink-900">Setor recomendado: {best.name}</h2>
+                <h2 className="font-semibold text-fg">Setor recomendado: {best.name}</h2>
                 <p className="mt-1 text-sm text-asphalt-700">
                   {best.free} vagas livres agora. {entrance ? `Entre pela ${(entrance.label ?? "entrada principal").toLowerCase()} e siga a rota tracejada.` : "Siga a sinalização até o setor."}
                 </p>
                 <p className="mt-2 text-xs text-asphalt-500">Rota ilustrativa — ainda não há navegação interna em tempo real.</p>
               </section>
             )}
-            <section className="rounded-lg border border-asphalt-100 bg-white p-4">
+            <section className="rounded-lg border border-asphalt-100 bg-surface p-4">
               <h2 className="font-semibold">Vagas livres por setor</h2>
               <ul className="mt-3 space-y-2 text-sm">
                 {bySector.map((s) => (
                   <li key={s.id} className="flex items-center justify-between">
                     <span className="flex items-center gap-2"><span className="size-3 rounded-sm" style={{ background: s.color }} aria-hidden /> Setor {s.name}</span>
-                    <span className="font-semibold text-ink-900">{s.free === 0 ? "Lotado" : `${s.free} de ${s.total}`}</span>
+                    <span className="font-semibold text-fg">{s.free === 0 ? "Lotado" : `${s.free} de ${s.total}`}</span>
                   </li>
                 ))}
               </ul>
             </section>
-            <section className="rounded-lg border border-asphalt-100 bg-white p-4">
+            <section className="rounded-lg border border-asphalt-100 bg-surface p-4">
               <h2 className="font-semibold">Vagas especiais livres</h2>
               <ul className="mt-3 space-y-1.5 text-sm">
                 {freeByType.map(({ t, n }) => (

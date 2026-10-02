@@ -43,7 +43,7 @@ export default async function FacilityOverview({ params }: { params: Promise<{ i
                 return (
                   <li key={fl.floorId} className="rounded-lg border border-asphalt-100 p-4">
                     <p className="flex items-center gap-2 font-semibold"><Layers className="size-4 text-asphalt-400" aria-hidden /> {fl.name}</p>
-                    <p className="mt-2 font-display text-2xl font-bold text-ink-900">{fl.counts.available === 0 ? "Lotado" : `${fl.counts.available} livres`}</p>
+                    <p className="mt-2 font-display text-2xl font-bold text-fg">{fl.counts.available === 0 ? "Lotado" : `${fl.counts.available} livres`}</p>
                     <div className="mt-2 flex h-2 overflow-hidden rounded-full bg-asphalt-100" role="img" aria-label={`${fl.counts.occupied + fl.counts.reserved} de ${total} ocupadas`}>
                       <span className="bg-status-occupied" style={{ width: `${(fl.counts.occupied / total) * 100}%` }} />
                       <span className="bg-[#e8a317]" style={{ width: `${(fl.counts.reserved / total) * 100}%` }} />
@@ -63,8 +63,8 @@ export default async function FacilityOverview({ params }: { params: Promise<{ i
           { href: `${base}/analytics`, t: "Analytics", d: "Ocupação por hora, histórico e capacidade ociosa" },
           { href: `${base}/dados`, t: "Fonte de dados", d: f.source ? "Gerenciar a origem da ocupação" : "Conecte uma fonte de ocupação" },
         ].map((l) => (
-          <Link key={l.href} href={l.href} className="group rounded-lg border border-asphalt-100 bg-white p-4 hover:border-asphalt-300">
-            <p className="flex items-center justify-between font-semibold text-ink-900">{l.t} <ArrowRight className="size-4 text-asphalt-400 group-hover:text-ink-900" aria-hidden /></p>
+          <Link key={l.href} href={l.href} className="group rounded-lg border border-asphalt-100 bg-surface p-4 hover:border-asphalt-300">
+            <p className="flex items-center justify-between font-semibold text-fg">{l.t} <ArrowRight className="size-4 text-asphalt-400 group-hover:text-fg" aria-hidden /></p>
             <p className="mt-1 text-sm text-asphalt-500">{l.d}</p>
           </Link>
         ))}

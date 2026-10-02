@@ -84,7 +84,7 @@ export function FacilityForm({ facilityId, initial, organizations }: { facilityI
   );
 
   return (
-    <form onSubmit={onSubmit} className="rounded-xl border border-asphalt-100 bg-white p-5 sm:p-7" noValidate>
+    <form onSubmit={onSubmit} className="rounded-xl border border-asphalt-100 bg-surface p-5 sm:p-7" noValidate>
       {serverError && (
         <Alert tone="danger" className="mb-6" icon={<AlertCircle className="size-4" />}>
           {serverError}

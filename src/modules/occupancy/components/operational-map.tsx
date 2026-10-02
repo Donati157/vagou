@@ -124,7 +124,7 @@ export function OperationalMap({ facilityId, initial }: { facilityId: string; in
             <Metric label="Ocupação" value={state.live.occupancy === null ? "—" : formatPercent(state.live.occupancy)} />
             <Metric label="Atualizado" value={state.live.updatedAt ? formatRelative(new Date(state.live.updatedAt)) : "—"} />
           </section>
-          <div className="rounded-xl border border-dashed border-asphalt-200 bg-white p-6 text-center">
+          <div className="rounded-xl border border-dashed border-asphalt-200 bg-surface p-6 text-center">
             <Layers className="mx-auto size-8 text-asphalt-400" aria-hidden />
             <p className="mt-2 font-semibold">Mapa operacional indisponível</p>
             <p className="mt-1 text-sm text-asphalt-500">Publique o mapa digital de um piso para acompanhar a ocupação vaga a vaga.</p>
@@ -144,7 +144,7 @@ export function OperationalMap({ facilityId, initial }: { facilityId: string; in
           </section>
 
           {/* filters */}
-          <div className="flex flex-wrap items-center gap-2 rounded-lg border border-asphalt-100 bg-white p-2" role="group" aria-label="Filtros">
+          <div className="flex flex-wrap items-center gap-2 rounded-lg border border-asphalt-100 bg-surface p-2" role="group" aria-label="Filtros">
             <nav aria-label="Pisos" className="flex flex-wrap gap-1">
               {state.floors.map((f) => {
                 const fc = state.live.floors.find((x) => x.floorId === f.id);
@@ -186,7 +186,7 @@ export function OperationalMap({ facilityId, initial }: { facilityId: string; in
                       return n;
                     })
                   }
-                  className={cn("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm font-medium", on ? "border-ink-900 bg-ink-900 text-white" : "border-asphalt-200 text-asphalt-700")}
+                  className={cn("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm font-medium", on ? "border-fg bg-ink-900 text-white" : "border-asphalt-200 text-asphalt-700")}
                 >
                   <st.Icon className="size-3.5" aria-hidden /> {SPACE_STATUS_LABEL[s]}
                 </button>
@@ -217,7 +217,7 @@ export function OperationalMap({ facilityId, initial }: { facilityId: string; in
           </div>
 
           <div className="grid gap-4 xl:grid-cols-[1fr_320px]">
-            <div className="relative w-full overflow-hidden rounded-xl border border-asphalt-100 bg-white" style={{ aspectRatio: `${1 / map.ratio}` }}>
+            <div className="relative w-full overflow-hidden rounded-xl border border-asphalt-100 bg-surface" style={{ aspectRatio: `${1 / map.ratio}` }}>
               {map.imageUrl && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={map.imageUrl} alt="" className="pointer-events-none absolute inset-0 h-full w-full opacity-60" />
@@ -264,10 +264,10 @@ export function OperationalMap({ facilityId, initial }: { facilityId: string; in
               </svg>
             </div>
 
-            <aside className={cn("rounded-xl border border-asphalt-100 bg-white p-4", !selected && "hidden xl:block")} aria-label="Detalhes da vaga" aria-live="polite">
+            <aside className={cn("rounded-xl border border-asphalt-100 bg-surface p-4", !selected && "hidden xl:block")} aria-label="Detalhes da vaga" aria-live="polite">
               {!selected ? (
                 <div className="text-sm text-asphalt-600">
-                  <p className="font-semibold text-ink-900">Selecione uma vaga</p>
+                  <p className="font-semibold text-fg">Selecione uma vaga</p>
                   <p className="mt-1">Clique em uma vaga no mapa para ver detalhes, histórico e alterar o status manualmente.</p>
                   <ul className="mt-4 space-y-1.5">
                     {map.sectors.map((sec) => {
@@ -277,7 +277,7 @@ export function OperationalMap({ facilityId, initial }: { facilityId: string; in
                           <span className="flex items-center gap-2">
                             <span className="size-3 rounded-sm" style={{ background: sec.color }} aria-hidden /> Setor {sec.name}
                           </span>
-                          <span className="font-semibold text-ink-900">
+                          <span className="font-semibold text-fg">
                             {mine.filter((s) => s.status === "AVAILABLE").length}/{mine.length} livres
                           </span>
                         </li>
@@ -290,7 +290,7 @@ export function OperationalMap({ facilityId, initial }: { facilityId: string; in
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <p className="text-xs text-asphalt-500">Vaga</p>
-                      <p className="font-display text-2xl font-bold text-ink-900">{selected.code}</p>
+                      <p className="font-display text-2xl font-bold text-fg">{selected.code}</p>
                     </div>
                     <button onClick={() => setSelectedId(null)} className="grid size-8 place-items-center rounded-full hover:bg-asphalt-100" aria-label="Fechar detalhes">
                       <X className="size-4" aria-hidden />

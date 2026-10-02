@@ -24,14 +24,14 @@ export const FacilityCard = forwardRef<HTMLElement, Props>(function FacilityCard
       onClick={() => onSelect?.(r.id)}
       aria-current={selected ? "true" : undefined}
       className={cn(
-        "group rounded-lg border bg-white transition-all",
+        "group rounded-lg border bg-surface transition-all",
         compact ? "p-3" : "p-4",
-        selected ? "border-ink-900 shadow-md ring-2 ring-green-300" : "border-asphalt-100 hover:border-asphalt-300 hover:shadow-sm",
+        selected ? "border-fg shadow-md ring-2 ring-green-300" : "border-asphalt-100 hover:border-asphalt-300 hover:shadow-sm",
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className={cn("font-semibold text-ink-900", compact ? "line-clamp-1 text-[15px]" : "text-base leading-snug")}>{r.name}</h3>
+          <h3 className={cn("font-semibold text-fg", compact ? "line-clamp-1 text-[15px]" : "text-base leading-snug")}>{r.name}</h3>
           <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-asphalt-500">
             <span>{r.neighborhood}</span>
             {r.distanceMeters !== null && (
@@ -43,7 +43,7 @@ export const FacilityCard = forwardRef<HTMLElement, Props>(function FacilityCard
         </div>
         {r.availability.capacity > 0 && (
           <p className="shrink-0 text-right">
-            <span className="font-display text-lg leading-none font-bold text-ink-900">{formatNumber(r.availability.capacity)}</span>
+            <span className="font-display text-lg leading-none font-bold text-fg">{formatNumber(r.availability.capacity)}</span>
             <span className="block text-[11px] text-asphalt-500">vagas no total</span>
           </p>
         )}

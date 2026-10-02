@@ -44,7 +44,7 @@ export default function EmpresasPage() {
             { Icon: BarChart3, t: "Inteligência", d: "Entenda a ocupação por hora, piso e setor, os picos de demanda e a capacidade ociosa." },
             { Icon: MapPinned, t: "Visibilidade", d: "Mostre a disponibilidade para motoristas na Vagou e direcione-os à entrada certa." },
           ].map(({ Icon, t, d }) => (
-            <article key={t} className="rounded-lg border border-asphalt-100 bg-white p-6">
+            <article key={t} className="rounded-lg border border-asphalt-100 bg-surface p-6">
               <Icon className="size-7 text-green-600" aria-hidden />
               <h3 className="mt-4 text-xl font-semibold">{t}</h3>
               <p className="mt-2 text-asphalt-600">{d}</p>
@@ -53,7 +53,7 @@ export default function EmpresasPage() {
         </div>
       </section>
 
-      <section aria-labelledby="mapa" className="border-y border-asphalt-100 bg-white">
+      <section aria-labelledby="mapa" className="border-y border-asphalt-100 bg-surface">
         <div className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2">
           <div>
             <h2 id="mapa" className="text-3xl font-semibold">

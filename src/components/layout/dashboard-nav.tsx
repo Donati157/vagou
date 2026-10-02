@@ -33,7 +33,7 @@ function Item({ item, onNavigate }: { item: NavItem; onNavigate?: () => void }) 
       href={item.href}
       onClick={onNavigate}
       aria-current={active ? "page" : undefined}
-      className={cn("flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-semibold transition-colors", active ? "bg-green-50 text-ink-900" : "text-asphalt-600 hover:bg-asphalt-50 hover:text-ink-900")}
+      className={cn("flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-semibold transition-colors", active ? "bg-green-50 text-fg" : "text-asphalt-600 hover:bg-asphalt-50 hover:text-fg")}
     >
       <Icon className={cn("size-[18px]", active ? "text-green-600" : "text-asphalt-400")} aria-hidden />
       {item.label}

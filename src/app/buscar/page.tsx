@@ -35,7 +35,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
       <div className="hidden lg:block">
         <SiteHeader />
       </div>
-      <div className="relative z-[600] border-b border-asphalt-100 bg-white px-4 pt-3 pb-2 lg:px-6 lg:py-3">
+      <div className="relative z-[600] border-b border-asphalt-100 bg-surface px-4 pt-3 pb-2 lg:px-6 lg:py-3">
         <div className="flex items-center gap-2 lg:block">
           <Link href="/" aria-label="Vagou — página inicial" className="shrink-0 lg:hidden">
             <LogoMark className="h-9" />
@@ -71,7 +71,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                 </p>
               )}
               {data.anySimulated && (
-                <p className="flex items-start gap-2 rounded-md border border-dashed border-amber-300 bg-status-reserved-bg/60 px-3 py-2 text-xs text-[#7a5200]" role="note">
+                <p className="flex items-start gap-2 rounded-md border border-dashed border-amber-300 bg-status-reserved-bg/60 px-3 py-2 text-xs text-reserved-fg" role="note">
                   <FlaskConical className="mt-0.5 size-3.5 shrink-0" aria-hidden />
                   Versão de demonstração: a disponibilidade marcada como “simulado” é gerada para demonstração e não representa a ocupação real.
                 </p>

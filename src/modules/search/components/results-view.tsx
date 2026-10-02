@@ -58,7 +58,7 @@ export function ResultsView({ results, center, hasCenter, originQuery, emptyRese
   return (
     <div className="relative flex min-h-0 flex-1">
       {/* Desktop list (~40%) */}
-      <section aria-label="Shoppings" className="hidden min-h-0 w-[40%] max-w-[560px] min-w-[400px] shrink-0 overflow-y-auto border-r border-asphalt-100 bg-white lg:block">
+      <section aria-label="Shoppings" className="hidden min-h-0 w-[40%] max-w-[560px] min-w-[400px] shrink-0 overflow-y-auto border-r border-asphalt-100 bg-surface lg:block">
         <div className="space-y-3 px-6 py-5">
           {header}
           {empty ? (
@@ -100,14 +100,14 @@ export function ResultsView({ results, center, hasCenter, originQuery, emptyRese
 
         {/* Mobile bottom sheet */}
         <div
-          className={cn("absolute inset-x-0 bottom-0 z-[500] flex flex-col rounded-t-xl bg-white shadow-[0_-10px_30px_-12px_rgba(12,34,25,.35)] lg:hidden", sheetExpanded ? "h-[82%]" : "h-auto")}
+          className={cn("absolute inset-x-0 bottom-0 z-[500] flex flex-col rounded-t-xl bg-surface shadow-[0_-10px_30px_-12px_rgba(12,34,25,.35)] lg:hidden", sheetExpanded ? "h-[82%]" : "h-auto")}
           role="region"
           aria-label="Shoppings encontrados"
         >
           <button type="button" onClick={() => setSheetExpanded((v) => !v)} className="flex w-full flex-col items-center px-4 pt-2 pb-2" aria-expanded={sheetExpanded}>
             <span className="h-1.5 w-10 rounded-full bg-asphalt-200" aria-hidden />
             <span className="mt-2 flex w-full items-center justify-between">
-              <span className="text-left text-[15px] font-semibold text-ink-900">{title}</span>
+              <span className="text-left text-[15px] font-semibold text-fg">{title}</span>
               <span className="inline-flex items-center gap-1 text-sm font-semibold text-green-700">
                 {sheetExpanded ? (
                   <>

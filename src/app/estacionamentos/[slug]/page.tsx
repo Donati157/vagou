@@ -71,7 +71,7 @@ export default async function FacilityPage({ params, searchParams }: Props) {
             </p>
 
             {/* Spaces: how many the mall has and how many are free now */}
-            <section aria-labelledby="vagas" className="mt-6 rounded-xl border border-asphalt-100 bg-white p-5">
+            <section aria-labelledby="vagas" className="mt-6 rounded-xl border border-asphalt-100 bg-surface p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h2 id="vagas" className="text-sm font-semibold tracking-wide text-asphalt-500 uppercase">
                   Vagas do shopping
@@ -81,15 +81,15 @@ export default async function FacilityPage({ params, searchParams }: Props) {
               <dl className="mt-4 grid grid-cols-3 gap-3">
                 <div className="rounded-lg bg-asphalt-25 p-3">
                   <dt className="text-xs font-semibold text-asphalt-500">Total de vagas</dt>
-                  <dd className="mt-1 font-display text-3xl font-bold text-ink-900 tabular-nums">{formatNumber(f.totalSpaces)}</dd>
+                  <dd className="mt-1 font-display text-3xl font-bold text-fg tabular-nums">{formatNumber(f.totalSpaces)}</dd>
                 </div>
                 <div className="rounded-lg bg-status-available-bg p-3">
                   <dt className="text-xs font-semibold text-status-available">Livres agora</dt>
-                  <dd className="mt-1 font-display text-3xl font-bold text-ink-900 tabular-nums">{a.state === "UNKNOWN" ? "—" : formatNumber(a.available ?? 0)}</dd>
+                  <dd className="mt-1 font-display text-3xl font-bold text-fg tabular-nums">{a.state === "UNKNOWN" ? "—" : formatNumber(a.available ?? 0)}</dd>
                 </div>
                 <div className="rounded-lg bg-asphalt-25 p-3">
                   <dt className="text-xs font-semibold text-asphalt-500">Ocupadas</dt>
-                  <dd className="mt-1 font-display text-3xl font-bold text-ink-900 tabular-nums">{a.counts && a.state !== "UNKNOWN" ? formatNumber(a.counts.occupied + a.counts.reserved) : "—"}</dd>
+                  <dd className="mt-1 font-display text-3xl font-bold text-fg tabular-nums">{a.counts && a.state !== "UNKNOWN" ? formatNumber(a.counts.occupied + a.counts.reserved) : "—"}</dd>
                 </div>
               </dl>
               {(f.freeByType.PCD > 0 || f.freeByType.EV > 0 || f.freeByType.MOTO > 0) && a.state !== "UNKNOWN" && (
@@ -101,7 +101,7 @@ export default async function FacilityPage({ params, searchParams }: Props) {
               )}
               {a.state === "UNKNOWN" && <p className="mt-3 text-sm text-asphalt-600">Este shopping ainda não compartilha a ocupação em tempo real com a Vagou.</p>}
               {a.simulated && a.state !== "UNKNOWN" && (
-                <p className="mt-3 rounded-md border border-dashed border-amber-300 bg-status-reserved-bg/50 px-3 py-2 text-xs text-[#7a5200]">
+                <p className="mt-3 rounded-md border border-dashed border-amber-300 bg-status-reserved-bg/50 px-3 py-2 text-xs text-reserved-fg">
                   Dados simulados para demonstração — não representam a ocupação real deste shopping.
                 </p>
               )}
@@ -112,7 +112,7 @@ export default async function FacilityPage({ params, searchParams }: Props) {
                 Planta do shopping
               </h2>
               {f.floorMaps.length === 0 ? (
-                <p className="rounded-lg border border-dashed border-asphalt-200 bg-white p-4 text-sm text-asphalt-600">A planta digital deste shopping ainda não foi publicada.</p>
+                <p className="rounded-lg border border-dashed border-asphalt-200 bg-surface p-4 text-sm text-asphalt-600">A planta digital deste shopping ainda não foi publicada.</p>
               ) : (
                 <MallPlan slug={f.slug} floors={f.floorMaps} simulated={a.simulated} />
               )}
@@ -125,7 +125,7 @@ export default async function FacilityPage({ params, searchParams }: Props) {
               <dl className="mt-3 grid grid-cols-2 gap-x-8 gap-y-1.5 text-[15px] sm:grid-cols-4">
                 {weekSummary(f.hours).map((d) => (
                   <div key={d.weekday} className="flex justify-between gap-2 sm:block">
-                    <dt className="font-semibold text-ink-900">{d.day}</dt>
+                    <dt className="font-semibold text-fg">{d.day}</dt>
                     <dd className={d.text === "Fechado" ? "text-asphalt-400" : "text-asphalt-600"}>{d.text}</dd>
                   </div>
                 ))}
@@ -135,13 +135,13 @@ export default async function FacilityPage({ params, searchParams }: Props) {
             <section className="mt-8" aria-labelledby="estrutura">
               <h2 id="estrutura" className="text-xl font-semibold">Estrutura e acessibilidade</h2>
               <ul className="mt-3 grid gap-3 text-[15px] text-asphalt-700 sm:grid-cols-2">
-                <li className="flex items-center gap-3"><Accessibility className="size-5 text-ink-800" aria-hidden /> {f.accessible ? `${f.accessibleSpaces} vagas PCD` : "Sem vagas PCD informadas"}</li>
-                <li className="flex items-center gap-3"><BatteryCharging className="size-5 text-ink-800" aria-hidden /> {f.evChargers > 0 ? `${f.evChargers} carregadores para veículos elétricos` : "Sem carregadores EV"}</li>
-                <li className="flex items-center gap-3"><Car className="size-5 text-ink-800" aria-hidden /> Aceita: {f.vehicleTypes.map((v) => VEHICLE_TYPE_LABEL[v]).join(", ") || "não informado"}</li>
-                <li className="flex items-center gap-3"><Umbrella className="size-5 text-ink-800" aria-hidden /> {f.covered ? "Coberto" : "Descoberto"}</li>
-                {f.maxHeightCm && <li className="flex items-center gap-3"><Ruler className="size-5 text-ink-800" aria-hidden /> Altura máxima {(f.maxHeightCm / 100).toFixed(2).replace(".", ",")} m</li>}
-                {f.valet && <li className="flex items-center gap-3"><UserRound className="size-5 text-ink-800" aria-hidden /> Manobrista</li>}
-                {f.security24h && <li className="flex items-center gap-3"><ShieldCheck className="size-5 text-ink-800" aria-hidden /> Segurança 24h</li>}
+                <li className="flex items-center gap-3"><Accessibility className="size-5 text-fg" aria-hidden /> {f.accessible ? `${f.accessibleSpaces} vagas PCD` : "Sem vagas PCD informadas"}</li>
+                <li className="flex items-center gap-3"><BatteryCharging className="size-5 text-fg" aria-hidden /> {f.evChargers > 0 ? `${f.evChargers} carregadores para veículos elétricos` : "Sem carregadores EV"}</li>
+                <li className="flex items-center gap-3"><Car className="size-5 text-fg" aria-hidden /> Aceita: {f.vehicleTypes.map((v) => VEHICLE_TYPE_LABEL[v]).join(", ") || "não informado"}</li>
+                <li className="flex items-center gap-3"><Umbrella className="size-5 text-fg" aria-hidden /> {f.covered ? "Coberto" : "Descoberto"}</li>
+                {f.maxHeightCm && <li className="flex items-center gap-3"><Ruler className="size-5 text-fg" aria-hidden /> Altura máxima {(f.maxHeightCm / 100).toFixed(2).replace(".", ",")} m</li>}
+                {f.valet && <li className="flex items-center gap-3"><UserRound className="size-5 text-fg" aria-hidden /> Manobrista</li>}
+                {f.security24h && <li className="flex items-center gap-3"><ShieldCheck className="size-5 text-fg" aria-hidden /> Segurança 24h</li>}
               </ul>
             </section>
 
@@ -149,10 +149,10 @@ export default async function FacilityPage({ params, searchParams }: Props) {
               <h2 id="entradas" className="text-xl font-semibold">Entradas</h2>
               <ul className="mt-3 space-y-2">
                 {f.entrances.map((e) => (
-                  <li key={e.id} className="flex items-start gap-3 rounded-lg border border-asphalt-100 bg-white p-3">
+                  <li key={e.id} className="flex items-start gap-3 rounded-lg border border-asphalt-100 bg-surface p-3">
                     <DoorOpen className="mt-0.5 size-5 text-green-600" aria-hidden />
                     <div className="min-w-0 flex-1">
-                      <p className="font-medium text-ink-900">
+                      <p className="font-medium text-fg">
                         {e.name} {e.isPrimary && <Badge tone="green" className="ml-1">Recomendada</Badge>}
                       </p>
                       <p className="text-sm text-asphalt-500">{ENTRANCE_KIND_LABEL[e.kind]}{e.addressLine ? ` · ${e.addressLine}` : ""}</p>
@@ -183,9 +183,9 @@ export default async function FacilityPage({ params, searchParams }: Props) {
 
           {/* Action card */}
           <aside className="lg:sticky lg:top-24 lg:self-start" aria-label="Como chegar">
-            <div className="hidden rounded-xl border border-asphalt-100 bg-white p-5 shadow-md lg:block">
+            <div className="hidden rounded-xl border border-asphalt-100 bg-surface p-5 shadow-md lg:block">
               <AvailabilityPill a={a} size="lg" />
-              <p className="mt-3 text-sm text-asphalt-600">Entrada recomendada: <strong className="text-ink-900">{f.primaryEntrance?.name ?? f.addressLine}</strong></p>
+              <p className="mt-3 text-sm text-asphalt-600">Entrada recomendada: <strong className="text-fg">{f.primaryEntrance?.name ?? f.addressLine}</strong></p>
               <a href={gmaps} target="_blank" rel="noopener noreferrer" className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-md bg-green-400 font-semibold text-ink-950 hover:bg-green-300">
                 <Navigation className="size-5" aria-hidden /> Ir até lá
               </a>
@@ -194,7 +194,7 @@ export default async function FacilityPage({ params, searchParams }: Props) {
                 <FavoriteButton facilityId={f.id} initial={isFav} loggedIn={!!user} returnTo={`/estacionamentos/${f.slug}`} />
               </div>
               {f.phone && (
-                <a href={`tel:${f.phone.replace(/\D/g, "")}`} className="mt-3 flex items-center gap-2 text-sm font-semibold text-asphalt-600 hover:text-ink-900">
+                <a href={`tel:${f.phone.replace(/\D/g, "")}`} className="mt-3 flex items-center gap-2 text-sm font-semibold text-asphalt-600 hover:text-fg">
                   <Phone className="size-4" aria-hidden /> Ligar para o shopping
                 </a>
               )}
@@ -204,7 +204,7 @@ export default async function FacilityPage({ params, searchParams }: Props) {
       </main>
 
       {/* Mobile fixed CTA */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-asphalt-100 bg-white px-4 py-3 shadow-[0_-8px_24px_-12px_rgba(12,34,25,.25)] lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-asphalt-100 bg-surface px-4 py-3 shadow-[0_-8px_24px_-12px_rgba(12,34,25,.25)] lg:hidden">
         <div className="flex items-center gap-3">
           <div className="min-w-0 flex-1">
             <AvailabilityPill a={a} size="sm" />

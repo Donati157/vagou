@@ -11,7 +11,7 @@ type PlanElement = { id: string; kind: string; label: string | null; x: number; 
 export function FloorMapView({ imageUrl, ratio, spaces, elements, highlightStatus, route = [] }: { imageUrl: string | null; ratio: number; spaces: Space[]; elements: PlanElement[]; highlightStatus?: SpaceStatus | null; route?: Array<[number, number]> }) {
   const H = 1000 * ratio; // uniform scale keeps rotated spaces undistorted
   return (
-    <div className="relative w-full overflow-hidden rounded-lg border border-asphalt-100 bg-white" style={{ aspectRatio: `${1 / ratio}` }}>
+    <div className="relative w-full overflow-hidden rounded-lg border border-asphalt-100 bg-surface" style={{ aspectRatio: `${1 / ratio}` }}>
       {imageUrl && (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={imageUrl} alt="" className="absolute inset-0 h-full w-full object-fill opacity-70" />

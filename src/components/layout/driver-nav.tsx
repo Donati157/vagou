@@ -15,13 +15,13 @@ const ITEMS = [
 export function DriverBottomNav() {
   const path = usePathname();
   return (
-    <nav aria-label="Navegação do motorista" className="fixed inset-x-0 bottom-0 z-40 border-t border-asphalt-100 bg-white pb-[env(safe-area-inset-bottom)] md:hidden">
+    <nav aria-label="Navegação do motorista" className="fixed inset-x-0 bottom-0 z-40 border-t border-asphalt-100 bg-surface pb-[env(safe-area-inset-bottom)] md:hidden">
       <ul className="grid grid-cols-3">
         {ITEMS.map(({ href, label, Icon, exact }) => {
           const active = exact ? path === href : path.startsWith(href);
           return (
             <li key={href}>
-              <Link href={href} aria-current={active ? "page" : undefined} className={cn("flex h-16 flex-col items-center justify-center gap-1 text-[11px] font-semibold", active ? "text-ink-900" : "text-asphalt-400")}>
+              <Link href={href} aria-current={active ? "page" : undefined} className={cn("flex h-16 flex-col items-center justify-center gap-1 text-[11px] font-semibold", active ? "text-fg" : "text-asphalt-400")}>
                 <Icon className={cn("size-5", active && "text-green-600")} aria-hidden />
                 {label}
               </Link>
@@ -40,7 +40,7 @@ export function DriverTopNav() {
       {ITEMS.filter((i) => i.href !== "/buscar").map(({ href, label, exact }) => {
         const active = exact ? path === href : path.startsWith(href);
         return (
-          <Link key={href} href={href} aria-current={active ? "page" : undefined} className={cn("rounded-md px-3 py-2 text-sm font-semibold", active ? "bg-asphalt-100 text-ink-900" : "text-asphalt-500 hover:text-ink-900")}>
+          <Link key={href} href={href} aria-current={active ? "page" : undefined} className={cn("rounded-md px-3 py-2 text-sm font-semibold", active ? "bg-asphalt-100 text-fg" : "text-asphalt-500 hover:text-fg")}>
             {label}
           </Link>
         );

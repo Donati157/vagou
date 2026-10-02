@@ -64,7 +64,7 @@ export function LoginForm({ next, demoMode, demoPassword }: { next?: string; dem
                   setEmail(a.email);
                   setPassword(demoPassword);
                 }}
-                className="rounded-sm border border-asphalt-200 bg-white px-3 py-2 text-left text-sm font-medium hover:border-ink-700"
+                className="rounded-sm border border-asphalt-200 bg-surface px-3 py-2 text-left text-sm font-medium hover:border-fg"
               >
                 {a.label}
               </button>
@@ -96,12 +96,12 @@ export function RegisterForm({ next, initialType }: { next?: string; initialType
               key={value}
               className={cn(
                 "flex cursor-pointer flex-col gap-1 rounded-md border p-3 transition-colors has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-green-200",
-                type === value ? "border-ink-900 bg-green-50" : "border-asphalt-200 bg-white hover:border-asphalt-300",
+                type === value ? "border-fg bg-green-50" : "border-asphalt-200 bg-surface hover:border-asphalt-300",
               )}
             >
               <input type="radio" name="accountType" value={value} checked={type === value} onChange={() => setType(value)} className="sr-only" />
-              <Icon className="size-5 text-ink-800" aria-hidden />
-              <span className="text-sm font-semibold text-ink-900">{label}</span>
+              <Icon className="size-5 text-fg" aria-hidden />
+              <span className="text-sm font-semibold text-fg">{label}</span>
               <span className="text-xs text-asphalt-500">{hint}</span>
             </label>
           ))}

@@ -4,10 +4,10 @@ const TONES = {
   neutral: "bg-asphalt-100 text-asphalt-700",
   green: "bg-green-100 text-green-700",
   ink: "bg-ink-900 text-white",
-  amber: "bg-status-reserved-bg text-[#8a5d00]",
-  red: "bg-status-occupied-bg text-[#a32626]",
+  amber: "bg-status-reserved-bg text-reserved-fg",
+  red: "bg-status-occupied-bg text-occupied-fg",
   blue: "bg-blue-50 text-blue-700",
-  outline: "border border-asphalt-200 text-asphalt-700 bg-white",
+  outline: "border border-asphalt-200 text-asphalt-700 bg-surface",
 } as const;
 
 export type BadgeTone = keyof typeof TONES;

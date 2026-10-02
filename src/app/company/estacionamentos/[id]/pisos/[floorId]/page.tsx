@@ -58,7 +58,7 @@ export default async function SmartMapPage({ params, searchParams }: { params: P
         </div>
         <div className="flex flex-wrap gap-2">
           {plan && !showUploader && (
-            <a href={`?nova=1`} className="inline-flex h-11 items-center rounded-md border border-asphalt-200 bg-white px-4 text-[15px] font-semibold hover:bg-asphalt-50">
+            <a href={`?nova=1`} className="inline-flex h-11 items-center rounded-md border border-asphalt-200 bg-surface px-4 text-[15px] font-semibold hover:bg-asphalt-50">
               Enviar nova planta
             </a>
           )}
@@ -77,7 +77,7 @@ export default async function SmartMapPage({ params, searchParams }: { params: P
       {showUploader && (
         <div className="space-y-3">
           {data.analyzerIsDemo && (
-            <p className="flex items-start gap-2 rounded-md border border-dashed border-amber-300 bg-status-reserved-bg/60 px-3 py-2 text-sm text-[#7a5200]">
+            <p className="flex items-start gap-2 rounded-md border border-dashed border-amber-300 bg-status-reserved-bg/60 px-3 py-2 text-sm text-reserved-fg">
               <FlaskConical className="mt-0.5 size-4 shrink-0" aria-hidden /> Modo demonstração: a análise automática é simulada e propõe um layout padrão sobre a sua planta. Revise e corrija as vagas no editor antes de publicar.
             </p>
           )}
@@ -95,8 +95,8 @@ export default async function SmartMapPage({ params, searchParams }: { params: P
               <ReanalyzeButton planId={plan.id} />
             </div>
           ) : plan.status === "ANALYZED" ? (
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-lg border border-asphalt-100 bg-white p-4 text-sm">
-              <span className="flex items-center gap-2 font-semibold text-ink-900">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-lg border border-asphalt-100 bg-surface p-4 text-sm">
+              <span className="flex items-center gap-2 font-semibold text-fg">
                 <CheckCircle2 className="size-5 text-green-600" aria-hidden /> Resultado da análise
               </span>
               <span>{spaces.length} vagas</span>
@@ -104,7 +104,7 @@ export default async function SmartMapPage({ params, searchParams }: { params: P
               <span>{data.elements.filter((e) => e.kind === "ENTRANCE").length} entrada(s) · {data.elements.filter((e) => e.kind === "EXIT").length} saída(s)</span>
               {plan.confidence !== null && <span>confiança {formatPercent(plan.confidence)}</span>}
               {data.analyzerIsDemo && (
-                <span className="inline-flex items-center gap-1 font-semibold text-[#7a5200]">
+                <span className="inline-flex items-center gap-1 font-semibold text-reserved-fg">
                   <FlaskConical className="size-4" aria-hidden /> análise simulada (modo demonstração)
                 </span>
               )}

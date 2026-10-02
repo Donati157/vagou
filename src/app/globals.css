@@ -1,44 +1,74 @@
 @import "tailwindcss";
 
 /*
- * Vagou design tokens.
- * Brand derived from the logo: forest ink (#17382A) + signal green (#5CB874).
- * Neutrals are slightly green-tinted "asphalt" greys; one accent, used sparingly.
+ * Vagou design tokens — Design V2.
+ *
+ * Identity = VAGA + PIN + ROTA + PLANTA, concept = movimento + espaço.
+ * Brand family derived from the logo: Forest (#17382A) + Vagou Green (#5CB874), with Mint tints,
+ * an Off-white canvas and green-tinted Graphite neutrals ("asphalt").
+ *
+ * Brand green ≠ availability green: "livre" uses the dedicated, more saturated status token and is
+ * always paired with icon + label (+ pattern on maps). On doubt, never green.
+ *
+ * Dark mode remaps these same tokens (see bottom), so components keep using one vocabulary.
  */
 @theme {
-  /* Typography */
+  /* Typography — Outfit (display) shares the logo's geometric construction; Inter for reading. */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-outfit), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
+  /* Type scale: few steps, fluid where it matters. */
+  --text-display: clamp(2.875rem, 1.6rem + 5.4vw, 6rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.045em;
+  --text-headline: clamp(2rem, 1.35rem + 2.6vw, 3.5rem);
+  --text-headline--line-height: 1.04;
+  --text-headline--letter-spacing: -0.035em;
+  --text-title: clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem);
+  --text-title--line-height: 1.15;
+  --text-title--letter-spacing: -0.02em;
+  --text-figure: clamp(2.5rem, 1.8rem + 2.8vw, 4.25rem);
+  --text-figure--line-height: 1;
+  --text-figure--letter-spacing: -0.04em;
+  --text-eyebrow: 0.75rem;
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.14em;
+
   /* Brand */
-  --color-ink-950: #0c2219;
-  --color-ink-900: #17382a;
+  --color-ink-950: #0b1f16; /* Night forest */
+  --color-ink-900: #17382a; /* Forest — the logo ink */
   --color-ink-800: #1f4a37;
   --color-ink-700: #2a5d46;
-  --color-green-50: #effaf1;
-  --color-green-100: #d9f2de;
-  --color-green-200: #b4e4be;
-  --color-green-300: #8ad29a;
-  --color-green-400: #5cb874;
+  --color-green-50: #eff9f1; /* Mint */
+  --color-green-100: #dcf2e1;
+  --color-green-200: #b8e4c2;
+  --color-green-300: #8bd29d;
+  --color-green-400: #5cb874; /* Vagou Green */
   --color-green-500: #3f9e5a;
   --color-green-600: #2f8048;
   --color-green-700: #26663a;
 
-  /* Neutrals (asphalt) */
-  --color-asphalt-0: #ffffff;
-  --color-asphalt-25: #fafbfa;
-  --color-asphalt-50: #f4f6f5;
-  --color-asphalt-100: #e9edeb;
-  --color-asphalt-200: #d7ddda;
-  --color-asphalt-300: #b9c2be;
-  --color-asphalt-400: #8c9893;
-  --color-asphalt-500: #67736e;
-  --color-asphalt-600: #4c5753;
-  --color-asphalt-700: #38413e;
-  --color-asphalt-800: #232a27;
-  --color-asphalt-900: #141917;
+  /* Semantic surfaces (remapped in dark mode) */
+  --color-canvas: #f7f8f5; /* Off-white page */
+  --color-surface: #ffffff; /* raised panels, inputs */
+  --color-fg: #17382a; /* primary foreground on canvas/surface */
+  --color-line: rgb(23 56 42 / 0.1); /* hairlines */
 
-  /* Space status (always paired with icon + label) */
+  /* Neutrals — Graphite, slightly green-tinted */
+  --color-asphalt-0: #ffffff;
+  --color-asphalt-25: #f7f8f5;
+  --color-asphalt-50: #f1f4f2;
+  --color-asphalt-100: #e6ebe8;
+  --color-asphalt-200: #d4dbd7;
+  --color-asphalt-300: #b6c0bb;
+  --color-asphalt-400: #8a9691;
+  --color-asphalt-500: #66726d;
+  --color-asphalt-600: #4b5652;
+  --color-asphalt-700: #37403d;
+  --color-asphalt-800: #222926;
+  --color-asphalt-900: #131816;
+
+  /* Space status — Parking Green is NOT the brand green (always paired with icon + label) */
   --color-status-available: #1f9d55;
   --color-status-available-bg: #e3f6ea;
   --color-status-occupied: #d63c3c;
@@ -47,6 +77,8 @@
   --color-status-reserved-bg: #fff4d6;
   --color-status-unavailable: #6b7470;
   --color-status-unavailable-bg: #eceeed;
+  --color-reserved-fg: #7a5200;
+  --color-occupied-fg: #a32626;
 
   /* Feedback */
   --color-success: #1f9d55;
@@ -54,29 +86,49 @@
   --color-danger: #c53030;
   --color-info: #2563eb;
 
-  /* Radius */
+  /* Radius — tighter than default SaaS; pills for actions */
   --radius-xs: 6px;
   --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 22px;
 
-  /* Elevation */
-  --shadow-xs: 0 1px 2px rgb(12 34 25 / 0.06);
-  --shadow-sm: 0 1px 3px rgb(12 34 25 / 0.08), 0 1px 2px rgb(12 34 25 / 0.04);
-  --shadow-md: 0 6px 16px -4px rgb(12 34 25 / 0.12), 0 2px 4px rgb(12 34 25 / 0.05);
-  --shadow-lg: 0 18px 40px -12px rgb(12 34 25 / 0.22);
+  /* Elevation — forest-tinted and quiet */
+  --shadow-xs: 0 1px 2px rgb(11 31 22 / 0.06);
+  --shadow-sm: 0 1px 3px rgb(11 31 22 / 0.07), 0 1px 2px rgb(11 31 22 / 0.04);
+  --shadow-md: 0 8px 20px -8px rgb(11 31 22 / 0.16), 0 2px 4px rgb(11 31 22 / 0.04);
+  --shadow-lg: 0 24px 48px -16px rgb(11 31 22 / 0.26);
 
-  --animate-fade-in: fade-in 160ms ease-out;
-  --animate-slide-up: slide-up 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Motion — one family of curves and durations for the whole product */
+  --ease-vagou: cubic-bezier(0.22, 1, 0.36, 1); /* decelerate: arrive and settle */
+  --ease-route: cubic-bezier(0.65, 0, 0.35, 1); /* in-out: travel along a path */
+  --ease-pin: cubic-bezier(0.34, 1.4, 0.64, 1); /* small overshoot: a pin landing */
+
+  --animate-fade-in: fade-in 200ms var(--ease-vagou);
+  --animate-slide-up: slide-up 320ms var(--ease-vagou);
+  --animate-pin-drop: pin-drop 520ms var(--ease-pin) both;
   @keyframes fade-in {
     from { opacity: 0; }
     to { opacity: 1; }
   }
   @keyframes slide-up {
-    from { transform: translateY(16px); opacity: 0; }
+    from { transform: translateY(12px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
+  @keyframes pin-drop {
+    from { transform: translateY(-10px) scale(0.6); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+  }
+}
+
+/* Motion durations (used through var() in arbitrary values and component CSS). */
+:root {
+  --dur-instant: 120ms; /* press, toggle */
+  --dur-fast: 200ms; /* hover, focus, color */
+  --dur-base: 320ms; /* panels, tabs, status change */
+  --dur-slow: 600ms; /* reveal */
+  --dur-story: 1600ms; /* route drawing */
+  color-scheme: light;
 }
 
 @layer base {
@@ -84,15 +136,20 @@
     -webkit-tap-highlight-color: transparent;
   }
   body {
-    background: var(--color-asphalt-25);
+    background: var(--color-canvas);
     color: var(--color-asphalt-900);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
-    color: var(--color-ink-900);
+    color: var(--color-fg);
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
   }
   :focus-visible {
     outline: 3px solid var(--color-green-400);
@@ -101,14 +158,31 @@
   }
   ::selection {
     background: var(--color-green-200);
+    color: var(--color-ink-950);
   }
   dialog::backdrop {
-    background: rgb(12 34 25 / 0.45);
+    background: rgb(11 31 22 / 0.5);
+    backdrop-filter: blur(2px);
+  }
+  /* Links and buttons share the same tempo. */
+  a, button, [role="tab"], summary {
+    transition-property: color, background-color, border-color, box-shadow, opacity, transform, translate, scale;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease-vagou);
+  }
+  /* Arrow icons travel a little forward on hover — "seguir em frente". */
+  :where(a, button) .lucide-arrow-right {
+    transition: translate var(--dur-fast) var(--ease-vagou);
+  }
+  :where(a, button):hover .lucide-arrow-right {
+    translate: 3px 0;
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
   }
 }
@@ -135,8 +209,265 @@
       linear-gradient(to bottom, rgb(23 56 42 / 0.06) 1px, transparent 1px);
     background-size: 32px 32px;
   }
+
+  /* ---------- Eyebrow: a small route node + label ---------- */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: var(--text-eyebrow);
+    line-height: var(--text-eyebrow--line-height);
+    letter-spacing: var(--text-eyebrow--letter-spacing);
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--color-green-600);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    border: 2px solid currentColor;
+    box-shadow: 0 0 0 3px color-mix(in oklab, currentColor 18%, transparent);
+  }
+
+  /*
+   * ---------- Textures (decorative, aria-hidden) ----------
+   * Painted with currentColor through a mask, so each section tints them with text-* / opacity.
+   */
+  .texture {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-color: currentColor;
+    -webkit-mask-repeat: repeat;
+    mask-repeat: repeat;
+  }
+  /* Parking stalls: two rows of bays facing an aisle. */
+  .texture-stalls {
+    --stalls: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='176' fill='none' stroke='%23000' stroke-width='1.5'%3E%3Cpath d='M0 1h192M0 64h192M0 113h192M0 175h192'/%3E%3Cpath d='M0 1v63M32 1v63M64 1v63M96 1v63M128 1v63M160 1v63M0 113v62M32 113v62M64 113v62M96 113v62M128 113v62M160 113v62'/%3E%3Cpath d='M0 88.5h192' stroke-dasharray='14 10'/%3E%3C/svg%3E");
+    -webkit-mask-image: var(--stalls);
+    mask-image: var(--stalls);
+  }
+  /* City/map grid with occasional coordinate ticks. */
+  .texture-grid {
+    --grid: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' fill='none' stroke='%23000'%3E%3Cpath d='M0 .5h96M.5 0v96' stroke-width='1'/%3E%3Cpath d='M44 48h8M48 44v8' stroke-width='1'/%3E%3C/svg%3E");
+    -webkit-mask-image: var(--grid);
+    mask-image: var(--grid);
+  }
+  /* Location dots, like a sparse pin field. */
+  .texture-dots {
+    --dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='2' cy='2' r='1.2' fill='%23000'/%3E%3C/svg%3E");
+    -webkit-mask-image: var(--dots);
+    mask-image: var(--dots);
+  }
+  /* Fade a texture towards the edges so it never competes with content. */
+  .texture-fade {
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+  .texture-fade.texture-stalls { -webkit-mask-image: var(--stalls), radial-gradient(ellipse at center, #000 20%, transparent 75%); mask-image: var(--stalls), radial-gradient(ellipse at center, #000 20%, transparent 75%); }
+  .texture-fade.texture-grid { -webkit-mask-image: var(--grid), radial-gradient(ellipse at center, #000 20%, transparent 75%); mask-image: var(--grid), radial-gradient(ellipse at center, #000 20%, transparent 75%); }
+  .texture-fade.texture-dots { -webkit-mask-image: var(--dots), radial-gradient(ellipse at center, #000 10%, transparent 70%); mask-image: var(--dots), radial-gradient(ellipse at center, #000 10%, transparent 70%); }
+
+  /* ---------- Interaction primitives ---------- */
+  /* Pressed feedback for anything tappable. */
+  .press:active {
+    scale: 0.98;
+    transition-duration: var(--dur-instant);
+  }
+  /* A unit of content that answers the cursor with a very light lift. */
+  .lift {
+    transition: translate var(--dur-base) var(--ease-vagou), box-shadow var(--dur-base) var(--ease-vagou), border-color var(--dur-fast) var(--ease-vagou);
+  }
+  @media (hover: hover) {
+    .lift:hover {
+      translate: 0 -2px;
+      box-shadow: var(--shadow-md);
+    }
+  }
+
+  /* ---------- Route drawing (SVG paths with pathLength="1") ---------- */
+  .route-draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: route-draw var(--dur-story) var(--ease-route) forwards;
+    animation-delay: var(--delay, 0ms);
+  }
+  @keyframes route-draw {
+    to { stroke-dashoffset: 0; }
+  }
+  /* Pins/badges landing in sequence (SVG groups or HTML). */
+  .pin-in {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: pin-drop 520ms var(--ease-pin) both;
+    animation-delay: var(--delay, 0ms);
+  }
+  .fade-in-late {
+    animation: fade-in var(--dur-slow) var(--ease-vagou) both;
+    animation-delay: var(--delay, 0ms);
+  }
+  /* A free-space "pulse" ring for the recommended spot (stops after a few beats). */
+  .beacon {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: beacon 2.4s var(--ease-vagou) 3;
+    animation-delay: var(--delay, 0ms);
+  }
+  @keyframes beacon {
+    0% { opacity: 0.55; scale: 0.6; }
+    80%, 100% { opacity: 0; scale: 1.8; }
+  }
+
+  /* ---------- Animated number (CSS @property; real value stays in the DOM for a11y) ---------- */
+  .count-up {
+    --n: var(--to);
+    counter-reset: n var(--n);
+    font-variant-numeric: tabular-nums;
+  }
+  .count-up::after {
+    content: counter(n);
+  }
 }
 
+@property --n {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@keyframes count-up {
+  from { --n: 0; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .count-up {
+    animation: count-up 1400ms var(--ease-vagou) both;
+    animation-delay: var(--delay, 0ms);
+  }
+  /* Scroll-driven reveals: native, no JS. Browsers without view timelines just show the content. */
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: slide-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+    .reveal-count {
+      animation: count-up linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+    .reveal-draw {
+      stroke-dasharray: 1;
+      animation: route-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 55%;
+    }
+  }
+}
+
+/* ---------- Maps ---------- */
 .leaflet-container {
   font-family: var(--font-sans);
+  background: var(--color-asphalt-50);
+}
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  border-bottom-color: var(--color-line) !important;
+}
+.leaflet-bar {
+  border: 1px solid var(--color-line) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-md) !important;
+  overflow: hidden;
+}
+.leaflet-bar a {
+  width: 38px !important;
+  height: 38px !important;
+  line-height: 38px !important;
+  background: var(--color-surface) !important;
+  color: var(--color-fg) !important;
+}
+.leaflet-bar a:hover {
+  background: var(--color-asphalt-50) !important;
+}
+.leaflet-control-attribution {
+  background: color-mix(in oklab, var(--color-surface) 80%, transparent) !important;
+  color: var(--color-asphalt-500) !important;
+  border-radius: var(--radius-xs) 0 0 0;
+}
+.leaflet-control-attribution a {
+  color: var(--color-asphalt-600) !important;
+}
+
+/* =====================================================================
+ * Dark mode — an interpretation, not an inversion.
+ * Night forest canvas, graphite surfaces, mint accents; status hues keep
+ * their meaning and gain luminance for contrast on dark tints.
+ * ===================================================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --color-canvas: #0a110e;
+    --color-surface: #111a16;
+    --color-fg: #e8f1ec;
+    --color-line: rgb(220 236 227 / 0.1);
+
+    --color-asphalt-0: #111a16;
+    --color-asphalt-25: #0d1512;
+    --color-asphalt-50: #151f1b;
+    --color-asphalt-100: #1c2823;
+    --color-asphalt-200: #29372f;
+    --color-asphalt-300: #3b4a43;
+    --color-asphalt-400: #64746d;
+    --color-asphalt-500: #8d9a95;
+    --color-asphalt-600: #a9b5b0;
+    --color-asphalt-700: #c5cfca;
+    --color-asphalt-800: #dce4e0;
+    --color-asphalt-900: #eef4f1;
+
+    --color-green-50: #10251a;
+    --color-green-100: #153222;
+    --color-green-200: #1d4a30;
+    --color-green-300: #2f6f47;
+    --color-green-600: #6cc583;
+    --color-green-700: #8bd29d;
+
+    --color-status-available: #2fb565;
+    --color-status-available-bg: #0f2c1b;
+    --color-status-occupied: #ee5d5d;
+    --color-status-occupied-bg: #331414;
+    --color-status-reserved: #e2a21b;
+    --color-status-reserved-bg: #2e2308;
+    --color-status-unavailable: #95a09b;
+    --color-status-unavailable-bg: #1d2522;
+    --color-reserved-fg: #f0c45e;
+    --color-occupied-fg: #f49a9a;
+
+    --color-danger: #f06a6a;
+    --color-info: #6b9bff;
+
+    --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.45);
+    --shadow-md: 0 10px 24px -10px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(220 236 227 / 0.04);
+    --shadow-lg: 0 28px 56px -20px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(220 236 227 / 0.05);
+  }
+  ::selection {
+    background: var(--color-green-300);
+    color: #fff;
+  }
+  .road-grid {
+    background-image:
+      linear-gradient(to right, rgb(220 236 227 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(220 236 227 / 0.05) 1px, transparent 1px);
+  }
+  /* Street tiles: a night map that keeps streets and labels legible under brand-colored pins. */
+  .leaflet-tile-pane {
+    filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.88) saturate(0.35);
+  }
+  .leaflet-container {
+    background: #0e1512;
+  }
 }
