@@ -82,3 +82,28 @@ describe("occupancy pipeline", () => {
     expect(live.get(ids.facilityB)!.state).toBe("UNKNOWN");
   });
 });
+
+describe("platform admin authorization", () => {
+  it("rejects non-admins on admin services", async () => {
+    const { listUsers } = await import("@/modules/admin/service");
+    await expect(listUsers(companyUser(), { page: 1 })).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+  it("suspended accounts cannot sign in and lose their sessions", async () => {
+    const { setUserStatus } = await import("@/modules/admin/service");
+    const { authenticate } = await import("@/modules/auth/service");
+    const { hashPassword } = await import("@/modules/auth/password");
+    const [u] = await db.insert(s.users).values({ email: "driver@test.dev", passwordHash: await hashPassword("Senha1234"), role: "DRIVER" }).returning();
+    await db.insert(s.sessions).values({ id: "sess-hash", userId: u.id, expiresAt: new Date(Date.now() + 3600_000) });
+    await expect(authenticate("driver@test.dev", "Senha1234")).resolves.toMatchObject({ id: u.id });
+    const admin = { ...companyUser(), id: ids.admin, role: "PLATFORM_ADMIN" as const };
+    await setUserStatus(admin, u.id, "SUSPENDED");
+    await expect(authenticate("driver@test.dev", "Senha1234")).rejects.toMatchObject({ code: "SUSPENDED" });
+    expect(await db.select().from(s.sessions).where(eq(s.sessions.userId, u.id))).toHaveLength(0);
+    await expect(setUserStatus(admin, ids.admin, "SUSPENDED")).rejects.toMatchObject({ code: "SELF" });
+  });
+  it("rejects wrong passwords without revealing whether the e-mail exists", async () => {
+    const { authenticate } = await import("@/modules/auth/service");
+    await expect(authenticate("driver@test.dev", "errada123")).rejects.toMatchObject({ code: "INVALID_CREDENTIALS" });
+    await expect(authenticate("ninguem@test.dev", "errada123")).rejects.toMatchObject({ code: "INVALID_CREDENTIALS" });
+  });
+});

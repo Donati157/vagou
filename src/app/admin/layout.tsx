@@ -7,7 +7,14 @@ export const metadata: Metadata = { title: { default: "Admin Vagou", template: "
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   await requireAreaPage("admin", "/admin");
   return (
-    <DashboardShell area="Admin Vagou" items={[{ href: "/admin", label: "Visão geral", icon: "LayoutDashboard", exact: true }]}>
+    <DashboardShell area="Admin Vagou" items={[
+        { href: "/admin", label: "Visão geral", icon: "LayoutDashboard", exact: true },
+        { href: "/admin/usuarios", label: "Usuários", icon: "Users" },
+        { href: "/admin/empresas", label: "Empresas", icon: "Building2" },
+        { href: "/admin/estacionamentos", label: "Estacionamentos", icon: "ParkingSquare" },
+        { href: "/admin/fontes", label: "Fontes de dados", icon: "MonitorDot" },
+        { href: "/admin/atividade", label: "Atividade", icon: "BarChart3" },
+      ]}>
       {children}
     </DashboardShell>
   );
