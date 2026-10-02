@@ -1,26 +1,142 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * Vagou design tokens.
+ * Brand derived from the logo: forest ink (#17382A) + signal green (#5CB874).
+ * Neutrals are slightly green-tinted "asphalt" greys; one accent, used sparingly.
+ */
+@theme {
+  /* Typography */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-outfit), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Brand */
+  --color-ink-950: #0c2219;
+  --color-ink-900: #17382a;
+  --color-ink-800: #1f4a37;
+  --color-ink-700: #2a5d46;
+  --color-green-50: #effaf1;
+  --color-green-100: #d9f2de;
+  --color-green-200: #b4e4be;
+  --color-green-300: #8ad29a;
+  --color-green-400: #5cb874;
+  --color-green-500: #3f9e5a;
+  --color-green-600: #2f8048;
+  --color-green-700: #26663a;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Neutrals (asphalt) */
+  --color-asphalt-0: #ffffff;
+  --color-asphalt-25: #fafbfa;
+  --color-asphalt-50: #f4f6f5;
+  --color-asphalt-100: #e9edeb;
+  --color-asphalt-200: #d7ddda;
+  --color-asphalt-300: #b9c2be;
+  --color-asphalt-400: #8c9893;
+  --color-asphalt-500: #67736e;
+  --color-asphalt-600: #4c5753;
+  --color-asphalt-700: #38413e;
+  --color-asphalt-800: #232a27;
+  --color-asphalt-900: #141917;
+
+  /* Space status (always paired with icon + label) */
+  --color-status-available: #1f9d55;
+  --color-status-available-bg: #e3f6ea;
+  --color-status-occupied: #d63c3c;
+  --color-status-occupied-bg: #fde8e8;
+  --color-status-reserved: #c98a04;
+  --color-status-reserved-bg: #fff4d6;
+  --color-status-unavailable: #6b7470;
+  --color-status-unavailable-bg: #eceeed;
+
+  /* Feedback */
+  --color-success: #1f9d55;
+  --color-warning: #b7791f;
+  --color-danger: #c53030;
+  --color-info: #2563eb;
+
+  /* Radius */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Elevation */
+  --shadow-xs: 0 1px 2px rgb(12 34 25 / 0.06);
+  --shadow-sm: 0 1px 3px rgb(12 34 25 / 0.08), 0 1px 2px rgb(12 34 25 / 0.04);
+  --shadow-md: 0 6px 16px -4px rgb(12 34 25 / 0.12), 0 2px 4px rgb(12 34 25 / 0.05);
+  --shadow-lg: 0 18px 40px -12px rgb(12 34 25 / 0.22);
+
+  --animate-fade-in: fade-in 160ms ease-out;
+  --animate-slide-up: slide-up 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { transform: translateY(16px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: var(--color-asphalt-25);
+    color: var(--color-asphalt-900);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    color: var(--color-ink-900);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-green-400);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  ::selection {
+    background: var(--color-green-200);
+  }
+  dialog::backdrop {
+    background: rgb(12 34 25 / 0.45);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Diagonal hatch used as a non-color cue for "unavailable" spaces. */
+  .pattern-hatch {
+    background-image: repeating-linear-gradient(45deg, rgb(0 0 0 / 0.18) 0 2px, transparent 2px 6px);
+  }
+  /* Dots pattern for "reserved". */
+  .pattern-dots {
+    background-image: radial-gradient(rgb(0 0 0 / 0.22) 1px, transparent 1.2px);
+    background-size: 5px 5px;
+  }
+  .road-grid {
+    background-image:
+      linear-gradient(to right, rgb(23 56 42 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(23 56 42 / 0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+}
+
+.leaflet-container {
+  font-family: var(--font-sans);
 }

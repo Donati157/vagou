@@ -1,0 +1,99 @@
+import Link from "next/link";
+import { Building2, ExternalLink, Layers } from "lucide-react";
+import { PageHeader } from "@/components/ui/breadcrumb";
+import { Badge } from "@/components/ui/badge";
+import { DemoBadge } from "@/components/ui/demo-badge";
+import { Metric } from "@/components/ui/metric";
+import { Alert, EmptyState } from "@/components/ui/states";
+import { Table, TD, TH, THead, TR } from "@/components/ui/table";
+import { getCurrentUser } from "@/modules/auth/session";
+import { listCompanyFacilities } from "@/modules/facilities/company";
+import { AvailabilityPill } from "@/modules/occupancy/components/availability-pill";
+import { DATA_SOURCE_KIND_LABEL, FACILITY_KIND_LABEL } from "@/lib/labels";
+import { formatNumber, formatPercent } from "@/lib/format";
+
+export const metadata = { title: "Estacionamentos" };
+
+export default async function CompanyHome({ searchParams }: { searchParams: Promise<{ negado?: string }> }) {
+  const sp = await searchParams;
+  const user = (await getCurrentUser())!;
+  const { orgs, facilities } = await listCompanyFacilities(user);
+  const capacity = facilities.reduce((a, f) => a + f.availability.capacity, 0);
+  const free = facilities.reduce((a, f) => a + (f.availability.available ?? 0), 0);
+  const known = facilities.filter((f) => f.availability.occupancy !== null);
+  const occupancy = known.length ? known.reduce((a, f) => a + (f.availability.occupancy ?? 0) * f.availability.capacity, 0) / known.reduce((a, f) => a + f.availability.capacity, 0) : null;
+  const anySim = facilities.some((f) => f.source?.kind === "SIMULATION");
+
+  return (
+    <>
+      {sp.negado && <Alert tone="warning" className="mb-4">Você não tem acesso àquela área com este perfil.</Alert>}
+      <PageHeader title={orgs.length === 1 ? orgs[0].name : "Estacionamentos"} description="Visão em tempo real dos seus estacionamentos." actions={anySim ? <DemoBadge /> : undefined} />
+      {facilities.length === 0 ? (
+        <EmptyState icon={<Building2 className="size-6" aria-hidden />} title="Nenhum estacionamento cadastrado" description="Cadastre seu primeiro estacionamento para começar a digitalizar pisos e vagas." />
+      ) : (
+        <>
+          <section aria-label="Indicadores" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <Metric label="Estacionamentos" value={facilities.length} />
+            <Metric label="Capacidade total" value={formatNumber(capacity)} hint="vagas" />
+            <Metric label="Vagas livres agora" value={formatNumber(free)} hint={anySim ? "inclui dados simulados" : undefined} />
+            <Metric label="Ocupação atual" value={occupancy === null ? "—" : formatPercent(occupancy)} />
+          </section>
+          <div className="mt-6">
+            <Table>
+              <THead>
+                <tr>
+                  <TH>Estacionamento</TH>
+                  <TH>Disponibilidade</TH>
+                  <TH>Fonte de ocupação</TH>
+                  <TH>Mapa digital</TH>
+                  <TH>Publicação</TH>
+                </tr>
+              </THead>
+              <tbody>
+                {facilities.map((f) => (
+                  <TR key={f.id}>
+                    <TD>
+                      <p className="font-semibold text-ink-900">{f.name}</p>
+                      <p className="text-xs text-asphalt-500">
+                        {FACILITY_KIND_LABEL[f.kind]} · {f.neighborhood} · {formatNumber(f.availability.capacity)} vagas
+                      </p>
+                    </TD>
+                    <TD>
+                      <AvailabilityPill a={f.availability} size="sm" />
+                    </TD>
+                    <TD>
+                      {f.source ? (
+                        f.source.kind === "SIMULATION" ? (
+                          <DemoBadge label="Simulação" />
+                        ) : (
+                          <Badge tone="blue">{DATA_SOURCE_KIND_LABEL[f.source.kind]}</Badge>
+                        )
+                      ) : (
+                        <Badge tone="outline">Não conectada</Badge>
+                      )}
+                    </TD>
+                    <TD>
+                      <span className="inline-flex items-center gap-1.5 text-sm">
+                        <Layers className="size-4 text-asphalt-400" aria-hidden />
+                        {f.mappedFloors}/{f.floors} pisos
+                      </span>
+                    </TD>
+                    <TD>
+                      {f.isPublished ? (
+                        <Link href={`/estacionamentos/${f.slug}`} className="inline-flex items-center gap-1 text-sm font-semibold text-green-700 hover:underline">
+                          Publicado <ExternalLink className="size-3.5" aria-hidden />
+                        </Link>
+                      ) : (
+                        <Badge tone="outline">Rascunho</Badge>
+                      )}
+                    </TD>
+                  </TR>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        </>
+      )}
+    </>
+  );
+}
