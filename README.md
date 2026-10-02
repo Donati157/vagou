@@ -11,7 +11,7 @@ e conectam fontes de ocupação.
 A Vagou **não** é um marketplace de reservas: não há reserva, checkout ou pagamento pela plataforma.
 A definição de produto completa está em [`docs/PRODUCT.md`](docs/PRODUCT.md) (fonte da verdade).
 
-> **Status:** checkpoint V0 publicável — o desenvolvimento da V1 completa continua (veja "Roadmap da V1").
+> **Status:** V1 — fluxos de motorista, empresa (incluindo Mapa Inteligente, operação e analytics) e admin implementados.
 
 ---
 
@@ -131,37 +131,55 @@ O seed se recusa a rodar com `NODE_ENV=production` (a menos que `ALLOW_DEMO_SEED
 - Rode `npm run db:migrate` no deploy; configure `APP_SECRET`, `NEXT_PUBLIC_APP_URL` e `NEXT_PUBLIC_DEMO_MODE=false`.
 - Uploads usam disco local (`UPLOADS_DIR`); em ambientes serverless troque pelo adaptador de storage (S3/Supabase) — a interface `FileStorage` já existe.
 
-## Funcional · Simulado · Preparado (estado atual)
+## Fluxos da V1
+
+| Perfil | Fluxo |
+|---|---|
+| Motorista | Home → buscar destino (ou "perto de mim") → mapa + lista de estacionamentos → **Ver estacionamento** → vagas por piso / mapa do piso → **Ir até lá** · favoritos e perfil em `/app` |
+| Empresa | Login → `/company` (dashboard) → estacionamento → **Pisos e mapas** → importar planta → análise → corrigir no editor → publicar → **Operação** (mapa ao vivo) → **Analytics** |
+| Admin | Login → `/admin` → usuários → empresas → estacionamentos → fontes de dados → atividade |
+
+### Rotas principais
+
+- Públicas: `/`, `/buscar`, `/estacionamentos/[slug]`, `/estacionamentos/[slug]/pisos/[floorId]`, `/empresas`, `/entrar`, `/cadastro`, `/recuperar-senha`
+- Motorista: `/app` (favoritos), `/app/perfil`
+- Empresa: `/company`, `/company/estacionamentos/novo`, `/company/estacionamentos/[id]` (visão geral, `operacao`, `pisos`, `pisos/[floorId]` = Mapa Inteligente, `analytics`, `cadastro`, `tarifas`, `dados`)
+- Admin: `/admin`, `/admin/usuarios`, `/admin/empresas`, `/admin/estacionamentos`, `/admin/fontes`, `/admin/atividade`
+
+## Funcional · Simulado · Preparado
 
 **Funcional**
-- Busca por destino (gazetteer de SP) ou localização do navegador; filtros (com vagas, aberto, PCD, EV, coberto, moto, preço, distância, ordenação)
-- Lista + mapa sincronizados (desktop ~40/60; mobile com mapa dominante e bottom sheet); pins com nº de vagas livres
-- Página do estacionamento: disponibilidade, capacidade, vagas por piso, preços com estimativa, horários (aberto/fechado), estrutura e acessibilidade, entradas, “Ir até lá” (Google Maps/Waze)
-- Mapa digital público por piso (status por cor + ícone + padrão; vagas livres por setor e tipo)
-- Cadastro, login, logout, recuperação de senha, sessão persistente, RBAC, favoritos, perfil, exportação de dados (LGPD) e pedido de exclusão
-- Painel da empresa (visão dos estacionamentos com disponibilidade, fonte de dados e pisos mapeados) e visão geral do admin
-- Pipeline de ocupação: eventos, snapshots, atualização manual, regras de dado desatualizado
-- Upload seguro (validação de tipo pela assinatura do arquivo, limites de tamanho, arquivos fora de `/public` com autorização)
+- Busca por destino (gazetteer de SP) ou localização do navegador; filtros (com vagas, aberto, PCD, EV, coberto, moto, preço, distância) e ordenação
+- Lista + mapa sincronizados (desktop ~40/60; mobile com mapa dominante e bottom sheet); pins com nº de vagas livres / "Lotado"
+- Página do estacionamento: disponibilidade, capacidade, vagas por piso e por tipo, preços com estimativa, horários (aberto/fechado), estrutura, acessibilidade, entradas, "Ir até lá" (Google Maps/Waze), favoritos
+- Mapa digital público por piso (status com cor + ícone + padrão), vagas livres por setor e setor recomendado
+- Empresa: cadastro/edição de estacionamentos (localização no mapa, capacidade, estrutura, veículos, horários, publicação), tarifas, entradas, pisos e setores
+- **Mapa Inteligente**: upload PNG/JPG/PDF (PDF renderizado no navegador), processamento, resultado, revisão no editor (adicionar, remover, mover, redimensionar, rotacionar, renomear, setor, tipo, status, duplicar, zoom) e publicação
+- Mapa operacional ao vivo (atualização a cada 10 s, filtros por status/setor/tipo/piso, painel da vaga com histórico, alteração manual de status)
+- Fonte de dados por estacionamento: atualização manual (por vaga no mapa operacional ou por contagem agregada)
+- Analytics de ocupação: por hora, histórico (média/pico), dia da semana, capacidade utilizada x disponível, capacidade ociosa, tempo lotado, giro por setor; dashboard corporativo consolidado
+- Admin: usuários (suspender/reativar com revogação de sessões), empresas, estacionamentos, fontes de dados (com frescor) e auditoria — com busca, filtros e paginação
+- Auth (cadastro, login, logout, recuperação de senha, sessão persistente), RBAC no servidor, isolamento por organização, auditoria, exportação de dados e pedido de exclusão (LGPD)
+- Uploads seguros (validação por assinatura, limites, fora de `/public`, autorização por organização; plantas só ficam públicas quando publicadas)
 
-**Simulado (identificado na interface)**
-- Ocupação dos estacionamentos de demonstração (`SimulationOccupancyProvider`)
-- Análise automática de plantas (`MockParkingPlanAnalyzer`)
-- Geocodificação limitada a um conjunto de locais de São Paulo
-- Todos os estacionamentos, empresas e pessoas do seed são fictícios
+**Simulado (sempre identificado na interface)**
+- Ocupação via `SimulationOccupancyProvider` (selo "simulado" no público e "Modo demonstração" nos painéis)
+- Análise automática de plantas (`MockParkingPlanAnalyzer`, "análise simulada")
+- Rota interna até o setor recomendado (ilustrativa)
+- Geocodificação limitada a locais conhecidos de São Paulo
+- Estacionamentos, empresas e pessoas do seed são fictícios
 
 **Preparado para integração**
-- Provedores de ocupação: câmeras, sensores, cancelas, sistemas de gestão, APIs
-- `AIParkingPlanAnalyzer` (visão computacional) via `ParkingPlanAnalyzer`
-- Provedor de e-mail (recuperação de senha), error tracking (`setErrorReporter`), storage em nuvem
+- Provedores de ocupação: câmeras, sensores, cancelas, sistemas de gestão e APIs (`OccupancyProvider`; exibidos como "integração sob demanda")
+- `AIParkingPlanAnalyzer` via `ParkingPlanAnalyzer` (`PLAN_ANALYZER`)
+- Provedor de e-mail (recuperação de senha), error tracking (`setErrorReporter`), storage em nuvem (`FileStorage`)
+- Anonimização de conta após pedido de exclusão (registrado e notificado ao admin; execução manual)
 
-## Roadmap da V1 (em andamento)
+## Limitações conhecidas
 
-- Empresa: cadastro/edição de estacionamentos, tarifas, horários, entradas, pisos/setores, fontes de dados
-- Mapa Inteligente: upload de planta (PNG/JPG/PDF) → análise → editor (adicionar, remover, mover, redimensionar, girar, renomear, setor, tipo, status) → publicação
-- Mapa operacional ao vivo com filtros (status, setor, tipo, piso), painel lateral e atualização manual
-- Analytics de ocupação (por hora, histórico, por piso/setor, capacidade ociosa)
-- Admin: usuários, empresas, estacionamentos, fontes de dados com busca, filtros e paginação
-- Mais testes de integração e revisão final de responsividade/acessibilidade
+- O banco embutido (PGlite) atende um processo por vez; use PostgreSQL em produção.
+- Uploads em disco local; em ambiente serverless, configure um adaptador de storage em nuvem.
+- Em desenvolvimento o `reactStrictMode` está desligado porque o `react-leaflet` v5 não suporta a dupla execução de efeitos do modo estrito.
 
 ## Testes
 
@@ -169,5 +187,7 @@ O seed se recusa a rodar com `NODE_ENV=production` (a menos que `ALLOW_DEMO_SEED
 npm test
 ```
 
-Cobrem: semântica de disponibilidade pública (simulado, desatualizado, lotado), simulação, horários,
-tarifas, isolamento entre organizações e o pipeline de ocupação (com PostgreSQL em memória).
+Cobrem: semântica de disponibilidade pública (simulado, desatualizado, lotado), simulação, analytics,
+horários, tarifas, isolamento entre organizações, autorização do admin, contas suspensas, login sem
+enumeração de e-mails, o pipeline de ocupação (com PostgreSQL em memória) e um guarda contra colunas
+não qualificadas em subconsultas SQL.
