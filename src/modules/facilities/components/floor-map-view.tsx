@@ -8,15 +8,18 @@ type PlanElement = { id: string; kind: string; label: string | null; x: number; 
  * Read-only digital floor map: plan image + spaces colored by status, each with a pattern
  * and a <title> so status never depends on color alone.
  */
-export function FloorMapView({ imageUrl, ratio, spaces, elements, highlightStatus, route = [] }: { imageUrl: string | null; ratio: number; spaces: Space[]; elements: PlanElement[]; highlightStatus?: SpaceStatus | null; route?: Array<[number, number]> }) {
+export function FloorMapView({ imageUrl, ratio, spaces, elements, highlightStatus, route = [], targetId }: { imageUrl: string | null; ratio: number; spaces: Space[]; elements: PlanElement[]; highlightStatus?: SpaceStatus | null; route?: Array<[number, number]>; targetId?: string }) {
   const H = 1000 * ratio; // uniform scale keeps rotated spaces undistorted
+  const target = targetId ? spaces.find((s) => s.id === targetId) : undefined;
   return (
-    <div className="relative w-full overflow-hidden rounded-lg border border-asphalt-100 bg-surface" style={{ aspectRatio: `${1 / ratio}` }}>
+    <div className="relative w-full overflow-hidden rounded-lg border border-line bg-surface" style={{ aspectRatio: `${1 / ratio}` }}>
       {imageUrl && (
+        // Plans are drawn on white: in dark mode the drawing is inverted so it reads as light lines on dark.
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={imageUrl} alt="" className="absolute inset-0 h-full w-full object-fill opacity-70" />
+        <img src={imageUrl} alt="" className="absolute inset-0 h-full w-full object-fill opacity-70 dark:opacity-40 dark:invert dark:hue-rotate-180" />
       )}
-      <svg viewBox={`0 0 1000 ${1000 * ratio}`} className="absolute inset-0 h-full w-full" role="img" aria-label="Mapa das vagas do piso">
+      {/* Status changes cross-fade instead of blinking (motion that shows state). */}
+      <svg viewBox={`0 0 1000 ${1000 * ratio}`} className="absolute inset-0 h-full w-full [&_rect]:transition-[fill,opacity] [&_rect]:duration-[var(--dur-base)] [&_rect]:ease-vagou" role="img" aria-label="Mapa das vagas do piso">
         <defs>
           <pattern id="fm-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
             <rect width="3" height="8" fill="rgba(0,0,0,.35)" />
@@ -33,7 +36,7 @@ export function FloorMapView({ imageUrl, ratio, spaces, elements, highlightStatu
             </rect>
           ))}
         {route.length > 1 && (
-          <polyline points={route.map(([x, y]) => `${x * 1000},${y * H}`).join(" ")} fill="none" stroke="#17382A" strokeWidth="5" strokeDasharray="12 8" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points={route.map(([x, y]) => `${x * 1000},${y * H}`).join(" ")} fill="none" stroke="#17382A" className="dark:stroke-green-300" strokeWidth="5" strokeDasharray="12 8" strokeLinecap="round" strokeLinejoin="round">
             <title>Rota ilustrativa até o setor recomendado</title>
           </polyline>
         )}
@@ -52,6 +55,12 @@ export function FloorMapView({ imageUrl, ratio, spaces, elements, highlightStatu
             </g>
           );
         })}
+        {target && (
+          <g aria-hidden>
+            <circle cx={(target.x + target.w / 2) * 1000} cy={(target.y + target.h / 2) * H} r={Math.max(target.w * 1000, target.h * H) * 0.9} fill="#1f9d55" className="beacon" />
+            <rect x={target.x * 1000 - 4} y={target.y * H - 4} width={target.w * 1000 + 8} height={target.h * H + 8} rx="5" fill="none" stroke="#5cb874" strokeWidth="3" vectorEffect="non-scaling-stroke" transform={target.rotation ? `rotate(${target.rotation} ${(target.x + target.w / 2) * 1000} ${(target.y + target.h / 2) * H})` : undefined} />
+          </g>
+        )}
       </svg>
     </div>
   );

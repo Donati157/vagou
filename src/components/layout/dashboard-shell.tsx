@@ -24,7 +24,7 @@ export async function DashboardShell({ area, items, children, context }: { area:
         </div>
       </aside>
       <div className="min-w-0">
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-asphalt-100 bg-white/95 px-4 backdrop-blur sm:px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-asphalt-100 bg-surface/95 px-4 backdrop-blur sm:px-6">
           <div className="flex items-center gap-2 lg:hidden">
             <MobileDashboardNav items={items} area={area} />
             <Link href="/" aria-label="Vagou" className="text-[22px]">

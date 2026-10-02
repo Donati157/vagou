@@ -8,7 +8,7 @@ import { UserMenu } from "./user-menu";
 export async function SiteHeader({ variant = "solid" }: { variant?: "solid" | "transparent" }) {
   const user = await getCurrentUser();
   return (
-    <header className={variant === "solid" ? "sticky top-0 z-40 border-b border-asphalt-100 bg-white/95 backdrop-blur" : "relative z-40"}>
+    <header className={variant === "solid" ? "sticky top-0 z-40 border-b border-asphalt-100 bg-surface/95 backdrop-blur" : "relative z-40"}>
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/" aria-label="Vagou — página inicial" className="text-[28px]">
           <Logo inverted={variant === "transparent"} />
