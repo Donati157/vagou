@@ -151,7 +151,7 @@ Variáveis de ambiente na Vercel:
 | `DATABASE_URL` | sim | criada pela integração Neon (ou a connection string do seu PostgreSQL) |
 | `NEXT_PUBLIC_APP_URL` | recomendada | URL pública, ex.: `https://vagou.vercel.app` |
 | `ALLOW_DEMO_SEED` | para dados demo | `true` |
-| `DEMO_PASSWORD` | se `ALLOW_DEMO_SEED=true` | senha das contas demo (mín. 10 caracteres, diferente da senha de desenvolvimento) |
+| `DEMO_PASSWORD` | se `ALLOW_DEMO_SEED=true` | senha das contas demo (mín. 10 caracteres, diferente da senha de desenvolvimento). Sem ela o deploy conclui, mas o seed é adiado até um novo deploy |
 | `NEXT_PUBLIC_DEMO_MODE` | não | `false` em produção |
 
 Em produção os atalhos de contas demo da tela de login ficam ocultos e o seed se recusa a usar a senha de desenvolvimento.

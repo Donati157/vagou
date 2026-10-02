@@ -31,8 +31,10 @@ if (PRODUCTION && process.env.ALLOW_DEMO_SEED !== "true") {
   process.exit(0);
 }
 if (PRODUCTION && (!process.env.DEMO_PASSWORD || process.env.DEMO_PASSWORD === "Vagou@2026" || process.env.DEMO_PASSWORD.length < 10)) {
-  console.error("✖ Em produção, defina DEMO_PASSWORD (mínimo de 10 caracteres, diferente da senha de desenvolvimento) antes de criar as contas de demonstração.");
-  process.exit(1);
+  // Never create demo accounts with a known password on a public site. Skipping keeps the
+  // database empty, so the next deploy seeds it once DEMO_PASSWORD is configured.
+  console.warn("⚠ Seed de demonstração adiado: defina DEMO_PASSWORD (mínimo de 10 caracteres, diferente da senha de desenvolvimento) e faça um novo deploy.");
+  process.exit(0);
 }
 
 export const DEMO_PASSWORD = process.env.DEMO_PASSWORD ?? "Vagou@2026";
