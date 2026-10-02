@@ -70,6 +70,10 @@ export default async function FacilityPage({ params, searchParams }: Props) {
                 </span>
               )}
             </p>
+            {/* Same favorite action as the desktop card, reachable on mobile (the side card is desktop-only) */}
+            <div className="mt-4 lg:hidden">
+              <FavoriteButton facilityId={f.id} initial={isFav} loggedIn={!!user} returnTo={`/estacionamentos/${f.slug}`} />
+            </div>
 
             {/* Spaces: how many the mall has and how many are free now */}
             <section aria-labelledby="vagas" className="mt-8 rounded-xl border border-line bg-surface p-5 sm:p-6">
