@@ -342,7 +342,7 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .count-up {
+  .count-up[data-play] {
     animation: count-up 1400ms var(--ease-vagou) both;
     animation-delay: var(--delay, 0ms);
   }
@@ -352,11 +352,6 @@
       animation: slide-up linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 55%;
-    }
-    .reveal-count {
-      animation: count-up linear both;
-      animation-timeline: view();
-      animation-range: entry 10% cover 40%;
     }
     .reveal-draw {
       stroke-dasharray: 1;
