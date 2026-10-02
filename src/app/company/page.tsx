@@ -9,6 +9,9 @@ import { Alert, EmptyState } from "@/components/ui/states";
 import { Table, TD, TH, THead, TR } from "@/components/ui/table";
 import { getCurrentUser } from "@/modules/auth/session";
 import { listCompanyFacilities } from "@/modules/facilities/company";
+import { getCompanyHourly } from "@/modules/occupancy/analytics-service";
+import { Card, CardBody, CardHeader } from "@/components/ui/card";
+import { Chart, CHART_COLORS } from "@/components/charts/charts";
 import { AvailabilityPill } from "@/modules/occupancy/components/availability-pill";
 import { DATA_SOURCE_KIND_LABEL, FACILITY_KIND_LABEL } from "@/lib/labels";
 import { formatNumber, formatPercent } from "@/lib/format";
@@ -24,6 +27,10 @@ export default async function CompanyHome({ searchParams }: { searchParams: Prom
   const known = facilities.filter((f) => f.availability.occupancy !== null);
   const occupancy = known.length ? known.reduce((a, f) => a + (f.availability.occupancy ?? 0) * f.availability.capacity, 0) / known.reduce((a, f) => a + f.availability.capacity, 0) : null;
   const anySim = facilities.some((f) => f.source?.kind === "SIMULATION");
+  const hourly = await getCompanyHourly(facilities.map((f) => f.id));
+  const capacityRows = facilities
+    .filter((f) => f.availability.counts)
+    .map((f) => ({ nome: f.name.length > 18 ? `${f.name.slice(0, 17)}…` : f.name, utilizadas: (f.availability.counts!.occupied + f.availability.counts!.reserved), livres: f.availability.counts!.available }));
 
   return (
     <>
@@ -50,6 +57,30 @@ export default async function CompanyHome({ searchParams }: { searchParams: Prom
             <Metric label="Vagas livres agora" value={formatNumber(free)} hint={anySim ? "inclui dados simulados" : undefined} />
             <Metric label="Ocupação atual" value={occupancy === null ? "—" : formatPercent(occupancy)} />
           </section>
+          <div className="mt-6 grid gap-6 xl:grid-cols-2">
+            <Card>
+              <CardHeader title="Ocupação por hora" description="Todas as unidades, últimos 7 dias (ponderada pela capacidade)" />
+              <CardBody>
+                <Chart title="Ocupação por hora" data={hourly} xKey="hora" series={[{ key: "ocupacao", label: "Ocupação", color: CHART_COLORS.primary }]} format="percent" />
+              </CardBody>
+            </Card>
+            <Card>
+              <CardHeader title="Capacidade utilizada x disponível agora" description="Por estacionamento" />
+              <CardBody>
+                <Chart
+                  title="Capacidade utilizada x disponível agora"
+                  data={capacityRows}
+                  xKey="nome"
+                  stacked
+                  series={[
+                    { key: "utilizadas", label: "Utilizadas", color: CHART_COLORS.primary },
+                    { key: "livres", label: "Livres", color: CHART_COLORS.remainder },
+                  ]}
+                  format="number"
+                />
+              </CardBody>
+            </Card>
+          </div>
           <div className="mt-6">
             <Table>
               <THead>

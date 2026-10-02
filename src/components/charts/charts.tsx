@@ -107,7 +107,7 @@ export function Chart({ data, xKey, series, format, kind = "bar", stacked, heigh
                 <Tooltip content={<ChartTooltip format={format} />} cursor={{ stroke: "#8c9893", strokeWidth: 1 }} />
                 {series.length > 1 && <Legend iconType="circle" wrapperStyle={{ fontSize: 12, color: "#4c5753" }} />}
                 {series.map((s, i) => (
-                  <Area key={s.key} type="monotone" dataKey={s.key} name={s.label} stroke={s.color ?? CHART_COLORS.primary} strokeWidth={2} fill={`url(#${gid}-${i})`} activeDot={{ r: 5, strokeWidth: 2, stroke: "#fff" }} stackId={stacked ? "a" : undefined} />
+                  <Area key={s.key} type="monotone" dataKey={s.key} name={s.label} stroke={s.color ?? CHART_COLORS.primary} strokeWidth={2} fill={`url(#${gid}-${i})`} activeDot={{ r: 5, strokeWidth: 2, stroke: "#fff" }} stackId={stacked ? "a" : undefined} isAnimationActive={false} />
                 ))}
               </AreaChart>
             ) : (
@@ -124,6 +124,7 @@ export function Chart({ data, xKey, series, format, kind = "bar", stacked, heigh
                     name={s.label}
                     fill={s.color ?? CHART_COLORS.primary}
                     maxBarSize={24}
+                    isAnimationActive={false}
                     stackId={stacked ? "a" : undefined}
                     radius={stacked ? (i === series.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]) : [4, 4, 0, 0]}
                     stroke={stacked ? "#fff" : undefined}

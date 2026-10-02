@@ -34,7 +34,7 @@ export async function listCompanyFacilities(user: CurrentUser, now = new Date())
           .select({
             facilityId: floors.facilityId,
             floors: sql<number>`count(distinct ${floors.id})::int`,
-            mapped: sql<number>`count(distinct ${floors.id}) filter (where exists (select 1 from floor_plans fp where fp.floor_id = ${floors.id} and fp.status = 'PUBLISHED'))::int`,
+            mapped: sql<number>`count(distinct ${floors.id}) filter (where exists (select 1 from floor_plans fp where fp.floor_id = "floors"."id" and fp.status = 'PUBLISHED'))::int`,
           })
           .from(floors)
           .where(inArray(floors.facilityId, ids))
