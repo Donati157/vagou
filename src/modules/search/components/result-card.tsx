@@ -1,3 +1,7 @@
+"use client";
+
+// Interactive card (hover/selection handlers, stopPropagation on the CTA): it must be a Client Component so
+// Server Components such as /app (favorites) can render it, not only the client-side search view.
 import Link from "next/link";
 import { forwardRef } from "react";
 import { Accessibility, BatteryCharging, Clock, Footprints, Layers, Umbrella } from "lucide-react";

@@ -17,7 +17,7 @@ export default async function DriverHome({ searchParams }: { searchParams: Promi
       {sp.negado && <Alert tone="warning" className="mb-4">Você não tem acesso àquela área com este perfil.</Alert>}
       <PageHeader
         title={`Olá, ${user.firstName}`}
-        description="Seus estacionamentos favoritos com a disponibilidade de agora."
+        description="Seus shoppings favoritos com as vagas livres de agora."
         actions={
           <LinkButton href="/buscar" size="sm">
             <Search className="size-4" aria-hidden /> Onde tem vaga
@@ -25,7 +25,7 @@ export default async function DriverHome({ searchParams }: { searchParams: Promi
         }
       />
       {favs.length === 0 ? (
-        <EmptyState icon={<Heart className="size-6" aria-hidden />} title="Nenhum favorito ainda" description="Salve os estacionamentos que você usa com frequência para ver as vagas livres de um jeito rápido." action={<LinkButton href="/buscar">Procurar estacionamentos</LinkButton>} />
+        <EmptyState icon={<Heart className="size-6" aria-hidden />} title="Nenhum shopping favorito ainda" description="Salve seus shoppings para encontrá-los mais rápido por aqui." action={<LinkButton href="/buscar">Ver shoppings com vaga</LinkButton>} />
       ) : (
         <ul className="grid gap-3 md:grid-cols-2">
           {favs.map((f) => (
