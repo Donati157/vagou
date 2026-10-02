@@ -294,9 +294,7 @@ export function MapEditor({ floorId, imageUrl, ratio, spaces, sectors, elements,
                 const isSel = selected.has(i.key);
                 return (
                   <g key={i.key} transform={`rotate(${i.rotation} ${cx} ${cy})`} onPointerDown={(e) => onSpacePointerDown(e, i)} className={tool === "select" && !readOnlyReason ? "cursor-move" : undefined}>
-                    <title>
-                      {i.code} · {SPACE_STATUS_LABEL[i.status]} · {SPACE_TYPE_LABEL[i.type]}
-                    </title>
+                    <title>{`${i.code} · ${SPACE_STATUS_LABEL[i.status]} · ${SPACE_TYPE_LABEL[i.type]}`}</title>
                     <rect x={x} y={y} width={w} height={h} rx={2} fill={fillFor(i)} fillOpacity={0.88} stroke={isSel ? "#0c2219" : "#fff"} strokeWidth={isSel ? 3 : 1.2} />
                     {i.status === "UNAVAILABLE" && colorBy === "status" && <line x1={x + 2} y1={y + 2} x2={x + w - 2} y2={y + h - 2} stroke="rgba(0,0,0,.45)" strokeWidth={1.5} />}
                     {i.type !== "COMMON" && (

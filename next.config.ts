@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
   // PGlite loads its WASM/data files from node_modules at runtime.
   serverExternalPackages: ["@electric-sql/pglite"],
   poweredByHeader: false,
+  // react-leaflet v5 breaks under StrictMode's dev-only double effect invocation
+  // ("Map container is being reused"). Production behaviour is identical either way.
+  reactStrictMode: false,
   experimental: {
     serverActions: { bodySizeLimit: "16mb" },
     proxyClientMaxBodySize: "16mb",
