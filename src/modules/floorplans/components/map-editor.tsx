@@ -226,10 +226,10 @@ export function MapEditor({ floorId, imageUrl, ratio, spaces, sectors, elements,
         {/* Toolbar */}
         <div role="toolbar" aria-label="Ferramentas do editor" className="mb-3 flex flex-wrap items-center gap-2 rounded-lg border border-asphalt-100 bg-surface p-2">
           <div className="flex rounded-md border border-asphalt-200 p-0.5">
-            <button type="button" aria-pressed={tool === "select"} onClick={() => setTool("select")} className={cn("flex h-8 items-center gap-1.5 rounded-sm px-2.5 text-sm font-semibold", tool === "select" ? "bg-ink-900 text-white" : "text-asphalt-600")} disabled={!!readOnlyReason}>
+            <button type="button" aria-pressed={tool === "select"} onClick={() => setTool("select")} className={cn("flex h-8 items-center gap-1.5 rounded-sm px-2.5 text-sm font-semibold", tool === "select" ? "bg-ink-900 text-white dark:bg-green-400 dark:text-ink-950" : "text-asphalt-600")} disabled={!!readOnlyReason}>
               <MousePointer2 className="size-4" aria-hidden /> Selecionar
             </button>
-            <button type="button" aria-pressed={tool === "add"} onClick={() => setTool("add")} className={cn("flex h-8 items-center gap-1.5 rounded-sm px-2.5 text-sm font-semibold", tool === "add" ? "bg-ink-900 text-white" : "text-asphalt-600")} disabled={!!readOnlyReason}>
+            <button type="button" aria-pressed={tool === "add"} onClick={() => setTool("add")} className={cn("flex h-8 items-center gap-1.5 rounded-sm px-2.5 text-sm font-semibold", tool === "add" ? "bg-ink-900 text-white dark:bg-green-400 dark:text-ink-950" : "text-asphalt-600")} disabled={!!readOnlyReason}>
               <SquarePlus className="size-4" aria-hidden /> Adicionar vaga
             </button>
           </div>

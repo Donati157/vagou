@@ -52,7 +52,7 @@ export function PlanDemo() {
                 {s === "occupied" && !pcd && <rect x={x + 8} y={r.y + 11} width="17" height="30" rx="5" fill="rgba(255,255,255,.42)" />}
                 {pcd && (
                   <text x={x + 16.5} y={r.y + 32} textAnchor="middle" fontSize="16" fill="#fff" aria-hidden>
-                    ♿
+                    {"\u267F\uFE0E"}
                   </text>
                 )}
               </g>

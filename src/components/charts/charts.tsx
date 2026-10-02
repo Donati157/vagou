@@ -6,14 +6,14 @@ import { Table2 } from "lucide-react";
 import { formatMoney, formatNumber, formatPercent } from "@/lib/format";
 
 /** Validated chart palette (see dataviz validator): fixed order, never cycled. */
-export const CHART_COLORS = { primary: "#3f9e5a", secondary: "#2563eb", tertiary: "#d97706", remainder: "#d7ddda" } as const;
+export const CHART_COLORS = { primary: "#3f9e5a", secondary: "#2563eb", tertiary: "#d97706", remainder: "var(--color-asphalt-200)" } as const;
 
 export type ValueFormat = "money" | "number" | "percent";
 const fmt = (v: number, f: ValueFormat) => (f === "money" ? formatMoney(v) : f === "percent" ? formatPercent(v) : formatNumber(v));
 const fmtAxis = (v: number, f: ValueFormat) =>
   f === "money" ? (v >= 100000 ? `R$ ${Math.round(v / 100000)} mil` : `R$ ${Math.round(v / 100)}`) : f === "percent" ? `${Math.round(v * 100)}%` : formatNumber(v);
 
-const axisProps = { stroke: "#b9c2be", tick: { fill: "#67736e", fontSize: 12 }, tickLine: false, axisLine: false } as const;
+const axisProps = { stroke: "var(--color-asphalt-300)", tick: { fill: "var(--color-asphalt-500)", fontSize: 12 }, tickLine: false, axisLine: false } as const;
 
 function ChartTooltip({ active, payload, label, format }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string; format: ValueFormat }) {
   if (!active || !payload?.length) return null;
@@ -101,22 +101,22 @@ export function Chart({ data, xKey, series, format, kind = "bar", stacked, heigh
                     </linearGradient>
                   ))}
                 </defs>
-                <CartesianGrid vertical={false} stroke="#e9edeb" />
+                <CartesianGrid vertical={false} stroke="var(--color-asphalt-100)" />
                 <XAxis dataKey={xKey} {...axisProps} minTickGap={24} />
                 <YAxis {...axisProps} width={64} tickFormatter={(v) => fmtAxis(v, format)} />
-                <Tooltip content={<ChartTooltip format={format} />} cursor={{ stroke: "#8c9893", strokeWidth: 1 }} />
-                {series.length > 1 && <Legend iconType="circle" wrapperStyle={{ fontSize: 12, color: "#4c5753" }} />}
+                <Tooltip content={<ChartTooltip format={format} />} cursor={{ stroke: "var(--color-asphalt-400)", strokeWidth: 1 }} />
+                {series.length > 1 && <Legend iconType="circle" wrapperStyle={{ fontSize: 12, color: "var(--color-asphalt-600)" }} />}
                 {series.map((s, i) => (
-                  <Area key={s.key} type="monotone" dataKey={s.key} name={s.label} stroke={s.color ?? CHART_COLORS.primary} strokeWidth={2} fill={`url(#${gid}-${i})`} activeDot={{ r: 5, strokeWidth: 2, stroke: "#fff" }} stackId={stacked ? "a" : undefined} isAnimationActive={false} />
+                  <Area key={s.key} type="monotone" dataKey={s.key} name={s.label} stroke={s.color ?? CHART_COLORS.primary} strokeWidth={2} fill={`url(#${gid}-${i})`} activeDot={{ r: 5, strokeWidth: 2, stroke: "var(--color-surface)" }} stackId={stacked ? "a" : undefined} isAnimationActive={false} />
                 ))}
               </AreaChart>
             ) : (
               <BarChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }} barCategoryGap="25%">
-                <CartesianGrid vertical={false} stroke="#e9edeb" />
+                <CartesianGrid vertical={false} stroke="var(--color-asphalt-100)" />
                 <XAxis dataKey={xKey} {...axisProps} minTickGap={12} />
                 <YAxis {...axisProps} width={64} tickFormatter={(v) => fmtAxis(v, format)} />
                 <Tooltip content={<ChartTooltip format={format} />} cursor={{ fill: "rgba(23,56,42,0.05)" }} />
-                {series.length > 1 && <Legend iconType="circle" wrapperStyle={{ fontSize: 12, color: "#4c5753" }} />}
+                {series.length > 1 && <Legend iconType="circle" wrapperStyle={{ fontSize: 12, color: "var(--color-asphalt-600)" }} />}
                 {series.map((s, i) => (
                   <Bar
                     key={s.key}
@@ -127,7 +127,7 @@ export function Chart({ data, xKey, series, format, kind = "bar", stacked, heigh
                     isAnimationActive={false}
                     stackId={stacked ? "a" : undefined}
                     radius={stacked ? (i === series.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]) : [4, 4, 0, 0]}
-                    stroke={stacked ? "#fff" : undefined}
+                    stroke={stacked ? "var(--color-surface)" : undefined}
                     strokeWidth={stacked ? 2 : 0}
                   />
                 ))}

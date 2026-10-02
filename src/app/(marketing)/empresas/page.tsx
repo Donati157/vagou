@@ -12,12 +12,12 @@ export const metadata: Metadata = {
 export default function EmpresasPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-ink-900 pb-20 text-white">
-        <div className="road-grid pointer-events-none absolute inset-0 opacity-25 invert" />
+      <section className="relative overflow-hidden bg-ink-900 pb-24 text-white sm:pb-32">
+        <div className="texture texture-stalls texture-fade text-white/[0.05]" aria-hidden />
         <SiteHeader variant="transparent" />
-        <main id="conteudo" className="relative mx-auto max-w-7xl px-4 pt-14 sm:px-6">
-          <p className="text-sm font-semibold tracking-wide text-green-300 uppercase">Vagou para shoppings</p>
-          <h1 className="mt-3 max-w-3xl font-display text-[40px] leading-[1.05] font-bold tracking-[-0.03em] text-white sm:text-6xl">
+        <main id="conteudo" className="relative mx-auto max-w-7xl px-4 pt-14 sm:px-6 sm:pt-20">
+          <p className="eyebrow text-green-300">Vagou para shoppings</p>
+          <h1 className="mt-5 max-w-4xl text-headline font-bold text-white sm:text-[4.25rem] sm:leading-[1.02]">
             Mostre aos seus clientes onde tem vaga no seu shopping.
           </h1>
           <p className="mt-5 max-w-2xl text-lg text-white/75">
@@ -34,32 +34,32 @@ export default function EmpresasPage() {
         </main>
       </section>
 
-      <section aria-labelledby="pilares" className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+      <section aria-labelledby="pilares" className="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32">
         <h2 id="pilares" className="sr-only">
           Pilares
         </h2>
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-10 md:grid-cols-3 md:gap-12">
           {[
             { Icon: Layers, t: "Digitalização", d: "Transforme o estacionamento do shopping em infraestrutura digital: importe a planta, revise as vagas propostas e publique o mapa." },
             { Icon: BarChart3, t: "Inteligência", d: "Entenda a ocupação por hora, piso e setor, os picos de demanda e a capacidade ociosa." },
             { Icon: MapPinned, t: "Visibilidade", d: "Mostre a disponibilidade para motoristas na Vagou e direcione-os à entrada certa." },
           ].map(({ Icon, t, d }) => (
-            <article key={t} className="rounded-lg border border-asphalt-100 bg-surface p-6">
-              <Icon className="size-7 text-green-600" aria-hidden />
-              <h3 className="mt-4 text-xl font-semibold">{t}</h3>
+            <article key={t} className="reveal border-t-2 border-green-400 pt-6">
+              <Icon className="size-6 text-green-600" aria-hidden />
+              <h3 className="mt-4 text-title font-semibold">{t}</h3>
               <p className="mt-2 text-asphalt-600">{d}</p>
             </article>
           ))}
         </div>
       </section>
 
-      <section aria-labelledby="mapa" className="border-y border-asphalt-100 bg-surface">
-        <div className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2">
+      <section aria-labelledby="mapa" className="border-y border-line bg-surface">
+        <div className="mx-auto grid max-w-7xl gap-16 px-4 py-24 sm:px-6 sm:py-32 lg:grid-cols-2">
           <div>
-            <h2 id="mapa" className="text-3xl font-semibold">
+            <h2 id="mapa" className="text-headline font-bold">
               Mapa Inteligente: da planta à operação.
             </h2>
-            <ol className="mt-6 space-y-4">
+            <ol className="mt-8 space-y-6">
               {[
                 { Icon: Upload, t: "Envie a planta", d: "PNG, JPG ou PDF de cada piso." },
                 { Icon: Cpu, t: "Análise da planta", d: "Propomos setores, vagas, entradas e circulação (em modo demonstração nesta versão)." },
@@ -79,10 +79,10 @@ export default function EmpresasPage() {
             </ol>
           </div>
           <div>
-            <h2 className="text-3xl font-semibold">Conecte a fonte de ocupação que você já tem.</h2>
+            <h2 className="text-headline font-bold">Conecte a fonte de ocupação que você já tem.</h2>
             <ul className="mt-6 grid gap-3 sm:grid-cols-2">
               {["Sensores de vaga", "Câmeras", "Cancelas e catracas", "Sistema de gestão do estacionamento do shopping", "API própria", "Atualização manual pela equipe"].map((t) => (
-                <li key={t} className="flex items-center gap-2 rounded-md border border-asphalt-100 px-4 py-3 text-[15px]">
+                <li key={t} className="flex items-center gap-2 border-b border-line py-3 text-[15px]">
                   <Check className="size-4 text-green-600" aria-hidden /> {t}
                 </li>
               ))}
@@ -95,7 +95,7 @@ export default function EmpresasPage() {
         </div>
       </section>
 
-      <section className="px-4 py-20 sm:px-6">
+      <section className="px-4 py-24 sm:px-6 sm:py-32">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 rounded-xl bg-ink-900 px-6 py-12 text-white sm:px-12 md:flex-row md:items-center">
           <div className="flex items-center gap-4">
             <Building2 className="size-10 shrink-0 text-green-300" aria-hidden />

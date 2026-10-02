@@ -116,7 +116,7 @@ export function HeroRoute() {
         </p>
         <p className="mt-2 flex items-baseline gap-2">
           <span className="font-display text-5xl leading-none font-bold tracking-[-0.04em]">
-            <span className="count-up" data-play style={{ "--to": 127, ...d(2200) } as CSSProperties} aria-hidden />
+            <span className="count-up inline-block min-w-[3ch]" data-play style={{ "--to": 127, ...d(2200) } as CSSProperties} aria-hidden />
             <span className="sr-only">127</span>
           </span>
           <span className="text-white/75">vagas livres</span>

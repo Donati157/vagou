@@ -68,7 +68,7 @@ export default async function SmartMapPage({ params, searchParams }: { params: P
 
       <ol className="flex flex-wrap gap-2" aria-label="Etapas">
         {STEPS.map((s, i) => (
-          <li key={s} aria-current={i === step ? "step" : undefined} className={cn("inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold", i < step ? "bg-green-100 text-green-700" : i === step ? "bg-ink-900 text-white" : "bg-asphalt-100 text-asphalt-500")}>
+          <li key={s} aria-current={i === step ? "step" : undefined} className={cn("inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold", i < step ? "bg-green-100 text-green-700" : i === step ? "bg-ink-900 text-white dark:bg-green-400 dark:text-ink-950" : "bg-asphalt-100 text-asphalt-500")}>
             {i < step ? <Check className="size-3.5" aria-hidden /> : <span className="text-xs">{i + 1}</span>} {s}
           </li>
         ))}

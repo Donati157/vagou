@@ -160,7 +160,7 @@ export function OperationalMap({ facilityId, initial }: { facilityId: string; in
                       setSectorFilter("");
                       load(f.id);
                     }}
-                    className={cn("rounded-full px-3 py-1.5 text-sm font-semibold", f.id === map.floorId ? "bg-ink-900 text-white" : "border border-asphalt-200 text-asphalt-700 disabled:opacity-40")}
+                    className={cn("rounded-full px-3 py-1.5 text-sm font-semibold", f.id === map.floorId ? "bg-ink-900 text-white dark:bg-green-400 dark:text-ink-950" : "border border-asphalt-200 text-asphalt-700 disabled:opacity-40")}
                     title={f.published ? undefined : "Piso sem mapa publicado"}
                   >
                     {f.name}
@@ -186,7 +186,7 @@ export function OperationalMap({ facilityId, initial }: { facilityId: string; in
                       return n;
                     })
                   }
-                  className={cn("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm font-medium", on ? "border-fg bg-ink-900 text-white" : "border-asphalt-200 text-asphalt-700")}
+                  className={cn("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm font-medium", on ? "border-fg bg-ink-900 text-white dark:bg-green-400 dark:text-ink-950" : "border-asphalt-200 text-asphalt-700")}
                 >
                   <st.Icon className="size-3.5" aria-hidden /> {SPACE_STATUS_LABEL[s]}
                 </button>

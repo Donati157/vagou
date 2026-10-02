@@ -30,7 +30,7 @@ export function CountUp({ to, delay = 0, className }: { to: number; delay?: numb
 
   return (
     <span className={className}>
-      <span ref={ref} className="count-up" data-play={play || undefined} style={{ "--to": to, "--delay": `${delay}ms` } as CSSProperties} aria-hidden />
+      <span ref={ref} className="count-up inline-block text-left" data-play={play || undefined} style={{ "--to": to, "--delay": `${delay}ms`, minWidth: `${String(to).length}ch` } as CSSProperties} aria-hidden />
       <span className="sr-only">{formatNumber(to)}</span>
     </span>
   );

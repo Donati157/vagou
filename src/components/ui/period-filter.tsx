@@ -16,7 +16,7 @@ export function PeriodFilter({ active, basePath, extra = "" }: { active: string;
           key={o.key}
           href={`${basePath}?periodo=${o.key}${extra}`}
           aria-current={active === o.key ? "page" : undefined}
-          className={cn("rounded-sm px-3 py-1.5 text-sm font-semibold", active === o.key ? "bg-ink-900 text-white" : "text-asphalt-600 hover:text-fg")}
+          className={cn("rounded-sm px-3 py-1.5 text-sm font-semibold", active === o.key ? "bg-ink-900 text-white dark:bg-green-400 dark:text-ink-950" : "text-asphalt-600 hover:text-fg")}
         >
           {o.label}
         </Link>

@@ -44,7 +44,7 @@ export function SearchFilters() {
             onClick={() => set(key, on ? null : "1")}
             className={cn(
               "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-sm font-medium transition-colors",
-              on ? "border-fg bg-ink-900 text-white" : "border-asphalt-200 bg-surface text-asphalt-700 hover:border-asphalt-300",
+              on ? "border-ink-900 bg-ink-900 text-white dark:border-green-400 dark:bg-green-400 dark:text-ink-950" : "border-asphalt-200 bg-surface text-asphalt-700 hover:border-asphalt-300",
             )}
           >
             <Icon className="size-4" aria-hidden /> {label}
