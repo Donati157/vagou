@@ -320,6 +320,17 @@
     80%, 100% { opacity: 0; scale: 1.8; }
   }
 
+  /* Slow occupancy change (decorative garages): a car arrives, stays, leaves. */
+  .stall-cycle {
+    animation: stall-cycle var(--dur, 30s) var(--ease-vagou) infinite;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes stall-cycle {
+    0%, 44% { opacity: 1; }
+    50%, 94% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
   /* ---------- Animated number (CSS @property; real value stays in the DOM for a11y) ---------- */
   .count-up {
     --n: var(--to);

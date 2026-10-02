@@ -116,7 +116,7 @@ export function RegisterForm({ next, initialType }: { next?: string; initialType
             <label
               key={value}
               className={cn(
-                "flex cursor-pointer flex-col gap-1 rounded-md border p-3 transition-colors has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-green-200",
+                "press flex cursor-pointer flex-col gap-1 rounded-md border p-3 transition-colors duration-200 has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-green-200",
                 type === value ? "border-fg bg-green-50" : "border-asphalt-200 bg-surface hover:border-asphalt-300",
               )}
             >
