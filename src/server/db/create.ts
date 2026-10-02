@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
 import { PGlite } from "@electric-sql/pglite";
-import { btree_gist } from "@electric-sql/pglite/contrib/btree_gist";
 import { drizzle as drizzlePglite } from "drizzle-orm/pglite";
 import { drizzle as drizzlePostgres, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
@@ -42,7 +41,7 @@ export function createDatabase(opts: { inMemory?: boolean } = {}): Database {
     fs.mkdirSync(pgliteDataDir(), { recursive: true });
     acquireLock();
   }
-  const client = new PGlite({ dataDir: opts.inMemory ? undefined : pgliteDataDir(), extensions: { btree_gist } });
+  const client = new PGlite({ dataDir: opts.inMemory ? undefined : pgliteDataDir() });
   if (!opts.inMemory) {
     // Flush and close cleanly on shutdown so the on-disk database stays consistent.
     const close = () => {

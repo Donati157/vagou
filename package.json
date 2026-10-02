@@ -16,7 +16,7 @@
     "db:reset": "rm -rf .data && tsx scripts/seed.ts",
     "setup": "tsx scripts/seed.ts",
     "assets": "tsx scripts/generate-assets.ts",
-    "vercel-build": "tsx scripts/migrate.ts && tsx scripts/seed.ts --if-empty && next build"
+    "vercel-build": "tsx scripts/migrate.ts && tsx scripts/seed.ts --if-empty --demo && next build"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
@@ -61,6 +61,6 @@
     "fsevents@2.3.3": false
   },
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=20.9.0 <25"
   }
 }

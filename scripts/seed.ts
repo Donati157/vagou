@@ -1,9 +1,13 @@
 /**
  * Demo seed — fictional facilities in São Paulo. No real personal data.
  *
- *   npm run db:seed                 → resets the database and loads demo data (development)
- *   tsx scripts/seed.ts --if-empty  → loads demo data only into an empty database (deploys);
- *                                     never deletes anything
+ *   npm run db:seed                        → resets the database and loads demo data (development)
+ *   tsx scripts/seed.ts --if-empty --demo  → deploys: loads demo data only into an EMPTY database
+ *                                            (never deletes anything) and keeps demo-account
+ *                                            passwords in sync with DEMO_PASSWORD
+ *
+ * In production, demo accounts are created LOCKED (random undisclosed password) unless
+ * DEMO_PASSWORD is set; setting it later and redeploying unlocks them.
  *
  * Stop `npm run dev` first when using the embedded database.
  */
@@ -15,7 +19,7 @@ import { runMigrations } from "./migrate";
 import { renderSamplePlan } from "./lib/plan-image";
 import { createDatabase, type Database } from "../src/server/db/create";
 import * as s from "../src/server/db/schema";
-import { hashPassword } from "../src/modules/auth/password";
+import { hashPassword, randomToken } from "../src/modules/auth/password";
 import { standardLayout, STANDARD_SECTORS, spaceCode } from "../src/modules/floorplans/layout";
 import { seededRng, simulateAggregate, targetOccupancy } from "../src/modules/occupancy/simulation";
 import { addMinutes } from "../src/lib/time";
@@ -25,19 +29,19 @@ loadEnv();
 
 const IF_EMPTY = process.argv.includes("--if-empty");
 const PRODUCTION = process.env.NODE_ENV === "production" || !!process.env.VERCEL;
+/** Demo data in production is an explicit opt-in: `--demo` (versioned in vercel-build) or ALLOW_DEMO_SEED=true. */
+const DEMO_ALLOWED = process.argv.includes("--demo") || process.env.ALLOW_DEMO_SEED === "true";
 
-if (PRODUCTION && process.env.ALLOW_DEMO_SEED !== "true") {
-  console.log("• Seed de demonstração não executado (defina ALLOW_DEMO_SEED=true para carregar dados de demonstração).");
-  process.exit(0);
-}
-if (PRODUCTION && (!process.env.DEMO_PASSWORD || process.env.DEMO_PASSWORD === "Vagou@2026" || process.env.DEMO_PASSWORD.length < 10)) {
-  // Never create demo accounts with a known password on a public site. Skipping keeps the
-  // database empty, so the next deploy seeds it once DEMO_PASSWORD is configured.
-  console.warn("⚠ Seed de demonstração adiado: defina DEMO_PASSWORD (mínimo de 10 caracteres, diferente da senha de desenvolvimento) e faça um novo deploy.");
+if (PRODUCTION && !DEMO_ALLOWED) {
+  console.log("• Seed de demonstração não executado (use --demo ou ALLOW_DEMO_SEED=true).");
   process.exit(0);
 }
 
-export const DEMO_PASSWORD = process.env.DEMO_PASSWORD ?? "Vagou@2026";
+const DEV_PASSWORD = "Vagou@2026";
+const configuredPassword = process.env.DEMO_PASSWORD;
+/** A public site never gets the documented development password. */
+const PASSWORD_OK = !!configuredPassword && configuredPassword !== DEV_PASSWORD && configuredPassword.length >= 10;
+export const DEMO_PASSWORD = PRODUCTION ? (PASSWORD_OK ? configuredPassword! : null) : (configuredPassword ?? DEV_PASSWORD);
 const rnd = seededRng(20261002);
 const slug = (t: string) =>
   t
@@ -335,6 +339,12 @@ async function main() {
     const [{ n }] = await db.select({ n: sql<number>`count(*)::int` }).from(s.users);
     if (n > 0) {
       console.log("• Banco já possui dados — seed ignorado.");
+      if (DEMO_PASSWORD) {
+        // Unlock / rotate the demo accounts (all fictional, under the .demo TLD).
+        const hash = await hashPassword(DEMO_PASSWORD);
+        await db.update(s.users).set({ passwordHash: hash, updatedAt: new Date() }).where(sql`${s.users.email} like '%.demo'`);
+        console.log("• Senha das contas de demonstração sincronizada com DEMO_PASSWORD.");
+      }
       process.exit(0);
     }
   } else {
@@ -350,7 +360,8 @@ async function main() {
   }
 
   const now = new Date();
-  const passwordHash = await hashPassword(DEMO_PASSWORD);
+  // Locked accounts get a random password nobody knows until DEMO_PASSWORD is configured.
+  const passwordHash = await hashPassword(DEMO_PASSWORD ?? randomToken(32));
 
   // ── Users ──
   console.log("• Usuários e empresas");
@@ -377,7 +388,7 @@ async function main() {
   await db.insert(s.organizationMembers).values(users.filter((u) => u.org).map((u) => ({ organizationId: orgIds.get(u.org!)!, userId: u.id, role: "OWNER" as const })));
 
   // ── Facilities ──
-  console.log("• Estacionamentos, tarifas, horários e entradas");
+  console.log("• Shoppings, horários e entradas");
   const { spaces: layoutSpaces, elements: layoutElements } = standardLayout();
   const meta: Array<{ id: string; kind: Kind; capacity: number; source: FacilitySpec["source"]; spaceIds: string[]; floorSpaces: Map<string, string[]> }> = [];
 
@@ -531,7 +542,13 @@ async function main() {
   ]);
 
   console.log(`\n✔ Seed concluído: ${FACILITIES.length} shoppings, ${meta.reduce((a, m) => a + m.spaceIds.length, 0)} vagas mapeadas.`);
-  console.log(PRODUCTION ? "  Contas demo criadas com a senha definida em DEMO_PASSWORD." : `  Contas demo (senha: ${DEMO_PASSWORD})`);
+  console.log(
+    !PRODUCTION
+      ? `  Contas demo (senha: ${DEMO_PASSWORD})`
+      : DEMO_PASSWORD
+        ? "  Contas demo criadas com a senha definida em DEMO_PASSWORD."
+        : "  Contas demo criadas BLOQUEADAS. Defina DEMO_PASSWORD e faça um novo deploy para liberá-las.",
+  );
   for (const u of users.slice(0, 3)) console.log(`  ${u.role.padEnd(15)} ${u.email}`);
   process.exit(0);
 }

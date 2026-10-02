@@ -136,24 +136,22 @@ A Vagou roda em hospedagem serverless. Requisitos de produção:
 O build da Vercel executa automaticamente `npm run vercel-build`:
 
 ```
-tsx scripts/migrate.ts && tsx scripts/seed.ts --if-empty && next build
+tsx scripts/migrate.ts && tsx scripts/seed.ts --if-empty --demo && next build
 ```
 
 1. aplica as migrations (falha com mensagem clara se `DATABASE_URL` não existir);
-2. carrega os dados de demonstração **somente se o banco estiver vazio** e `ALLOW_DEMO_SEED=true` — nunca apaga dados;
+2. carrega os shoppings de demonstração **somente se o banco estiver vazio** (nunca apaga dados);
 3. compila o app.
 
-Variáveis de ambiente na Vercel:
+**A única variável obrigatória é `DATABASE_URL`** (criada pela integração Neon). As demais são opcionais:
 
-| Variável | Obrigatória | Valor |
-|---|---|---|
-| `DATABASE_URL` | sim | criada pela integração Neon (ou a connection string do seu PostgreSQL) |
-| `NEXT_PUBLIC_APP_URL` | recomendada | URL pública, ex.: `https://vagou.vercel.app` |
-| `ALLOW_DEMO_SEED` | para dados demo | `true` |
-| `DEMO_PASSWORD` | se `ALLOW_DEMO_SEED=true` | senha das contas demo (mín. 10 caracteres, diferente da senha de desenvolvimento). Sem ela o deploy conclui, mas o seed é adiado até um novo deploy |
-| `NEXT_PUBLIC_DEMO_MODE` | não | `false` em produção |
+| Variável | Valor |
+|---|---|
+| `DEMO_PASSWORD` | senha das contas demo (mín. 10 caracteres, diferente da senha de desenvolvimento). Sem ela as contas demo são criadas **bloqueadas**; ao definir e fazer novo deploy, elas são liberadas (e a senha é sincronizada a cada deploy) |
+| `NEXT_PUBLIC_APP_URL` | URL pública customizada; se ausente, usa o domínio de produção da Vercel |
+| `NEXT_PUBLIC_DEMO_MODE` | deixe ausente ou `false` em produção |
 
-Em produção os atalhos de contas demo da tela de login ficam ocultos e o seed se recusa a usar a senha de desenvolvimento.
+Para não carregar dados de demonstração num ambiente real, remova `--demo` do script `vercel-build`.
 
 ## Fluxos da V1
 
