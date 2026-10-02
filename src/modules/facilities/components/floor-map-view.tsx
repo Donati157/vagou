@@ -8,7 +8,7 @@ type PlanElement = { id: string; kind: string; label: string | null; x: number; 
  * Read-only digital floor map: plan image + spaces colored by status, each with a pattern
  * and a <title> so status never depends on color alone.
  */
-export function FloorMapView({ imageUrl, ratio, spaces, elements, highlightStatus }: { imageUrl: string | null; ratio: number; spaces: Space[]; elements: PlanElement[]; highlightStatus?: SpaceStatus | null }) {
+export function FloorMapView({ imageUrl, ratio, spaces, elements, highlightStatus, route = [] }: { imageUrl: string | null; ratio: number; spaces: Space[]; elements: PlanElement[]; highlightStatus?: SpaceStatus | null; route?: Array<[number, number]> }) {
   const H = 1000 * ratio; // uniform scale keeps rotated spaces undistorted
   return (
     <div className="relative w-full overflow-hidden rounded-lg border border-asphalt-100 bg-white" style={{ aspectRatio: `${1 / ratio}` }}>
@@ -32,6 +32,11 @@ export function FloorMapView({ imageUrl, ratio, spaces, elements, highlightStatu
               <title>{e.label ?? (e.kind === "ENTRANCE" ? "Entrada" : "Saída")}</title>
             </rect>
           ))}
+        {route.length > 1 && (
+          <polyline points={route.map(([x, y]) => `${x * 1000},${y * H}`).join(" ")} fill="none" stroke="#17382A" strokeWidth="5" strokeDasharray="12 8" strokeLinecap="round" strokeLinejoin="round">
+            <title>Rota ilustrativa até o setor recomendado</title>
+          </polyline>
+        )}
         {spaces.map((s) => {
           const st = SPACE_STATUS_STYLE[s.status];
           const dim = highlightStatus && highlightStatus !== s.status;

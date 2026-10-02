@@ -8,6 +8,7 @@ import { FloorMapView, SpaceLegend } from "@/modules/facilities/components/floor
 import { AvailabilityPill } from "@/modules/occupancy/components/availability-pill";
 import { countStatuses, toPublicAvailability } from "@/modules/occupancy/availability";
 import { SPACE_TYPE_LABEL, type SpaceType } from "@/lib/labels";
+import { demoRoute } from "@/modules/floorplans/route";
 
 type Props = { params: Promise<{ slug: string; floorId: string }> };
 
@@ -27,6 +28,11 @@ export default async function FloorPage({ params }: Props) {
   const bySector = sectors.map((s) => ({ ...s, free: spaces.filter((x) => x.sectorId === s.id && x.status === "AVAILABLE").length, total: spaces.filter((x) => x.sectorId === s.id).length }));
   const freeByType = (["PCD", "EV", "MOTO"] as SpaceType[]).map((t) => ({ t, n: spaces.filter((s) => s.type === t && s.status === "AVAILABLE").length }));
   const nav = f.navigateTo;
+  // "Inside the facility": recommend the sector with most free spaces and draw a demonstrative route.
+  const best = [...bySector].sort((x, y) => y.free - x.free)[0];
+  const target = best && best.free > 0 ? spaces.find((s) => s.sectorId === best.id && s.status === "AVAILABLE") : undefined;
+  const entrance = elements.find((e) => e.kind === "ENTRANCE");
+  const route = target ? demoRoute(entrance, target, elements.filter((e) => e.kind === "CIRCULATION")) : [];
   return (
     <>
       <SiteHeader />
@@ -51,11 +57,20 @@ export default async function FloorPage({ params }: Props) {
         </div>
         <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_280px]">
           <div className="space-y-3">
-            <FloorMapView imageUrl={plan.imageUrl} ratio={ratio} spaces={spaces} elements={elements} />
+            <FloorMapView imageUrl={plan.imageUrl} ratio={ratio} spaces={spaces} elements={elements} route={route} />
             <SpaceLegend />
             {a.simulated && <p className="text-xs text-[#7a5200]">Status das vagas simulado para demonstração.</p>}
           </div>
           <aside className="space-y-4">
+            {best && best.free > 0 && (
+              <section className="rounded-lg border border-green-200 bg-green-50 p-4">
+                <h2 className="font-semibold text-ink-900">Setor recomendado: {best.name}</h2>
+                <p className="mt-1 text-sm text-asphalt-700">
+                  {best.free} vagas livres agora. {entrance ? `Entre pela ${(entrance.label ?? "entrada principal").toLowerCase()} e siga a rota tracejada.` : "Siga a sinalização até o setor."}
+                </p>
+                <p className="mt-2 text-xs text-asphalt-500">Rota ilustrativa — ainda não há navegação interna em tempo real.</p>
+              </section>
+            )}
             <section className="rounded-lg border border-asphalt-100 bg-white p-4">
               <h2 className="font-semibold">Vagas livres por setor</h2>
               <ul className="mt-3 space-y-2 text-sm">
