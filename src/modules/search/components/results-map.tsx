@@ -19,11 +19,17 @@ type Props = {
 const DESTINATION_ICON = L.divIcon({
   className: "",
   iconSize: [0, 0],
-  html: `<div style="position:absolute;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:999px;background:#2563eb;border:4px solid #fff;box-shadow:0 0 0 6px rgba(37,99,235,.25)"></div>`,
+  html: `<div style="position:absolute;transform:translate(-50%,-50%);width:18px;height:18px;border-radius:999px;background:#17382A;border:4px solid #fff;box-shadow:0 0 0 6px rgba(23,56,42,.25),0 2px 8px rgba(11,31,22,.35)"></div>`,
 });
 
+// Pins drop in once, in sequence, the first time a facility appears (not on every hover/selection,
+// because Leaflet replaces the icon element whenever it changes).
+const SHOWN = new Set<string>();
+
 /** Pin = facility, labeled with live free spaces ("127", "Lotado", "?"). */
-function pinIcon(r: FacilityResult, state: "default" | "hover" | "selected") {
+function pinIcon(r: FacilityResult, state: "default" | "hover" | "selected", index: number) {
+  const first = !SHOWN.has(r.id);
+  SHOWN.add(r.id);
   const a = r.availability;
   const closed = !r.open;
   const st = AVAILABILITY_STYLE[closed ? "UNKNOWN" : a.state];
@@ -34,12 +40,12 @@ function pinIcon(r: FacilityResult, state: "default" | "hover" | "selected") {
   return L.divIcon({
     className: "",
     iconSize: [0, 0],
-    html: `<div role="presentation" style="position:absolute;left:0;top:0;transform:translate(-50%,-100%) scale(${scale});transform-origin:50% 100%;transition:transform .12s">
+    html: `<div role="presentation" style="position:absolute;left:0;top:0;transform:translate(-50%,-100%) scale(${scale});transform-origin:50% 100%;transition:transform var(--dur-fast) var(--ease-pin)"><div class="${first ? "pin-in" : ""}" style="--delay:${Math.min(index, 12) * 45}ms">
       <div style="display:flex;align-items:center;gap:5px;background:${bg};color:${fg};font:700 13px var(--font-outfit),sans-serif;padding:5px 10px 5px 6px;border-radius:999px;box-shadow:${state === "selected" ? "0 0 0 4px rgba(92,184,116,.45)," : ""}0 3px 10px rgba(12,34,25,.3);white-space:nowrap;border:2px solid #fff">
         <span style="display:grid;place-items:center;width:18px;height:18px;border-radius:5px;background:rgba(255,255,255,.22);font-size:11px">P</span>${label}
       </div>
       <div style="width:10px;height:10px;background:${bg};border-right:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(45deg);margin:-7px auto 0"></div>
-    </div>`,
+    </div></div>`,
   });
 }
 
@@ -74,11 +80,11 @@ export default function ResultsMap({ results, center, hasCenter, selectedId, hov
       <FitBounds results={results} center={center} hasCenter={hasCenter} />
       <PanTo result={selected} />
       {hasCenter && <Marker position={[center.lat, center.lng]} icon={DESTINATION_ICON} interactive={false} keyboard={false} />}
-      {results.map((r) => (
+      {results.map((r, i) => (
         <Marker
           key={r.id}
           position={[r.lat, r.lng]}
-          icon={pinIcon(r, r.id === selectedId ? "selected" : r.id === hoveredId ? "hover" : "default")}
+          icon={pinIcon(r, r.id === selectedId ? "selected" : r.id === hoveredId ? "hover" : "default", i)}
           zIndexOffset={r.id === selectedId ? 1000 : r.id === hoveredId ? 500 : 0}
           title={`${r.name} — ${r.availability.state === "UNKNOWN" ? "sem dados" : r.availability.state === "FULL" ? "lotado" : `${r.availability.available} vagas livres`}`}
           alt={r.name}

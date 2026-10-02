@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { forwardRef } from "react";
 import { Accessibility, BatteryCharging, Clock, Footprints, Layers, Umbrella } from "lucide-react";
+import { buttonClasses } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { formatDistance, formatNumber } from "@/lib/format";
 import { AvailabilityPill } from "@/modules/occupancy/components/availability-pill";
@@ -24,9 +25,9 @@ export const FacilityCard = forwardRef<HTMLElement, Props>(function FacilityCard
       onClick={() => onSelect?.(r.id)}
       aria-current={selected ? "true" : undefined}
       className={cn(
-        "group rounded-lg border bg-surface transition-all",
+        "group lift rounded-lg border bg-surface",
         compact ? "p-3" : "p-4",
-        selected ? "border-fg shadow-md ring-2 ring-green-300" : "border-asphalt-100 hover:border-asphalt-300 hover:shadow-sm",
+        selected ? "border-fg shadow-md ring-2 ring-green-300" : "border-line hover:border-asphalt-300",
       )}
     >
       <div className="flex items-start justify-between gap-3">
@@ -80,13 +81,13 @@ export const FacilityCard = forwardRef<HTMLElement, Props>(function FacilityCard
           )}
         </p>
         {!compact && (
-          <Link href={href} onClick={(e) => e.stopPropagation()} className="inline-flex h-9 items-center rounded-md bg-green-400 px-4 text-sm font-semibold text-ink-950 hover:bg-green-300">
+          <Link href={href} onClick={(e) => e.stopPropagation()} className={buttonClasses("accent", "sm", "px-4")}>
             Ver shopping
           </Link>
         )}
       </div>
       {compact && (
-        <Link href={href} className="mt-3 flex h-10 w-full items-center justify-center rounded-md bg-green-400 text-sm font-semibold text-ink-950 hover:bg-green-300">
+        <Link href={href} className={buttonClasses("accent", "md", "mt-3 w-full")}>
           Ver shopping
         </Link>
       )}

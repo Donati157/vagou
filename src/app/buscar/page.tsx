@@ -65,7 +65,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
                 {data.withSpots} de {data.results.length} com vagas livres agora
               </p>
               {data.unresolvedQuery && (
-                <p className="flex items-start gap-2 rounded-md bg-blue-50 px-3 py-2 text-sm text-blue-900" role="status">
+                <p className="flex items-start gap-2 rounded-md bg-blue-50 px-3 py-2 text-sm text-blue-900 dark:bg-blue-950/40 dark:text-blue-200" role="status">
                   <Info className="mt-0.5 size-4 shrink-0" aria-hidden />
                   Não encontramos “{params.q}”. Mostrando shoppings de toda a cidade — escolha um local da lista de sugestões.
                 </p>

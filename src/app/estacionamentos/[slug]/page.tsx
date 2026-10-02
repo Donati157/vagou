@@ -5,6 +5,7 @@ import { Accessibility, BatteryCharging, Building2, Car, Clock, DoorOpen, Footpr
 import { SiteHeader } from "@/components/layout/site-header";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Badge } from "@/components/ui/badge";
+import { buttonClasses } from "@/components/ui/button";
 import { getPublicFacility } from "@/modules/facilities/public";
 import { weekSummary } from "@/modules/facilities/hours";
 import { MallPlan } from "@/modules/facilities/components/mall-plan";
@@ -58,7 +59,7 @@ export default async function FacilityPage({ params, searchParams }: Props) {
                 {f.open.label}
               </Badge>
             </div>
-            <h1 className="mt-3 text-3xl font-semibold sm:text-[36px]">{f.name}</h1>
+            <h1 className="mt-4 text-headline font-bold">{f.name}</h1>
             <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[15px] text-asphalt-600">
               <span className="inline-flex items-center gap-1.5">
                 <MapPin className="size-4 text-green-600" aria-hidden /> {f.addressLine} — {f.neighborhood}
@@ -71,25 +72,25 @@ export default async function FacilityPage({ params, searchParams }: Props) {
             </p>
 
             {/* Spaces: how many the mall has and how many are free now */}
-            <section aria-labelledby="vagas" className="mt-6 rounded-xl border border-asphalt-100 bg-surface p-5">
+            <section aria-labelledby="vagas" className="mt-8 rounded-xl border border-line bg-surface p-5 sm:p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <h2 id="vagas" className="text-sm font-semibold tracking-wide text-asphalt-500 uppercase">
+                <h2 id="vagas" className="eyebrow">
                   Vagas do shopping
                 </h2>
                 <AvailabilityPill a={a} showUpdated />
               </div>
-              <dl className="mt-4 grid grid-cols-3 gap-3">
-                <div className="rounded-lg bg-asphalt-25 p-3">
+              <dl className="mt-5 grid grid-cols-3 divide-x divide-line">
+                <div className="pr-3">
                   <dt className="text-xs font-semibold text-asphalt-500">Total de vagas</dt>
-                  <dd className="mt-1 font-display text-3xl font-bold text-fg tabular-nums">{formatNumber(f.totalSpaces)}</dd>
+                  <dd className="mt-1 font-display text-[2rem] leading-none font-bold text-fg tabular-nums sm:text-[2.5rem]">{formatNumber(f.totalSpaces)}</dd>
                 </div>
-                <div className="rounded-lg bg-status-available-bg p-3">
+                <div className="px-3 sm:px-5">
                   <dt className="text-xs font-semibold text-status-available">Livres agora</dt>
-                  <dd className="mt-1 font-display text-3xl font-bold text-fg tabular-nums">{a.state === "UNKNOWN" ? "—" : formatNumber(a.available ?? 0)}</dd>
+                  <dd className="mt-1 font-display text-[2rem] leading-none font-bold text-status-available tabular-nums sm:text-[2.5rem]">{a.state === "UNKNOWN" ? "—" : formatNumber(a.available ?? 0)}</dd>
                 </div>
-                <div className="rounded-lg bg-asphalt-25 p-3">
+                <div className="pl-3 sm:pl-5">
                   <dt className="text-xs font-semibold text-asphalt-500">Ocupadas</dt>
-                  <dd className="mt-1 font-display text-3xl font-bold text-fg tabular-nums">{a.counts && a.state !== "UNKNOWN" ? formatNumber(a.counts.occupied + a.counts.reserved) : "—"}</dd>
+                  <dd className="mt-1 font-display text-[2rem] leading-none font-bold text-fg tabular-nums sm:text-[2.5rem]">{a.counts && a.state !== "UNKNOWN" ? formatNumber(a.counts.occupied + a.counts.reserved) : "—"}</dd>
                 </div>
               </dl>
               {(f.freeByType.PCD > 0 || f.freeByType.EV > 0 || f.freeByType.MOTO > 0) && a.state !== "UNKNOWN" && (
@@ -107,8 +108,8 @@ export default async function FacilityPage({ params, searchParams }: Props) {
               )}
             </section>
 
-            <section className="mt-8" aria-labelledby="planta">
-              <h2 id="planta" className="mb-3 text-xl font-semibold">
+            <section className="mt-12" aria-labelledby="planta">
+              <h2 id="planta" className="mb-4 text-title font-semibold">
                 Planta do shopping
               </h2>
               {f.floorMaps.length === 0 ? (
@@ -120,8 +121,8 @@ export default async function FacilityPage({ params, searchParams }: Props) {
 
             {f.description && <p className="mt-8 leading-relaxed text-asphalt-700">{f.description}</p>}
 
-            <section className="mt-8" aria-labelledby="horarios">
-              <h2 id="horarios" className="text-xl font-semibold">Horário de funcionamento</h2>
+            <section className="mt-12" aria-labelledby="horarios">
+              <h2 id="horarios" className="text-title font-semibold">Horário de funcionamento</h2>
               <dl className="mt-3 grid grid-cols-2 gap-x-8 gap-y-1.5 text-[15px] sm:grid-cols-4">
                 {weekSummary(f.hours).map((d) => (
                   <div key={d.weekday} className="flex justify-between gap-2 sm:block">
@@ -132,8 +133,8 @@ export default async function FacilityPage({ params, searchParams }: Props) {
               </dl>
             </section>
 
-            <section className="mt-8" aria-labelledby="estrutura">
-              <h2 id="estrutura" className="text-xl font-semibold">Estrutura e acessibilidade</h2>
+            <section className="mt-12" aria-labelledby="estrutura">
+              <h2 id="estrutura" className="text-title font-semibold">Estrutura e acessibilidade</h2>
               <ul className="mt-3 grid gap-3 text-[15px] text-asphalt-700 sm:grid-cols-2">
                 <li className="flex items-center gap-3"><Accessibility className="size-5 text-fg" aria-hidden /> {f.accessible ? `${f.accessibleSpaces} vagas PCD` : "Sem vagas PCD informadas"}</li>
                 <li className="flex items-center gap-3"><BatteryCharging className="size-5 text-fg" aria-hidden /> {f.evChargers > 0 ? `${f.evChargers} carregadores para veículos elétricos` : "Sem carregadores EV"}</li>
@@ -145,11 +146,11 @@ export default async function FacilityPage({ params, searchParams }: Props) {
               </ul>
             </section>
 
-            <section className="mt-8" aria-labelledby="entradas">
-              <h2 id="entradas" className="text-xl font-semibold">Entradas</h2>
-              <ul className="mt-3 space-y-2">
+            <section className="mt-12" aria-labelledby="entradas">
+              <h2 id="entradas" className="text-title font-semibold">Entradas</h2>
+              <ul className="mt-3 divide-y divide-line border-y border-line">
                 {f.entrances.map((e) => (
-                  <li key={e.id} className="flex items-start gap-3 rounded-lg border border-asphalt-100 bg-surface p-3">
+                  <li key={e.id} className="flex items-start gap-3 py-3.5">
                     <DoorOpen className="mt-0.5 size-5 text-green-600" aria-hidden />
                     <div className="min-w-0 flex-1">
                       <p className="font-medium text-fg">
@@ -157,7 +158,7 @@ export default async function FacilityPage({ params, searchParams }: Props) {
                       </p>
                       <p className="text-sm text-asphalt-500">{ENTRANCE_KIND_LABEL[e.kind]}{e.addressLine ? ` · ${e.addressLine}` : ""}</p>
                     </div>
-                    <a href={`https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lng}`} target="_blank" rel="noopener noreferrer" className="shrink-0 text-sm font-semibold text-green-700 hover:underline">
+                    <a href={`https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lng}`} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 shrink-0 items-center text-sm font-semibold text-green-700 hover:underline">
                       Rota
                     </a>
                   </li>
@@ -172,9 +173,9 @@ export default async function FacilityPage({ params, searchParams }: Props) {
               </section>
             )}
 
-            <section className="mt-8" aria-labelledby="mapa">
-              <h2 id="mapa" className="text-xl font-semibold">Localização</h2>
-              <div className="mt-3 h-64 overflow-hidden rounded-lg border border-asphalt-100">
+            <section className="mt-12" aria-labelledby="mapa">
+              <h2 id="mapa" className="text-title font-semibold">Localização</h2>
+              <div className="mt-3 h-64 overflow-hidden rounded-lg border border-line">
                 <LazyLocationMap lat={nav.lat} lng={nav.lng} approximate={false} />
               </div>
               <p className="mt-2 text-sm text-asphalt-500">Operado por {f.operator}.{f.phone ? ` Telefone: ${f.phone}.` : ""}</p>
@@ -183,14 +184,14 @@ export default async function FacilityPage({ params, searchParams }: Props) {
 
           {/* Action card */}
           <aside className="lg:sticky lg:top-24 lg:self-start" aria-label="Como chegar">
-            <div className="hidden rounded-xl border border-asphalt-100 bg-surface p-5 shadow-md lg:block">
+            <div className="hidden rounded-xl border border-line bg-surface p-5 shadow-md lg:block">
               <AvailabilityPill a={a} size="lg" />
               <p className="mt-3 text-sm text-asphalt-600">Entrada recomendada: <strong className="text-fg">{f.primaryEntrance?.name ?? f.addressLine}</strong></p>
-              <a href={gmaps} target="_blank" rel="noopener noreferrer" className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-md bg-green-400 font-semibold text-ink-950 hover:bg-green-300">
+              <a href={gmaps} target="_blank" rel="noopener noreferrer" className={buttonClasses("accent", "lg", "mt-4 w-full")}>
                 <Navigation className="size-5" aria-hidden /> Ir até lá
               </a>
               <div className="mt-2 grid grid-cols-2 gap-2">
-                <a href={waze} target="_blank" rel="noopener noreferrer" className="flex h-10 items-center justify-center rounded-md border border-asphalt-200 text-sm font-semibold hover:bg-asphalt-50">Abrir no Waze</a>
+                <a href={waze} target="_blank" rel="noopener noreferrer" className={buttonClasses("secondary", "md", "text-sm")}>Abrir no Waze</a>
                 <FavoriteButton facilityId={f.id} initial={isFav} loggedIn={!!user} returnTo={`/estacionamentos/${f.slug}`} />
               </div>
               {f.phone && (
@@ -204,12 +205,12 @@ export default async function FacilityPage({ params, searchParams }: Props) {
       </main>
 
       {/* Mobile fixed CTA */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-asphalt-100 bg-surface px-4 py-3 shadow-[0_-8px_24px_-12px_rgba(12,34,25,.25)] lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_-12px_rgba(12,34,25,.25)] backdrop-blur lg:hidden">
         <div className="flex items-center gap-3">
           <div className="min-w-0 flex-1">
             <AvailabilityPill a={a} size="sm" />
           </div>
-          <a href={gmaps} target="_blank" rel="noopener noreferrer" className="flex h-12 items-center gap-2 rounded-md bg-green-400 px-5 font-semibold text-ink-950">
+          <a href={gmaps} target="_blank" rel="noopener noreferrer" className={buttonClasses("accent", "lg", "px-5")}>
             <Navigation className="size-5" aria-hidden /> Ir até lá
           </a>
         </div>

@@ -6,7 +6,7 @@ const TONES = {
   ink: "bg-ink-900 text-white",
   amber: "bg-status-reserved-bg text-reserved-fg",
   red: "bg-status-occupied-bg text-occupied-fg",
-  blue: "bg-blue-50 text-blue-700",
+  blue: "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-200",
   outline: "border border-asphalt-200 text-asphalt-700 bg-surface",
 } as const;
 

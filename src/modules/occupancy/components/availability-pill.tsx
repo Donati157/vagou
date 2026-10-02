@@ -4,7 +4,7 @@ import { formatRelative } from "@/lib/format";
 import type { AvailabilityState, PublicAvailability } from "../availability";
 
 export const AVAILABILITY_STYLE: Record<AvailabilityState, { bg: string; fg: string; pin: string; pinFg: string; Icon: typeof ParkingSquare }> = {
-  AVAILABLE: { bg: "bg-status-available-bg", fg: "text-status-available", pin: "#2f8048", pinFg: "#ffffff", Icon: ParkingSquare },
+  AVAILABLE: { bg: "bg-status-available-bg", fg: "text-status-available", pin: "#1f9d55", pinFg: "#ffffff", Icon: ParkingSquare },
   FEW: { bg: "bg-status-reserved-bg", fg: "text-reserved-fg", pin: "#e8a317", pinFg: "#3b2a00", Icon: TriangleAlert },
   FULL: { bg: "bg-status-occupied-bg", fg: "text-status-occupied", pin: "#d63c3c", pinFg: "#ffffff", Icon: CircleSlash },
   UNKNOWN: { bg: "bg-asphalt-100", fg: "text-asphalt-600", pin: "#8c9893", pinFg: "#ffffff", Icon: HelpCircle },
