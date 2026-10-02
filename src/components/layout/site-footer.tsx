@@ -9,15 +9,15 @@ export function SiteFooter() {
           <span className="text-[30px]">
             <Logo inverted />
           </span>
-          <p className="mt-3 max-w-xs text-sm">Descubra onde tem vaga para estacionar em São Paulo — disponibilidade, preços, horários e mapas de vagas.</p>
+          <p className="mt-3 max-w-xs text-sm">Descubra onde tem vaga nos shoppings de São Paulo — vagas livres agora e a planta do estacionamento, piso por piso.</p>
         </div>
         <FooterCol title="Motoristas" links={[{ href: "/buscar", label: "Onde tem vaga" }, { href: "/app", label: "Meus favoritos" }, { href: "/cadastro", label: "Criar conta" }]} />
-        <FooterCol title="Empresas" links={[{ href: "/empresas", label: "Vagou para empresas" }, { href: "/company", label: "Painel da empresa" }]} />
+        <FooterCol title="Shoppings" links={[{ href: "/empresas", label: "Vagou para shoppings" }, { href: "/company", label: "Painel do shopping" }]} />
         <FooterCol title="Vagou" links={[{ href: "/entrar", label: "Entrar" }]} />
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-xs sm:flex-row sm:justify-between sm:px-6">
-          <p>© {new Date().getFullYear()} Vagou. Versão de demonstração — estacionamentos fictícios e ocupação simulada.</p>
+          <p>© {new Date().getFullYear()} Vagou. Versão de demonstração — shoppings fictícios e ocupação simulada.</p>
           <p>Feito em São Paulo.</p>
         </div>
       </div>

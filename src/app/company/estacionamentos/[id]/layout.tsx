@@ -22,7 +22,7 @@ export default async function FacilityWorkspaceLayout({ children, params }: { ch
   }
   return (
     <>
-      <Breadcrumb items={[{ label: "Estacionamentos", href: "/company" }, { label: f.name }]} />
+      <Breadcrumb items={[{ label: "Shoppings", href: "/company" }, { label: f.name }]} />
       <header className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold sm:text-[28px]">{f.name}</h1>

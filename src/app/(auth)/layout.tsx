@@ -17,8 +17,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(92,184,116,0.35),transparent_55%)]" />
         <div className="relative flex h-full flex-col justify-end p-14 text-white">
           <LogoMark className="mb-8 h-20" />
-          <p className="max-w-md font-display text-4xl leading-tight font-semibold tracking-tight">Descubra onde tem vaga antes de chegar.</p>
-          <p className="mt-4 max-w-md text-white/70">Estacionamentos de São Paulo com disponibilidade, preços, horários e mapa de vagas em um só lugar.</p>
+          <p className="max-w-md font-display text-4xl leading-tight font-semibold tracking-tight">Saiba onde tem vaga antes de chegar ao shopping.</p>
+          <p className="mt-4 max-w-md text-white/70">Shoppings de São Paulo com vagas livres em tempo real e a planta do estacionamento, piso por piso.</p>
         </div>
       </aside>
     </div>

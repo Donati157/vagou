@@ -26,7 +26,7 @@ export default async function AdminHome() {
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Metric label="Usuários" value={formatNumber(u.n)} hint={`${role("DRIVER")} motoristas · ${role("COMPANY_ADMIN")} de empresas`} />
         <Metric label="Empresas" value={formatNumber(o.n)} />
-        <Metric label="Estacionamentos" value={formatNumber(f.n)} hint={`${f.published} publicados`} />
+        <Metric label="Shoppings" value={formatNumber(f.n)} hint={`${f.published} publicados`} />
         <Metric label="Vagas mapeadas" value={formatNumber(sp.n)} />
       </section>
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
@@ -48,7 +48,7 @@ export default async function AdminHome() {
           </CardBody>
         </Card>
         <Card>
-          <CardHeader title="Estacionamentos por região" />
+          <CardHeader title="Shoppings por região" />
           <CardBody>
             <ul className="space-y-2 text-sm">
               {byCity.map((c) => (

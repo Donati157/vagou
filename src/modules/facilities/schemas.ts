@@ -46,17 +46,6 @@ export const facilityInputSchema = z.object({
 });
 export type FacilityInput = z.infer<typeof facilityInputSchema>;
 
-export const rateSchema = z.object({
-  label: z.string().trim().min(2, "Descreva a tarifa.").max(80),
-  vehicleType: z.enum(["CAR", "MOTORCYCLE", "VAN"]),
-  firstPeriodMinutes: z.number().int().min(15).max(1440),
-  firstPeriod: z.number().min(0).max(1000),
-  additionalHour: z.number().min(0).max(1000).nullable(),
-  dailyMax: z.number().min(0).max(5000).nullable(),
-  notes: z.string().trim().max(200).nullable(),
-});
-export const ratesInputSchema = z.object({ rates: z.array(rateSchema).max(12) });
-
 export const entranceSchema = z.object({
   name: z.string().trim().min(2, "Dê um nome à entrada.").max(100),
   kind: z.enum(["VEHICLE_ENTRY", "VEHICLE_EXIT", "VEHICLE_BOTH", "PEDESTRIAN"]),

@@ -20,13 +20,13 @@ export default async function HomePage() {
           <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
             <div>
               <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-sm text-green-200">
-                <span className="size-2 rounded-full bg-green-400" aria-hidden /> {formatNumber(stats.facilities)} estacionamentos em {formatNumber(stats.neighborhoods)} bairros de São Paulo
+                <span className="size-2 rounded-full bg-green-400" aria-hidden /> {formatNumber(stats.facilities)} shoppings em {formatNumber(stats.neighborhoods)} bairros de São Paulo
               </p>
               <h1 className="font-display text-[44px] leading-[1.02] font-bold tracking-[-0.035em] text-white sm:text-6xl lg:text-[72px]">
                 Pare de procurar <span className="text-green-400">vaga.</span>
               </h1>
               <p className="mt-5 max-w-xl text-lg text-white/75">
-                A Vagou ajuda você a descobrir onde tem vaga para estacionar. Diga para onde vai e veja no mapa os estacionamentos próximos e quantas vagas estão livres.
+                A Vagou mostra quantas vagas cada shopping tem, quantas estão livres agora e a planta do estacionamento — para você ir direto ao piso com vaga.
               </p>
               <div className="mt-8 max-w-2xl text-asphalt-900">
                 <SearchForm initial={{}} />
@@ -45,9 +45,9 @@ export default async function HomePage() {
         <h2 id="como-funciona" className="mt-2 max-w-2xl text-3xl font-semibold sm:text-4xl">Do destino à vaga, sem rodar o quarteirão.</h2>
         <ol className="mt-10 grid gap-6 md:grid-cols-3">
           {[
-            { Icon: Search, title: "Diga para onde vai", text: "Digite o destino ou use sua localização. Mostramos os estacionamentos ao redor." },
-            { Icon: Eye, title: "Veja onde tem vaga", text: "Cada pin mostra quantas vagas estão livres agora, a distância, o preço e se está aberto." },
-            { Icon: Navigation, title: "Vá direto", text: "Escolha o estacionamento e toque em “Ir até lá”. Indicamos a melhor entrada." },
+            { Icon: Search, title: "Escolha o shopping", text: "Digite o nome do shopping, o bairro ou use sua localização." },
+            { Icon: Eye, title: "Veja onde tem vaga", text: "Cada shopping mostra quantas vagas tem, quantas estão livres agora e em qual piso." },
+            { Icon: Navigation, title: "Vá direto", text: "Abra a planta do shopping, veja o setor com vaga e toque em “Ir até lá”." },
           ].map(({ Icon, title, text }, i) => (
             <li key={title} className="rounded-lg border border-asphalt-100 bg-white p-6">
               <span className="font-display text-sm font-bold text-asphalt-300">0{i + 1}</span>
@@ -62,14 +62,14 @@ export default async function HomePage() {
       <section aria-labelledby="dentro" className="border-y border-asphalt-100 bg-white">
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2">
           <div>
-            <p className="text-sm font-semibold tracking-wide text-green-600 uppercase">Dentro do estacionamento</p>
+            <p className="text-sm font-semibold tracking-wide text-green-600 uppercase">Planta do shopping</p>
             <h2 id="dentro" className="mt-2 text-3xl font-semibold sm:text-4xl">Saiba qual piso tem vaga antes de entrar.</h2>
-            <p className="mt-4 max-w-lg text-asphalt-600">Em estacionamentos com mapa digital, você vê as vagas livres por piso e setor — inclusive PCD e com carregador para elétricos.</p>
+            <p className="mt-4 max-w-lg text-asphalt-600">Cada shopping tem a planta digital do estacionamento: você vê as vagas livres por piso e setor — inclusive PCD e com carregador para elétricos.</p>
             <ul className="mt-6 space-y-3 text-[15px] text-asphalt-700">
               {[
                 { Icon: Layers, t: "G1 — 34 vagas livres · G2 — 18 · G3 — Lotado" },
                 { Icon: MapPinned, t: "Mapa das vagas com status por cor, ícone e padrão" },
-                { Icon: Clock, t: "Horários, preços e entradas sempre à mão" },
+                { Icon: Clock, t: "Horários e entradas do estacionamento sempre à mão" },
               ].map(({ Icon, t }) => (
                 <li key={t} className="flex gap-3">
                   <Icon className="mt-0.5 size-5 shrink-0 text-ink-800" aria-hidden /> {t}
@@ -90,7 +90,7 @@ export default async function HomePage() {
             <div className="mt-4 flex flex-wrap gap-4 text-xs text-asphalt-600">
               <span className="flex items-center gap-1.5"><span className="size-3 rounded-sm bg-status-available" /> Livre</span>
               <span className="flex items-center gap-1.5"><span className="size-3 rounded-sm bg-status-occupied" /> Ocupada</span>
-              <span className="flex items-center gap-1.5"><span className="pattern-dots size-3 rounded-sm bg-[#e8a317]" /> Reservada pelo estacionamento</span>
+              <span className="flex items-center gap-1.5"><span className="pattern-dots size-3 rounded-sm bg-[#e8a317]" /> Reservada pelo shopping</span>
               <span className="flex items-center gap-1.5"><span className="pattern-hatch size-3 rounded-sm bg-status-unavailable" /> Indisponível</span>
             </div>
           </div>
@@ -105,10 +105,10 @@ export default async function HomePage() {
           </div>
           <ul className="grid gap-6 sm:grid-cols-2">
             {[
-              { Icon: Radar, t: "Fontes conectadas", d: "Sensores, câmeras, cancelas ou o sistema do próprio estacionamento alimentam a disponibilidade." },
+              { Icon: Radar, t: "Fontes conectadas", d: "Sensores, câmeras, cancelas ou o sistema do próprio shopping alimentam a disponibilidade." },
               { Icon: Clock, t: "Atualização visível", d: "Mostramos quando o dado foi atualizado. Informação antiga não aparece como atual." },
-              { Icon: ShieldCheck, t: "Sem dados? Avisamos", d: "Se um estacionamento não compartilha ocupação, dizemos isso claramente." },
-              { Icon: Cpu, t: "Fase de demonstração", d: "Nesta versão, a ocupação de vários estacionamentos é simulada e sinalizada como tal." },
+              { Icon: ShieldCheck, t: "Sem dados? Avisamos", d: "Se um shopping não compartilha a ocupação, dizemos isso claramente." },
+              { Icon: Cpu, t: "Fase de demonstração", d: "Nesta versão, os shoppings são fictícios e a ocupação é simulada e sinalizada como tal." },
             ].map(({ Icon, t, d }) => (
               <li key={t} className="flex gap-4">
                 <span className="grid size-11 shrink-0 place-items-center rounded-md bg-green-50 text-green-600">
@@ -128,18 +128,18 @@ export default async function HomePage() {
         <div className="road-grid pointer-events-none absolute inset-0 opacity-30 invert" />
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2">
           <div>
-            <p className="text-sm font-semibold tracking-wide text-green-300 uppercase">Vagou para empresas</p>
+            <p className="text-sm font-semibold tracking-wide text-green-300 uppercase">Vagou para shoppings</p>
             <h2 id="empresas" className="mt-2 text-3xl font-semibold text-white sm:text-4xl">Mostre aos motoristas que você tem vaga.</h2>
-            <p className="mt-4 max-w-lg text-white/70">Shoppings, edifícios, hospitais e operadores digitalizam o estacionamento a partir da planta, acompanham a ocupação por piso e setor e aparecem para quem está procurando vaga por perto.</p>
+            <p className="mt-4 max-w-lg text-white/70">Shoppings digitalizam o estacionamento a partir da planta, acompanham a ocupação por piso e setor e aparecem para quem está procurando vaga por perto.</p>
             <LinkButton href="/empresas" variant="accent" size="lg" className="mt-8">
-              Vagou para empresas <ArrowRight className="size-5" aria-hidden />
+              Vagou para shoppings <ArrowRight className="size-5" aria-hidden />
             </LinkButton>
           </div>
           <dl className="grid grid-cols-2 gap-4">
             {[
               { Icon: Layers, t: "Mapa inteligente", d: "Da planta ao mapa digital de vagas." },
               { Icon: Radar, t: "Ocupação ao vivo", d: "Integração com sensores, câmeras e cancelas." },
-              { Icon: Building2, t: "Multiunidade", d: "Vários estacionamentos, pisos e setores." },
+              { Icon: Building2, t: "Multiunidade", d: "Vários shoppings, pisos e setores." },
               { Icon: Eye, t: "Mais visibilidade", d: "Apareça quando o motorista mais precisa." },
             ].map(({ Icon, t, d }) => (
               <div key={t} className="rounded-lg border border-white/10 bg-white/[0.04] p-5">
@@ -163,7 +163,7 @@ export default async function HomePage() {
               Onde tem vaga agora?
             </LinkButton>
             <Link href="/empresas" className="inline-flex h-13 items-center px-4 font-semibold text-ink-950 underline-offset-4 hover:underline">
-              Tenho um estacionamento
+              Tenho um shopping
             </Link>
           </div>
         </div>

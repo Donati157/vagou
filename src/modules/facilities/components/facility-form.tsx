@@ -11,7 +11,7 @@ import { Checkbox, Field, Input, Select, Textarea } from "@/components/ui/field"
 import { Alert, Skeleton } from "@/components/ui/states";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/cn";
-import { FACILITY_KIND_LABEL, VEHICLE_TYPE_LABEL, WEEKDAY_LABEL } from "@/lib/labels";
+import { VEHICLE_TYPE_LABEL, WEEKDAY_LABEL } from "@/lib/labels";
 import { geocoder, SAO_PAULO_CENTER } from "@/modules/geo/geocoding";
 import { createFacilityAction, updateFacilityAction } from "../actions";
 import { defaultHours, facilityInputSchema, type FacilityInput } from "../schemas";
@@ -45,7 +45,7 @@ export function FacilityForm({ facilityId, initial, organizations }: { facilityI
     mode: "onTouched",
     defaultValues: initial ?? {
       name: "",
-      kind: "PARKING_LOT",
+      kind: "SHOPPING",
       description: "",
       addressLine: "",
       neighborhood: "",
@@ -76,7 +76,7 @@ export function FacilityForm({ facilityId, initial, organizations }: { facilityI
         setServerError(null);
         const res = facilityId ? await updateFacilityAction(facilityId, data) : await createFacilityAction(data, organizations && organizations.length > 1 ? orgId : null);
         if (!res.ok) return setServerError(res.error);
-        toast(facilityId ? "Alterações salvas." : "Estacionamento cadastrado.");
+        toast(facilityId ? "Alterações salvas." : "Shopping cadastrado.");
         if (!facilityId && "id" in res.data) router.push(`/company/estacionamentos/${res.data.id}`);
         else router.refresh();
       }),
@@ -91,7 +91,7 @@ export function FacilityForm({ facilityId, initial, organizations }: { facilityI
         </Alert>
       )}
 
-      <Section title="Identificação" description="Como o estacionamento aparece para os motoristas.">
+      <Section title="Identificação" description="Como o shopping aparece para os motoristas.">
         {organizations && organizations.length > 1 && !facilityId && (
           <Field label="Empresa responsável" htmlFor="org">
             <Select id="org" value={orgId} onChange={(ev) => setOrgId(ev.target.value)}>
@@ -103,20 +103,9 @@ export function FacilityForm({ facilityId, initial, organizations }: { facilityI
             </Select>
           </Field>
         )}
-        <div className="grid gap-4 sm:grid-cols-[1.6fr_1fr]">
-          <Field label="Nome" htmlFor="name" error={err("name")}>
-            <Input id="name" {...register("name")} placeholder="Ex.: Shopping Centro Norte" />
-          </Field>
-          <Field label="Tipo" htmlFor="kind">
-            <Select id="kind" {...register("kind")}>
-              {Object.entries(FACILITY_KIND_LABEL).map(([v, l]) => (
-                <option key={v} value={v}>
-                  {l}
-                </option>
-              ))}
-            </Select>
-          </Field>
-        </div>
+        <Field label="Nome do shopping" htmlFor="name" error={err("name")}>
+          <Input id="name" {...register("name")} placeholder="Ex.: Shopping Centro Norte" />
+        </Field>
         <Field label="Descrição" htmlFor="description" optional error={err("description")}>
           <Textarea id="description" {...register("description")} rows={3} maxLength={1500} />
         </Field>
@@ -125,7 +114,7 @@ export function FacilityForm({ facilityId, initial, organizations }: { facilityI
         </Field>
       </Section>
 
-      <Section title="Localização" description="Marque no mapa o ponto do estacionamento. Entradas específicas são configuradas depois.">
+      <Section title="Localização" description="Marque no mapa o ponto do shopping. Entradas específicas são configuradas depois.">
         <div className="grid gap-4 sm:grid-cols-[1.6fr_1fr_1fr]">
           <Field label="Endereço" htmlFor="addressLine" error={err("addressLine")}>
             <Input id="addressLine" {...register("addressLine")} autoComplete="street-address" />
@@ -157,7 +146,7 @@ export function FacilityForm({ facilityId, initial, organizations }: { facilityI
         </div>
         {e.lat ? (
           <p className="text-sm text-danger" role="alert">
-            Toque no mapa para marcar o estacionamento (cidade de São Paulo).
+            Toque no mapa para marcar o shopping (cidade de São Paulo).
           </p>
         ) : (
           <p className="flex items-center gap-1.5 text-sm text-asphalt-500">
@@ -166,7 +155,7 @@ export function FacilityForm({ facilityId, initial, organizations }: { facilityI
         )}
       </Section>
 
-      <Section title="Capacidade e estrutura" description="Usada quando o estacionamento ainda não tem mapa digital.">
+      <Section title="Capacidade e estrutura" description="Usada quando o shopping ainda não tem mapa digital.">
         <div className="grid gap-4 sm:grid-cols-4">
           <Field label="Capacidade total" htmlFor="declaredCapacity" error={err("declaredCapacity")}>
             <Input id="declaredCapacity" type="number" min={0} {...register("declaredCapacity", num)} />
@@ -250,13 +239,13 @@ export function FacilityForm({ facilityId, initial, organizations }: { facilityI
         </div>
       </Section>
 
-      <Section title="Publicação" description="Estacionamentos publicados aparecem na busca pública.">
+      <Section title="Publicação" description="Shoppings publicados aparecem na busca pública.">
         <Checkbox label="Publicar na busca da Vagou" {...register("isPublished")} />
       </Section>
 
       <div className="flex justify-end gap-2 pt-4">
         <Button type="submit" loading={pending}>
-          {facilityId ? "Salvar alterações" : "Cadastrar estacionamento"}
+          {facilityId ? "Salvar alterações" : "Cadastrar shopping"}
         </Button>
       </div>
     </form>

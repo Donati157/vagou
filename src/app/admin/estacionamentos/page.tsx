@@ -10,7 +10,7 @@ import { getCurrentUser } from "@/modules/auth/session";
 import { listAllFacilities } from "@/modules/admin/service";
 import { DATA_SOURCE_KIND_LABEL, FACILITY_KIND_LABEL, type DataSourceKind } from "@/lib/labels";
 
-export const metadata = { title: "Estacionamentos" };
+export const metadata = { title: "Shoppings" };
 
 export default async function AdminFacilities({ searchParams }: { searchParams: Promise<{ q?: string; publicado?: string; fonte?: string; pagina?: string }> }) {
   const sp = await searchParams;
@@ -19,7 +19,7 @@ export default async function AdminFacilities({ searchParams }: { searchParams: 
   const data = await listAllFacilities(admin, { q: sp.q, published: sp.publicado, source: sp.fonte, page });
   return (
     <>
-      <PageHeader title="Estacionamentos" description="Todos os estacionamentos da plataforma." />
+      <PageHeader title="Shoppings" description="Todos os shoppings da plataforma." />
       <FilterBar
         q={sp.q}
         placeholder="Nome, bairro ou empresa"
@@ -29,13 +29,13 @@ export default async function AdminFacilities({ searchParams }: { searchParams: 
         ]}
       />
       {data.rows.length === 0 ? (
-        <EmptyState title="Nenhum estacionamento encontrado" />
+        <EmptyState title="Nenhum shopping encontrado" />
       ) : (
         <>
           <Table>
             <THead>
               <tr>
-                <TH>Estacionamento</TH>
+                <TH>Shopping</TH>
                 <TH>Empresa</TH>
                 <TH className="text-right">Vagas mapeadas</TH>
                 <TH>Fonte</TH>

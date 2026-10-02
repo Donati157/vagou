@@ -1,4 +1,9 @@
-# Vagou — definição de produto da V1 (fonte da verdade)
+# Vagou — definição de produto (fonte da verdade)
+
+> **Atualização (pós-V1.0.0):** a Vagou é **exclusiva para shoppings** e **não exibe preços**.
+> Para cada shopping mostra **quantas vagas existem (total e livres agora, por piso)** e a **planta do
+> shopping** (mapa digital das vagas). Onde este documento falar em "estacionamentos" genéricos,
+> preços ou tarifas, prevalece esta atualização.
 
 > **"Abra a Vagou e descubra onde tem vaga para estacionar."**
 

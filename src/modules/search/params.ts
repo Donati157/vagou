@@ -12,8 +12,7 @@ export const searchParamsSchema = z.object({
   ev: z.literal("1").optional(),
   coberto: z.literal("1").optional(),
   moto: z.literal("1").optional(),
-  precoMax: z.coerce.number().int().min(1).max(500).optional(),
-  ordem: z.enum(["relevancia", "distancia", "vagas", "preco"]).optional(),
+  ordem: z.enum(["relevancia", "distancia", "vagas", "capacidade"]).optional(),
 });
 
 export type SearchParams = z.infer<typeof searchParamsSchema>;

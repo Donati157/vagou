@@ -1,7 +1,7 @@
 import "server-only";
 import { and, eq, ne, sql } from "drizzle-orm";
 import { db } from "@/server/db/client";
-import { dataSources, facilities, facilityEntrances, facilityVehicleTypes, floorPlans, floors, operatingHours, parkingRates, parkingSpaces, sectors } from "@/server/db/schema";
+import { dataSources, facilities, facilityEntrances, facilityVehicleTypes, floorPlans, floors, operatingHours, parkingSpaces, sectors } from "@/server/db/schema";
 import { AppError, ForbiddenError, NotFoundError } from "@/server/lib/errors";
 import { audit } from "@/server/lib/audit";
 import { pgErrorCode, PG_UNIQUE_VIOLATION } from "@/server/lib/pg";
@@ -9,7 +9,7 @@ import type { CurrentUser } from "@/modules/auth/session";
 import { assertFacilityAccess, assertFloorAccess, assertOrgAccess, getUserOrganizations } from "./access";
 import { fromMinutes, toMinutes, type FacilityInput } from "./schemas";
 import type { z } from "zod";
-import type { dataSourceInputSchema, entrancesInputSchema, floorSchema, ratesInputSchema, sectorSchema } from "./schemas";
+import type { dataSourceInputSchema, entrancesInputSchema, floorSchema, sectorSchema } from "./schemas";
 
 /*
  * Company-side facility management. Every function authorizes the user against the owning
@@ -54,7 +54,7 @@ export async function resolveTargetOrg(user: CurrentUser, organizationId?: strin
 function facilityColumns(input: FacilityInput) {
   return {
     name: input.name,
-    kind: input.kind,
+    kind: "SHOPPING" as const, // Vagou is shopping-only
     description: input.description,
     addressLine: input.addressLine,
     neighborhood: input.neighborhood,
@@ -149,28 +149,6 @@ export async function getFacilityForEdit(user: CurrentUser, facilityId: string) 
     }),
   };
   return { facility: f, input };
-}
-
-export async function replaceRates(user: CurrentUser, facilityId: string, input: z.infer<typeof ratesInputSchema>) {
-  await assertFacilityAccess(user, facilityId);
-  await db.transaction(async (tx) => {
-    await tx.delete(parkingRates).where(eq(parkingRates.facilityId, facilityId));
-    if (input.rates.length)
-      await tx.insert(parkingRates).values(
-        input.rates.map((r, i) => ({
-          facilityId,
-          label: r.label,
-          vehicleType: r.vehicleType,
-          firstPeriodMinutes: r.firstPeriodMinutes,
-          firstPeriodCents: Math.round(r.firstPeriod * 100),
-          additionalHourCents: r.additionalHour === null ? null : Math.round(r.additionalHour * 100),
-          dailyMaxCents: r.dailyMax === null ? null : Math.round(r.dailyMax * 100),
-          notes: r.notes,
-          sortOrder: i,
-        })),
-      );
-    await audit(tx, { actorId: user.id, action: "facility.rates_updated", entityType: "facility", entityId: facilityId, metadata: { count: input.rates.length } });
-  });
 }
 
 export async function replaceEntrances(user: CurrentUser, facilityId: string, input: z.infer<typeof entrancesInputSchema>) {

@@ -1,10 +1,9 @@
 import "server-only";
 import { and, eq, inArray } from "drizzle-orm";
 import { db } from "@/server/db/client";
-import { facilities, facilityVehicleTypes, favorites, operatingHours, parkingRates } from "@/server/db/schema";
+import { facilities, facilityVehicleTypes, favorites, operatingHours } from "@/server/db/schema";
 import { getLiveAvailability, refreshOccupancy } from "@/modules/occupancy/service";
 import { openStatus } from "./hours";
-import { startingPrice } from "./rates";
 import type { FacilityResult } from "./public";
 
 /** The driver's saved facilities, shaped like search results (live availability included). */
@@ -26,15 +25,14 @@ export async function listFavoriteFacilities(userId: string, now = new Date()): 
     })
     .from(favorites)
     .innerJoin(facilities, eq(facilities.id, favorites.facilityId))
-    .where(and(eq(favorites.userId, userId), eq(facilities.isPublished, true)))
+    .where(and(eq(favorites.userId, userId), eq(facilities.isPublished, true), eq(facilities.kind, "SHOPPING")))
     .orderBy(facilities.name);
   if (rows.length === 0) return [];
   const ids = rows.map((r) => r.id);
   await refreshOccupancy(ids, now);
-  const [live, hours, rates, motos] = await Promise.all([
+  const [live, hours, motos] = await Promise.all([
     getLiveAvailability(rows, now),
     db.select().from(operatingHours).where(inArray(operatingHours.facilityId, ids)),
-    db.select().from(parkingRates).where(inArray(parkingRates.facilityId, ids)),
     db.select().from(facilityVehicleTypes).where(and(inArray(facilityVehicleTypes.facilityId, ids), eq(facilityVehicleTypes.vehicleType, "MOTORCYCLE"))),
   ]);
   return rows.map((r) => {
@@ -44,7 +42,7 @@ export async function listFavoriteFacilities(userId: string, now = new Date()): 
       distanceMeters: null,
       open: os.open,
       openLabel: os.label,
-      startingPriceCents: startingPrice(rates.filter((x) => x.facilityId === r.id)),
+      mappedFloors: live.get(r.id)!.floors.length,
       acceptsMotorcycles: motos.some((m) => m.facilityId === r.id),
       availability: live.get(r.id)!,
     };

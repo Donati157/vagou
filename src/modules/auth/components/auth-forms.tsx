@@ -78,7 +78,7 @@ export function LoginForm({ next, demoMode, demoPassword }: { next?: string; dem
 
 const ACCOUNT_TYPES = [
   { value: "DRIVER", label: "Sou motorista", hint: "Salvar estacionamentos favoritos", Icon: Car },
-  { value: "COMPANY_ADMIN", label: "Sou uma empresa", hint: "Digitalizar e gerir estacionamentos", Icon: Building2 },
+  { value: "COMPANY_ADMIN", label: "Sou um shopping", hint: "Publicar a planta e as vagas do estacionamento", Icon: Building2 },
 ] as const;
 
 export function RegisterForm({ next, initialType }: { next?: string; initialType?: string }) {
@@ -111,7 +111,7 @@ export function RegisterForm({ next, initialType }: { next?: string; initialType
         <Input id="fullName" name="fullName" autoComplete="name" required />
       </Field>
       {type === "COMPANY_ADMIN" && (
-        <Field label="Nome da empresa" htmlFor="organizationName" error={fe(state, "organizationName")}>
+        <Field label="Nome do shopping ou grupo" htmlFor="organizationName" error={fe(state, "organizationName")}>
           <Input id="organizationName" name="organizationName" autoComplete="organization" />
         </Field>
       )}

@@ -16,7 +16,7 @@ import { AvailabilityPill } from "@/modules/occupancy/components/availability-pi
 import { DATA_SOURCE_KIND_LABEL, FACILITY_KIND_LABEL } from "@/lib/labels";
 import { formatNumber, formatPercent } from "@/lib/format";
 
-export const metadata = { title: "Estacionamentos" };
+export const metadata = { title: "Shoppings" };
 
 export default async function CompanyHome({ searchParams }: { searchParams: Promise<{ negado?: string }> }) {
   const sp = await searchParams;
@@ -36,23 +36,23 @@ export default async function CompanyHome({ searchParams }: { searchParams: Prom
     <>
       {sp.negado && <Alert tone="warning" className="mb-4">Você não tem acesso àquela área com este perfil.</Alert>}
       <PageHeader
-        title={orgs.length === 1 ? orgs[0].name : "Estacionamentos"}
-        description="Visão em tempo real dos seus estacionamentos."
+        title={orgs.length === 1 ? orgs[0].name : "Shoppings"}
+        description="Visão em tempo real dos seus shoppings."
         actions={
           <>
             {anySim && <DemoBadge />}
             <LinkButton href="/company/estacionamentos/novo" size="sm">
-              <Plus className="size-4" aria-hidden /> Novo estacionamento
+              <Plus className="size-4" aria-hidden /> Novo shopping
             </LinkButton>
           </>
         }
       />
       {facilities.length === 0 ? (
-        <EmptyState icon={<Building2 className="size-6" aria-hidden />} title="Nenhum estacionamento cadastrado" description="Cadastre seu primeiro estacionamento para começar a digitalizar pisos e vagas." />
+        <EmptyState icon={<Building2 className="size-6" aria-hidden />} title="Nenhum shopping cadastrado" description="Cadastre seu primeiro shopping para começar a digitalizar pisos e vagas." />
       ) : (
         <>
           <section aria-label="Indicadores" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <Metric label="Estacionamentos" value={facilities.length} />
+            <Metric label="Shoppings" value={facilities.length} />
             <Metric label="Capacidade total" value={formatNumber(capacity)} hint="vagas" />
             <Metric label="Vagas livres agora" value={formatNumber(free)} hint={anySim ? "inclui dados simulados" : undefined} />
             <Metric label="Ocupação atual" value={occupancy === null ? "—" : formatPercent(occupancy)} />
@@ -65,7 +65,7 @@ export default async function CompanyHome({ searchParams }: { searchParams: Prom
               </CardBody>
             </Card>
             <Card>
-              <CardHeader title="Capacidade utilizada x disponível agora" description="Por estacionamento" />
+              <CardHeader title="Capacidade utilizada x disponível agora" description="Por shopping" />
               <CardBody>
                 <Chart
                   title="Capacidade utilizada x disponível agora"
@@ -85,7 +85,7 @@ export default async function CompanyHome({ searchParams }: { searchParams: Prom
             <Table>
               <THead>
                 <tr>
-                  <TH>Estacionamento</TH>
+                  <TH>Shopping</TH>
                   <TH>Disponibilidade</TH>
                   <TH>Fonte de ocupação</TH>
                   <TH>Mapa digital</TH>

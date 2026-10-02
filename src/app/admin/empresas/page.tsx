@@ -17,7 +17,7 @@ export default async function AdminOrgs({ searchParams }: { searchParams: Promis
   const data = await listOrganizations(admin, { q: sp.q, type: sp.tipo, page });
   return (
     <>
-      <PageHeader title="Empresas" description="Organizações que administram estacionamentos." />
+      <PageHeader title="Empresas" description="Organizações que administram shoppings." />
       <FilterBar q={sp.q} placeholder="Nome da empresa" selects={[{ name: "tipo", label: "Todos os tipos", value: sp.tipo, options: Object.entries(ORG_TYPE_LABEL).map(([value, label]) => ({ value, label })) }]} />
       {data.rows.length === 0 ? (
         <EmptyState title="Nenhuma empresa encontrada" />
@@ -29,7 +29,7 @@ export default async function AdminOrgs({ searchParams }: { searchParams: Promis
                 <TH>Empresa</TH>
                 <TH>Tipo</TH>
                 <TH className="text-right">Membros</TH>
-                <TH className="text-right">Estacionamentos</TH>
+                <TH className="text-right">Shoppings</TH>
                 <TH>Desde</TH>
               </tr>
             </THead>

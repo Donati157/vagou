@@ -20,7 +20,7 @@ const OPTIONS = [
   { kind: "SENSOR", label: "Sensores de vaga", desc: "Sensores por vaga (ultrassom, magnético).", Icon: CircuitBoard, available: false },
   { kind: "CAMERA", label: "Câmeras", desc: "Visão computacional sobre câmeras existentes.", Icon: Camera, available: false },
   { kind: "GATE", label: "Cancelas", desc: "Contagem de entradas e saídas.", Icon: DoorClosed, available: false },
-  { kind: "PARKING_MANAGEMENT", label: "Sistema do estacionamento", desc: "Integração com o software de gestão já usado.", Icon: Server, available: false },
+  { kind: "PARKING_MANAGEMENT", label: "Sistema do shopping", desc: "Integração com o software de gestão já usado.", Icon: Server, available: false },
   { kind: "API", label: "API própria", desc: "Envio de ocupação via API.", Icon: Plug, available: false },
 ] as const;
 
@@ -79,7 +79,7 @@ export function DataSourcePanel({ facilityId, source, hasDigitalMap, capacity }:
 
       <section className="rounded-xl border border-asphalt-100 bg-white p-5">
         <h2 className="text-lg font-semibold">Conectar fonte</h2>
-        <p className="mt-1 text-sm text-asphalt-500">{hasDigitalMap ? "Este estacionamento tem mapa digital: a ocupação será acompanhada vaga a vaga." : "Sem mapa digital: a ocupação será por contagem de vagas livres."}</p>
+        <p className="mt-1 text-sm text-asphalt-500">{hasDigitalMap ? "Este shopping tem mapa digital: a ocupação será acompanhada vaga a vaga." : "Sem mapa digital: a ocupação será por contagem de vagas livres."}</p>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
           {OPTIONS.map((o) => {
             const current = source?.kind === o.kind;

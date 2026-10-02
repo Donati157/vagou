@@ -51,17 +51,6 @@ export function SearchFilters() {
           </button>
         );
       })}
-      <label className="sr-only" htmlFor="f-preco">
-        Preço máximo da primeira hora
-      </label>
-      <select id="f-preco" className={selectCls} value={sp.get("precoMax") ?? ""} onChange={(e) => set("precoMax", e.target.value || null)}>
-        <option value="">Qualquer preço</option>
-        {[10, 12, 15, 20].map((v) => (
-          <option key={v} value={v}>
-            1ª hora até R$ {v}
-          </option>
-        ))}
-      </select>
       <label className="sr-only" htmlFor="f-raio">
         Distância máxima
       </label>
@@ -79,7 +68,7 @@ export function SearchFilters() {
         <option value="">Melhor opção</option>
         <option value="distancia">Mais perto</option>
         <option value="vagas">Mais vagas livres</option>
-        <option value="preco">Menor preço</option>
+        <option value="capacidade">Maiores estacionamentos</option>
       </select>
       {pending && <Loader2 className="size-4 shrink-0 animate-spin text-asphalt-500" aria-label="Atualizando resultados" />}
     </div>

@@ -15,8 +15,8 @@ export async function SiteHeader({ variant = "solid" }: { variant?: "solid" | "t
         </Link>
         <nav aria-label="Principal" className="hidden items-center gap-1 md:flex">
           {[
-            { href: "/buscar", label: "Onde tem vaga" },
-            { href: "/empresas", label: "Para empresas" },
+            { href: "/buscar", label: "Shoppings com vaga" },
+            { href: "/empresas", label: "Para shoppings" },
           ].map((l) => (
             <Link
               key={l.href}

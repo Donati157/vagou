@@ -8,7 +8,7 @@ export default function FacilityNotFound() {
     <>
       <SiteHeader />
       <main id="conteudo" className="mx-auto max-w-xl px-4 py-20">
-        <EmptyState icon={<SearchX className="size-6" aria-hidden />} title="Estacionamento não encontrado" description="Ele pode ter sido removido ou ainda não está publicado." action={<LinkButton href="/buscar">Ver estacionamentos</LinkButton>} />
+        <EmptyState icon={<SearchX className="size-6" aria-hidden />} title="Shopping não encontrado" description="Ele pode ter sido removido ou ainda não está publicado." action={<LinkButton href="/buscar">Ver shoppings</LinkButton>} />
       </main>
     </>
   );

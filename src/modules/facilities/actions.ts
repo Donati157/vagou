@@ -19,14 +19,13 @@ import {
   deleteSector,
   disconnectDataSource,
   replaceEntrances,
-  replaceRates,
   setDataSource,
   setFacilityPublished,
   updateFacility,
   updateFloor,
   updateSector,
 } from "./manage";
-import { dataSourceInputSchema, entrancesInputSchema, facilityInputSchema, floorSchema, ratesInputSchema, sectorSchema } from "./schemas";
+import { dataSourceInputSchema, entrancesInputSchema, facilityInputSchema, floorSchema, sectorSchema } from "./schemas";
 
 const uuid = z.string().uuid();
 const company = () => requireRole("COMPANY_ADMIN", "PLATFORM_ADMIN");
@@ -57,15 +56,6 @@ export async function setPublishedAction(facilityId: string, published: boolean)
   return runAction("set_published", async () => {
     const user = await company();
     await setFacilityPublished(user, uuid.parse(facilityId), published);
-    refresh(facilityId);
-    return null;
-  });
-}
-
-export async function saveRatesAction(facilityId: string, input: unknown): Promise<ActionResult<null>> {
-  return runAction("save_rates", async () => {
-    const user = await company();
-    await replaceRates(user, uuid.parse(facilityId), ratesInputSchema.parse(input));
     refresh(facilityId);
     return null;
   });

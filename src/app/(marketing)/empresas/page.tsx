@@ -4,8 +4,8 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { LinkButton } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Vagou para empresas",
-  description: "Digitalize seu estacionamento, acompanhe a ocupação e mostre aos motoristas onde há vagas disponíveis.",
+  title: "Vagou para shoppings",
+  description: "Digitalize o estacionamento do seu shopping, acompanhe a ocupação e mostre aos clientes onde há vagas livres.",
   alternates: { canonical: "/empresas" },
 };
 
@@ -16,12 +16,12 @@ export default function EmpresasPage() {
         <div className="road-grid pointer-events-none absolute inset-0 opacity-25 invert" />
         <SiteHeader variant="transparent" />
         <main id="conteudo" className="relative mx-auto max-w-7xl px-4 pt-14 sm:px-6">
-          <p className="text-sm font-semibold tracking-wide text-green-300 uppercase">Vagou para empresas</p>
+          <p className="text-sm font-semibold tracking-wide text-green-300 uppercase">Vagou para shoppings</p>
           <h1 className="mt-3 max-w-3xl font-display text-[40px] leading-[1.05] font-bold tracking-[-0.03em] text-white sm:text-6xl">
-            Transforme estacionamento em informação útil — e visível.
+            Mostre aos seus clientes onde tem vaga no seu shopping.
           </h1>
           <p className="mt-5 max-w-2xl text-lg text-white/75">
-            Digitalize pisos e vagas, acompanhe a ocupação e apareça para os motoristas que estão procurando onde estacionar perto de você.
+            Digitalize os pisos e vagas do seu estacionamento, acompanhe a ocupação e apareça para quem está indo ao seu shopping.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <LinkButton href="/cadastro?tipo=empresa" variant="accent" size="lg">
@@ -40,7 +40,7 @@ export default function EmpresasPage() {
         </h2>
         <div className="grid gap-6 md:grid-cols-3">
           {[
-            { Icon: Layers, t: "Digitalização", d: "Transforme o estacionamento físico em infraestrutura digital: importe a planta, revise as vagas propostas e publique o mapa." },
+            { Icon: Layers, t: "Digitalização", d: "Transforme o estacionamento do shopping em infraestrutura digital: importe a planta, revise as vagas propostas e publique o mapa." },
             { Icon: BarChart3, t: "Inteligência", d: "Entenda a ocupação por hora, piso e setor, os picos de demanda e a capacidade ociosa." },
             { Icon: MapPinned, t: "Visibilidade", d: "Mostre a disponibilidade para motoristas na Vagou e direcione-os à entrada certa." },
           ].map(({ Icon, t, d }) => (
@@ -81,7 +81,7 @@ export default function EmpresasPage() {
           <div>
             <h2 className="text-3xl font-semibold">Conecte a fonte de ocupação que você já tem.</h2>
             <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-              {["Sensores de vaga", "Câmeras", "Cancelas e catracas", "Sistema de gestão do estacionamento", "API própria", "Atualização manual pela equipe"].map((t) => (
+              {["Sensores de vaga", "Câmeras", "Cancelas e catracas", "Sistema de gestão do estacionamento do shopping", "API própria", "Atualização manual pela equipe"].map((t) => (
                 <li key={t} className="flex items-center gap-2 rounded-md border border-asphalt-100 px-4 py-3 text-[15px]">
                   <Check className="size-4 text-green-600" aria-hidden /> {t}
                 </li>
@@ -100,8 +100,8 @@ export default function EmpresasPage() {
           <div className="flex items-center gap-4">
             <Building2 className="size-10 shrink-0 text-green-300" aria-hidden />
             <div>
-              <h2 className="text-2xl font-semibold text-white">Leve seu estacionamento para a Vagou.</h2>
-              <p className="mt-1 text-white/70">Crie a conta da sua empresa e cadastre o primeiro estacionamento.</p>
+              <h2 className="text-2xl font-semibold text-white">Leve seu shopping para a Vagou.</h2>
+              <p className="mt-1 text-white/70">Crie a conta do seu shopping e publique a planta do estacionamento.</p>
             </div>
           </div>
           <LinkButton href="/cadastro?tipo=empresa" variant="accent" size="lg">

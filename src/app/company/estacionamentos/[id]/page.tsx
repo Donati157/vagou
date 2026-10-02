@@ -9,7 +9,7 @@ import { getLiveAvailability, refreshOccupancy } from "@/modules/occupancy/servi
 import { AvailabilityPill } from "@/modules/occupancy/components/availability-pill";
 import { formatNumber, formatPercent } from "@/lib/format";
 
-export const metadata = { title: "Visão geral do estacionamento" };
+export const metadata = { title: "Visão geral do shopping" };
 
 export default async function FacilityOverview({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -31,7 +31,7 @@ export default async function FacilityOverview({ params }: { params: Promise<{ i
         <CardBody>
           {a.floors.length === 0 ? (
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-dashed border-asphalt-200 p-4">
-              <p className="text-sm text-asphalt-600">Este estacionamento ainda não tem mapa digital. Importe a planta para acompanhar vaga a vaga.</p>
+              <p className="text-sm text-asphalt-600">Este shopping ainda não tem mapa digital. Importe a planta para acompanhar vaga a vaga.</p>
               <LinkButton href={`${base}/pisos`} size="sm">
                 <Upload className="size-4" aria-hidden /> Importar planta
               </LinkButton>

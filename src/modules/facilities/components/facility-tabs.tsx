@@ -10,7 +10,7 @@ const TABS = [
   { seg: "pisos", label: "Pisos e mapas" },
   { seg: "analytics", label: "Analytics" },
   { seg: "cadastro", label: "Cadastro" },
-  { seg: "tarifas", label: "Tarifas e entradas" },
+  { seg: "entradas", label: "Entradas" },
   { seg: "dados", label: "Fonte de dados" },
 ];
 
@@ -19,7 +19,7 @@ export function FacilityTabs({ facilityId }: { facilityId: string }) {
   const base = `/company/estacionamentos/${facilityId}`;
   const current = path.slice(base.length).split("/")[1] ?? "";
   return (
-    <nav aria-label="Seções do estacionamento" className="no-scrollbar -mx-1 flex gap-1 overflow-x-auto border-b border-asphalt-100 px-1">
+    <nav aria-label="Seções do shopping" className="no-scrollbar -mx-1 flex gap-1 overflow-x-auto border-b border-asphalt-100 px-1">
       {TABS.map((t) => {
         const active = current === t.seg;
         return (

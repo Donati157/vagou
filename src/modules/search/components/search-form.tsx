@@ -61,7 +61,7 @@ export function SearchForm({ initial, variant = "hero", className, onSubmitted, 
 
   const hero = variant === "hero";
   return (
-    <form onSubmit={submit} role="search" aria-label="Buscar estacionamentos" className={cn(hero && "rounded-xl bg-white p-2 shadow-lg", className)}>
+    <form onSubmit={submit} role="search" aria-label="Buscar shoppings" className={cn(hero && "rounded-xl bg-white p-2 shadow-lg", className)}>
       <div className={cn("flex gap-2", hero ? "flex-col sm:flex-row" : "")}>
         <div className="relative flex-1">
           <label htmlFor="destino" className="sr-only">
@@ -77,7 +77,7 @@ export function SearchForm({ initial, variant = "hero", className, onSubmitted, 
             aria-activedescendant={active >= 0 ? `destino-opt-${active}` : undefined}
             autoComplete="off"
             autoFocus={autoFocus}
-            placeholder="Para onde você vai? Ex.: Anália Franco, Paulista"
+            placeholder="Qual shopping ou bairro? Ex.: Anália Franco, Moema"
             value={q}
             onChange={(e) => {
               setQ(e.target.value);
@@ -127,7 +127,7 @@ export function SearchForm({ initial, variant = "hero", className, onSubmitted, 
             </ul>
           )}
         </div>
-        <Button type="button" variant="secondary" size={hero ? "lg" : "md"} onClick={nearMe} aria-label="Estacionamentos perto de mim" className={cn(hero ? "sm:w-auto" : "px-3")} disabled={geoState === "loading"}>
+        <Button type="button" variant="secondary" size={hero ? "lg" : "md"} onClick={nearMe} aria-label="Shoppings perto de mim" className={cn(hero ? "sm:w-auto" : "px-3")} disabled={geoState === "loading"}>
           {geoState === "loading" ? <Loader2 className="size-5 animate-spin" aria-hidden /> : <Crosshair className="size-5" aria-hidden />}
           <span className={hero ? "" : "sr-only"}>Perto de mim</span>
         </Button>

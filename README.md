@@ -2,11 +2,10 @@
 
 > **Abra a Vagou e descubra onde tem vaga para estacionar.**
 
-A Vagou é uma plataforma de **descoberta e visualização de disponibilidade de estacionamento**.
-O motorista diz para onde vai e vê no mapa os estacionamentos próximos, quantas vagas estão livres,
-preço, horário e entradas — e, quando o estacionamento tem mapa digital, as vagas livres por piso e setor.
-Empresas (shoppings, edifícios, hospitais, operadores) digitalizam seus estacionamentos a partir da planta
-e conectam fontes de ocupação.
+A Vagou é uma plataforma de **descoberta e visualização de vagas em estacionamentos de shoppings**.
+O motorista escolhe o shopping (pelo nome, bairro ou localização) e vê quantas vagas ele tem, quantas
+estão livres agora e a **planta do estacionamento**, piso por piso e setor por setor. A Vagou **não exibe
+preços**. Shoppings digitalizam seus estacionamentos a partir da planta e conectam fontes de ocupação.
 
 A Vagou **não** é um marketplace de reservas: não há reserva, checkout ou pagamento pela plataforma.
 A definição de produto completa está em [`docs/PRODUCT.md`](docs/PRODUCT.md) (fonte da verdade).
@@ -161,24 +160,24 @@ Em produção os atalhos de contas demo da tela de login ficam ocultos e o seed 
 | Perfil | Fluxo |
 |---|---|
 | Motorista | Home → buscar destino (ou "perto de mim") → mapa + lista de estacionamentos → **Ver estacionamento** → vagas por piso / mapa do piso → **Ir até lá** · favoritos e perfil em `/app` |
-| Empresa | Login → `/company` (dashboard) → estacionamento → **Pisos e mapas** → importar planta → análise → corrigir no editor → publicar → **Operação** (mapa ao vivo) → **Analytics** |
+| Shopping | Login → `/company` (dashboard) → shopping → **Pisos e mapas** → importar planta → análise → corrigir no editor → publicar → **Operação** (mapa ao vivo) → **Analytics** |
 | Admin | Login → `/admin` → usuários → empresas → estacionamentos → fontes de dados → atividade |
 
 ### Rotas principais
 
 - Públicas: `/`, `/buscar`, `/estacionamentos/[slug]`, `/estacionamentos/[slug]/pisos/[floorId]`, `/empresas`, `/entrar`, `/cadastro`, `/recuperar-senha`
 - Motorista: `/app` (favoritos), `/app/perfil`
-- Empresa: `/company`, `/company/estacionamentos/novo`, `/company/estacionamentos/[id]` (visão geral, `operacao`, `pisos`, `pisos/[floorId]` = Mapa Inteligente, `analytics`, `cadastro`, `tarifas`, `dados`)
+- Empresa: `/company`, `/company/estacionamentos/novo`, `/company/estacionamentos/[id]` (visão geral, `operacao`, `pisos`, `pisos/[floorId]` = Mapa Inteligente, `analytics`, `cadastro`, `entradas`, `dados`)
 - Admin: `/admin`, `/admin/usuarios`, `/admin/empresas`, `/admin/estacionamentos`, `/admin/fontes`, `/admin/atividade`
 
 ## Funcional · Simulado · Preparado
 
 **Funcional**
-- Busca por destino (gazetteer de SP) ou localização do navegador; filtros (com vagas, aberto, PCD, EV, coberto, moto, preço, distância) e ordenação
+- Busca de shoppings pelo nome, bairro (gazetteer de SP) ou localização do navegador; filtros (com vagas, aberto, PCD, EV, coberto, moto, distância) e ordenação
 - Lista + mapa sincronizados (desktop ~40/60; mobile com mapa dominante e bottom sheet); pins com nº de vagas livres / "Lotado"
-- Página do estacionamento: disponibilidade, capacidade, vagas por piso e por tipo, preços com estimativa, horários (aberto/fechado), estrutura, acessibilidade, entradas, "Ir até lá" (Google Maps/Waze), favoritos
+- Página do shopping: total de vagas, livres e ocupadas agora, vagas por tipo, **planta do shopping com abas por piso** (status por vaga e vagas livres por setor), horários, estrutura, acessibilidade, entradas, "Ir até lá" (Google Maps/Waze), favoritos
 - Mapa digital público por piso (status com cor + ícone + padrão), vagas livres por setor e setor recomendado
-- Empresa: cadastro/edição de estacionamentos (localização no mapa, capacidade, estrutura, veículos, horários, publicação), tarifas, entradas, pisos e setores
+- Shopping (painel): cadastro/edição (localização no mapa, capacidade, estrutura, veículos, horários, publicação), entradas, pisos e setores
 - **Mapa Inteligente**: upload PNG/JPG/PDF (PDF renderizado no navegador), processamento, resultado, revisão no editor (adicionar, remover, mover, redimensionar, rotacionar, renomear, setor, tipo, status, duplicar, zoom) e publicação
 - Mapa operacional ao vivo (atualização a cada 10 s, filtros por status/setor/tipo/piso, painel da vaga com histórico, alteração manual de status)
 - Fonte de dados por estacionamento: atualização manual (por vaga no mapa operacional ou por contagem agregada)
@@ -201,6 +200,8 @@ Em produção os atalhos de contas demo da tela de login ficam ocultos e o seed 
 - Anonimização de conta após pedido de exclusão (registrado e notificado ao admin; execução manual)
 
 ## Limitações conhecidas
+
+- A tabela `parking_rates` permanece no schema (sem uso desde que a Vagou deixou de exibir preços); pode ser removida numa migration futura.
 
 - O banco embutido (PGlite) atende um processo por vez; em produção é obrigatório um PostgreSQL.
 - Arquivos no PostgreSQL atendem a escala da V1; para grande volume, implemente um driver de object storage (interface `FileStorage`).

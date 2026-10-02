@@ -45,7 +45,7 @@ export function ResultsView({ results, center, hasCenter, originQuery, emptyRese
   const emptyState = (
     <EmptyState
       icon={<SearchX className="size-6" aria-hidden />}
-      title="Nenhum estacionamento encontrado"
+      title="Nenhum shopping encontrado"
       description="Tente outro destino, aumente a distância ou remova alguns filtros."
       action={
         <LinkButton href={emptyResetHref} variant="secondary">
@@ -58,7 +58,7 @@ export function ResultsView({ results, center, hasCenter, originQuery, emptyRese
   return (
     <div className="relative flex min-h-0 flex-1">
       {/* Desktop list (~40%) */}
-      <section aria-label="Estacionamentos" className="hidden min-h-0 w-[40%] max-w-[560px] min-w-[400px] shrink-0 overflow-y-auto border-r border-asphalt-100 bg-white lg:block">
+      <section aria-label="Shoppings" className="hidden min-h-0 w-[40%] max-w-[560px] min-w-[400px] shrink-0 overflow-y-auto border-r border-asphalt-100 bg-white lg:block">
         <div className="space-y-3 px-6 py-5">
           {header}
           {empty ? (
@@ -85,7 +85,7 @@ export function ResultsView({ results, center, hasCenter, originQuery, emptyRese
       </section>
 
       {/* Map (~60% desktop, full-bleed mobile) */}
-      <section aria-label="Mapa de estacionamentos" className="relative min-h-0 flex-1">
+      <section aria-label="Mapa de shoppings" className="relative min-h-0 flex-1">
         <ResultsMap
           results={results}
           center={center}
@@ -102,7 +102,7 @@ export function ResultsView({ results, center, hasCenter, originQuery, emptyRese
         <div
           className={cn("absolute inset-x-0 bottom-0 z-[500] flex flex-col rounded-t-xl bg-white shadow-[0_-10px_30px_-12px_rgba(12,34,25,.35)] lg:hidden", sheetExpanded ? "h-[82%]" : "h-auto")}
           role="region"
-          aria-label="Estacionamentos encontrados"
+          aria-label="Shoppings encontrados"
         >
           <button type="button" onClick={() => setSheetExpanded((v) => !v)} className="flex w-full flex-col items-center px-4 pt-2 pb-2" aria-expanded={sheetExpanded}>
             <span className="h-1.5 w-10 rounded-full bg-asphalt-200" aria-hidden />
@@ -146,9 +146,9 @@ export function ResultsView({ results, center, hasCenter, originQuery, emptyRese
               <FacilityCard r={selected} href={href(selected)} compact />
             </div>
           ) : empty ? (
-            <p className="px-4 pb-5 text-sm text-asphalt-500">Nenhum estacionamento nesta região. Tente outro destino ou remova filtros.</p>
+            <p className="px-4 pb-5 text-sm text-asphalt-500">Nenhum shopping nesta região. Tente outro destino ou remova filtros.</p>
           ) : (
-            <ul className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-4" aria-label="Estacionamentos próximos">
+            <ul className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-4" aria-label="Shoppings próximos">
               {results.slice(0, 12).map((r) => (
                 <li
                   key={r.id}

@@ -44,7 +44,7 @@ export function FloorMapView({ imageUrl, ratio, spaces, elements, highlightStatu
           const cy = (s.y + s.h / 2) * H;
           return (
             <g key={s.id} transform={s.rotation ? `rotate(${s.rotation} ${cx} ${cy})` : undefined} opacity={dim ? 0.25 : 1}>
-              <title>{`${s.code} — ${s.status === "AVAILABLE" ? "livre" : s.status === "OCCUPIED" ? "ocupada" : s.status === "RESERVED" ? "reservada pelo estacionamento" : "indisponível"}`}</title>
+              <title>{`${s.code} — ${s.status === "AVAILABLE" ? "livre" : s.status === "OCCUPIED" ? "ocupada" : s.status === "RESERVED" ? "reservada pelo shopping" : "indisponível"}`}</title>
               <rect x={s.x * 1000} y={s.y * H} width={s.w * 1000} height={s.h * H} rx="3" fill={st.fill} stroke="#fff" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
               {s.status === "UNAVAILABLE" && <rect x={s.x * 1000} y={s.y * H} width={s.w * 1000} height={s.h * H} fill="url(#fm-hatch)" />}
               {s.status === "RESERVED" && <rect x={s.x * 1000} y={s.y * H} width={s.w * 1000} height={s.h * H} fill="url(#fm-dots)" />}
@@ -66,7 +66,7 @@ export function SpaceLegend() {
           <li key={k} className="flex items-center gap-2">
             <span className={`relative inline-block size-4 rounded-sm ${st.pattern}`} style={{ background: st.fill }} aria-hidden />
             <st.Icon className={`size-4 ${st.text}`} aria-hidden />
-            {k === "AVAILABLE" ? "Livre" : k === "OCCUPIED" ? "Ocupada" : k === "RESERVED" ? "Reservada pelo estacionamento" : "Indisponível"}
+            {k === "AVAILABLE" ? "Livre" : k === "OCCUPIED" ? "Ocupada" : k === "RESERVED" ? "Reservada pelo shopping" : "Indisponível"}
           </li>
         );
       })}

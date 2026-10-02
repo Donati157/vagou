@@ -38,7 +38,7 @@ export default async function AdminOrgDetail({ params }: { params: Promise<{ id:
           </CardBody>
         </Card>
         <Card>
-          <CardHeader title="Estacionamentos" />
+          <CardHeader title="Shoppings" />
           <CardBody>
             <ul className="divide-y divide-asphalt-100 text-sm">
               {data.facilities.map((f) => (
@@ -52,7 +52,7 @@ export default async function AdminOrgDetail({ params }: { params: Promise<{ id:
                   </span>
                 </li>
               ))}
-              {data.facilities.length === 0 && <li className="py-2 text-asphalt-500">Nenhum estacionamento.</li>}
+              {data.facilities.length === 0 && <li className="py-2 text-asphalt-500">Nenhum shopping.</li>}
             </ul>
           </CardBody>
         </Card>

@@ -1,15 +1,14 @@
 import "server-only";
-import { and, asc, eq, gte, inArray, lte, sql, type SQL } from "drizzle-orm";
+import { and, asc, desc, eq, gte, ilike, inArray, lte, sql, type SQL } from "drizzle-orm";
 import { cache } from "react";
 import { db } from "@/server/db/client";
-import { facilities, facilityEntrances, facilityVehicleTypes, floorPlanElements, floorPlans, floors, operatingHours, organizations, parkingRates, parkingSpaces, sectors } from "@/server/db/schema";
+import { facilities, facilityEntrances, facilityVehicleTypes, floorPlanElements, floorPlans, floors, operatingHours, organizations, parkingSpaces, sectors } from "@/server/db/schema";
 import { boundingBox, haversineMeters, type LatLng } from "@/modules/geo/geo";
 import { geocoder, SAO_PAULO_CENTER } from "@/modules/geo/geocoding";
 import { getLiveAvailability, refreshOccupancy, type LiveAvailability } from "@/modules/occupancy/service";
 import { fileUrl } from "@/modules/storage/storage";
 import type { SearchParams } from "@/modules/search/params";
 import { openStatus } from "./hours";
-import { startingPrice } from "./rates";
 
 export type FacilityResult = {
   id: string;
@@ -23,7 +22,8 @@ export type FacilityResult = {
   distanceMeters: number | null;
   open: boolean;
   openLabel: string;
-  startingPriceCents: number | null;
+  /** Floors with a published digital map (the mall's plan). */
+  mappedFloors: number;
   covered: boolean;
   accessible: boolean;
   evChargers: number;
@@ -31,7 +31,8 @@ export type FacilityResult = {
   availability: LiveAvailability;
 };
 
-const publishedActive = and(eq(facilities.isPublished, true), eq(facilities.status, "ACTIVE"));
+/** Vagou is shopping-only: public pages list published, active shopping malls. */
+const publishedActive = and(eq(facilities.isPublished, true), eq(facilities.status, "ACTIVE"), eq(facilities.kind, "SHOPPING"));
 
 export async function searchFacilities(params: SearchParams, now = new Date()) {
   let center: LatLng | null = null;
@@ -40,9 +41,16 @@ export async function searchFacilities(params: SearchParams, now = new Date()) {
     center = { lat: params.lat, lng: params.lng };
     centerLabel = params.q || "Local selecionado";
   } else if (params.q) {
-    const match = geocoder.search(params.q)[0];
+    // A shopping's own name wins (e.g. "Anália Franco"), then known neighborhoods/landmarks.
+    const term = params.q.replace(/[%_\\]/g, "");
+    const [mall] = await db
+      .select({ name: facilities.name, lat: facilities.lat, lng: facilities.lng })
+      .from(facilities)
+      .where(and(publishedActive, ilike(facilities.name, `%${term}%`)))
+      .limit(1);
+    const match = mall ?? geocoder.search(params.q)[0];
     if (match) {
-      center = match;
+      center = { lat: match.lat, lng: match.lng };
       centerLabel = match.name;
     }
   }
@@ -77,10 +85,9 @@ export async function searchFacilities(params: SearchParams, now = new Date()) {
 
   const ids = rows.map((r) => r.id);
   await refreshOccupancy(ids, now);
-  const [live, hours, rates, motos] = await Promise.all([
+  const [live, hours, motos] = await Promise.all([
     getLiveAvailability(rows, now),
     ids.length ? db.select().from(operatingHours).where(inArray(operatingHours.facilityId, ids)) : Promise.resolve([]),
-    ids.length ? db.select().from(parkingRates).where(inArray(parkingRates.facilityId, ids)) : Promise.resolve([]),
     ids.length ? db.select().from(facilityVehicleTypes).where(and(inArray(facilityVehicleTypes.facilityId, ids), eq(facilityVehicleTypes.vehicleType, "MOTORCYCLE"))) : Promise.resolve([]),
   ]);
 
@@ -98,7 +105,7 @@ export async function searchFacilities(params: SearchParams, now = new Date()) {
       distanceMeters: center ? haversineMeters(center, r) : null,
       open: os.open,
       openLabel: os.label,
-      startingPriceCents: startingPrice(rates.filter((x) => x.facilityId === r.id)),
+      mappedFloors: live.get(r.id)!.floors.length,
       covered: r.covered,
       accessible: r.accessible,
       evChargers: r.evChargers,
@@ -110,14 +117,13 @@ export async function searchFacilities(params: SearchParams, now = new Date()) {
   if (center) results = results.filter((r) => (r.distanceMeters ?? 0) <= radius);
   if (params.aberto) results = results.filter((r) => r.open);
   if (params.comVagas) results = results.filter((r) => r.open && (r.availability.state === "AVAILABLE" || r.availability.state === "FEW"));
-  if (params.precoMax) results = results.filter((r) => r.startingPriceCents !== null && r.startingPriceCents <= params.precoMax! * 100);
 
   const hasSpots = (r: FacilityResult) => (r.open && (r.availability.state === "AVAILABLE" || r.availability.state === "FEW") ? 0 : r.availability.state === "UNKNOWN" && r.open ? 1 : 2);
   const order = params.ordem ?? "relevancia";
   results.sort((a, b) => {
     if (order === "distancia") return (a.distanceMeters ?? 0) - (b.distanceMeters ?? 0);
     if (order === "vagas") return (b.availability.available ?? -1) - (a.availability.available ?? -1);
-    if (order === "preco") return (a.startingPriceCents ?? Infinity) - (b.startingPriceCents ?? Infinity);
+    if (order === "capacidade") return b.availability.capacity - a.availability.capacity;
     return hasSpots(a) - hasSpots(b) || (a.distanceMeters ?? 0) - (b.distanceMeters ?? 0);
   });
 
@@ -168,10 +174,9 @@ export const getPublicFacility = cache(async (slug: string, now = new Date()) =>
   if (!f || !f.isPublished || f.status !== "ACTIVE") return null;
 
   await refreshOccupancy([f.id], now);
-  const [live, hours, rates, entrances, vehicles, typeCounts, plans] = await Promise.all([
+  const [live, hours, entrances, vehicles, typeCounts, plans] = await Promise.all([
     getLiveAvailability([f], now),
     db.select().from(operatingHours).where(eq(operatingHours.facilityId, f.id)),
-    db.select().from(parkingRates).where(eq(parkingRates.facilityId, f.id)).orderBy(asc(parkingRates.sortOrder)),
     db.select().from(facilityEntrances).where(eq(facilityEntrances.facilityId, f.id)),
     db.select({ v: facilityVehicleTypes.vehicleType }).from(facilityVehicleTypes).where(eq(facilityVehicleTypes.facilityId, f.id)),
     db
@@ -180,21 +185,55 @@ export const getPublicFacility = cache(async (slug: string, now = new Date()) =>
       .where(and(eq(parkingSpaces.facilityId, f.id), sql`${parkingSpaces.archivedAt} is null`))
       .groupBy(parkingSpaces.type, parkingSpaces.opStatus),
     db
-      .select({ floorId: floorPlans.floorId })
+      .select({ floorId: floorPlans.floorId, planId: floorPlans.id, previewKey: floorPlans.previewKey, widthPx: floorPlans.widthPx, heightPx: floorPlans.heightPx })
       .from(floorPlans)
       .innerJoin(floors, eq(floors.id, floorPlans.floorId))
-      .where(and(eq(floors.facilityId, f.id), eq(floorPlans.status, "PUBLISHED"))),
+      .where(and(eq(floors.facilityId, f.id), eq(floorPlans.status, "PUBLISHED")))
+      .orderBy(desc(floorPlans.publishedAt)),
   ]);
+  const planByFloor = new Map<string, (typeof plans)[number]>();
+  for (const p of plans) if (!planByFloor.has(p.floorId)) planByFloor.set(p.floorId, p);
+  const floorIds = [...planByFloor.keys()];
+  const planIds = [...planByFloor.values()].map((p) => p.planId);
+  const [mapSpaces, mapSectors, mapElements] = floorIds.length
+    ? await Promise.all([
+        db
+          .select({ id: parkingSpaces.id, floorId: parkingSpaces.floorId, code: parkingSpaces.code, type: parkingSpaces.type, status: parkingSpaces.opStatus, sectorId: parkingSpaces.sectorId, x: parkingSpaces.x, y: parkingSpaces.y, w: parkingSpaces.w, h: parkingSpaces.h, rotation: parkingSpaces.rotation })
+          .from(parkingSpaces)
+          .where(and(inArray(parkingSpaces.floorId, floorIds), sql`${parkingSpaces.archivedAt} is null`)),
+        db.select({ id: sectors.id, floorId: sectors.floorId, name: sectors.name, color: sectors.color }).from(sectors).where(inArray(sectors.floorId, floorIds)).orderBy(asc(sectors.name)),
+        db.select({ id: floorPlanElements.id, planId: floorPlanElements.floorPlanId, kind: floorPlanElements.kind, label: floorPlanElements.label, x: floorPlanElements.x, y: floorPlanElements.y, w: floorPlanElements.w, h: floorPlanElements.h }).from(floorPlanElements).where(inArray(floorPlanElements.floorPlanId, planIds)),
+      ])
+    : [[], [], []];
   const availability = live.get(f.id)!;
   const free = (type: string) => typeCounts.filter((t) => t.type === type && t.status === "AVAILABLE").reduce((a, t) => a + t.n, 0);
   const primary = entrances.find((e) => e.isPrimary && e.kind !== "PEDESTRIAN") ?? entrances.find((e) => e.kind !== "PEDESTRIAN") ?? null;
-  const publishedFloorIds = new Set(plans.map((p) => p.floorId));
+  const publishedFloorIds = new Set(floorIds);
+  // The mall's plan: one digital map per published floor, ordered like the floor list (top first).
+  const floorMaps = availability.floors
+    .filter((fl) => planByFloor.has(fl.floorId))
+    .map((fl) => {
+      const plan = planByFloor.get(fl.floorId)!;
+      const spaces = mapSpaces.filter((sp) => sp.floorId === fl.floorId);
+      const secs = mapSectors.filter((sc) => sc.floorId === fl.floorId);
+      return {
+        floorId: fl.floorId,
+        name: fl.name,
+        counts: fl.counts,
+        imageUrl: fileUrl(plan.previewKey),
+        ratio: plan.widthPx && plan.heightPx ? plan.heightPx / plan.widthPx : 0.625,
+        spaces,
+        elements: mapElements.filter((e) => e.planId === plan.planId),
+        sectors: secs.map((sc) => ({ ...sc, total: spaces.filter((sp) => sp.sectorId === sc.id).length, free: spaces.filter((sp) => sp.sectorId === sc.id && sp.status === "AVAILABLE").length })),
+      };
+    });
   return {
     ...f,
     availability,
     open: openStatus(hours, now),
     hours,
-    rates,
+    floorMaps,
+    totalSpaces: availability.capacity,
     entrances,
     primaryEntrance: primary,
     vehicleTypes: vehicles.map((v) => v.v),

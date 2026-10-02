@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: { default: "Painel da empresa", templ
 export default async function CompanyLayout({ children }: { children: React.ReactNode }) {
   await requireAreaPage("company", "/company");
   return (
-    <DashboardShell area="Empresa" items={[{ href: "/company", label: "Estacionamentos", icon: "Building2", exact: true }]}>
+    <DashboardShell area="Shopping" items={[{ href: "/company", label: "Shoppings", icon: "Building2", exact: true }]}>
       {children}
     </DashboardShell>
   );

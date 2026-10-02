@@ -35,7 +35,7 @@ export function PublishPlanButton({ planId, spaces, republish }: { planId: strin
           })
         }
       >
-        <p className="text-[15px] text-asphalt-700">As {spaces} vagas passam a compor a disponibilidade pública do estacionamento e o mapa digital do piso fica visível para os motoristas.</p>
+        <p className="text-[15px] text-asphalt-700">As {spaces} vagas passam a compor a disponibilidade pública do shopping e o mapa digital do piso fica visível para os motoristas.</p>
       </ConfirmDialog>
     </>
   );

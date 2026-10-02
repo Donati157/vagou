@@ -2,7 +2,7 @@ import { getCurrentUser } from "@/modules/auth/session";
 import { getFacilityForEdit } from "@/modules/facilities/manage";
 import { FacilityForm } from "@/modules/facilities/components/facility-form";
 
-export const metadata = { title: "Cadastro do estacionamento" };
+export const metadata = { title: "Cadastro do shopping" };
 
 export default async function FacilityEditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

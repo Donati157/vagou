@@ -55,7 +55,7 @@ export function FloorsManager({ facilityId, floors }: { facilityId: string; floo
         </Button>
       </div>
       {floors.length === 0 ? (
-        <EmptyState icon={<Layers className="size-6" aria-hidden />} title="Nenhum piso cadastrado" description="Crie os pisos do estacionamento para importar a planta e digitalizar as vagas." />
+        <EmptyState icon={<Layers className="size-6" aria-hidden />} title="Nenhum piso cadastrado" description="Crie os pisos do shopping para importar a planta e digitalizar as vagas." />
       ) : (
         <ul className="space-y-3">
           {floors.map((f) => (

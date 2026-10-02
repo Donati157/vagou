@@ -18,7 +18,7 @@ export default async function AdminSources({ searchParams }: { searchParams: Pro
   const data = await listDataSources(admin, { kind: sp.tipo, status: sp.status, page });
   return (
     <>
-      <PageHeader title="Fontes de dados" description="Origem da ocupação de cada estacionamento. Simulação é exibida como dado de demonstração." />
+      <PageHeader title="Fontes de dados" description="Origem da ocupação de cada shopping. Simulação é exibida como dado de demonstração." />
       <FilterBar
         selects={[
           { name: "tipo", label: "Todos os tipos", value: sp.tipo, options: Object.entries(DATA_SOURCE_KIND_LABEL).map(([value, label]) => ({ value, label })) },
@@ -32,7 +32,7 @@ export default async function AdminSources({ searchParams }: { searchParams: Pro
           <Table>
             <THead>
               <tr>
-                <TH>Estacionamento</TH>
+                <TH>Shopping</TH>
                 <TH>Tipo</TH>
                 <TH>Granularidade</TH>
                 <TH>Status</TH>
